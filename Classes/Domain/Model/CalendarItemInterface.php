@@ -17,5 +17,11 @@ namespace DWenzel\T3calendar\Domain\Model;
  */
 interface CalendarItemInterface
 {
+    /**
+     * Gets the date of the item
+     *
+     * @return \DateTime
+     */
+    public function getDate();
 
 }

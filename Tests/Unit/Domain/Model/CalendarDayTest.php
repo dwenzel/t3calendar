@@ -246,9 +246,8 @@ class CalendarDayTest extends UnitTestCase
      */
     public function constructorInitializesDate()
     {
-        $timeStamp = 12345;
-        $expectedDate = new \DateTime('@' . $timeStamp);
-        $this->subject->__construct($timeStamp);
+        $expectedDate = new \DateTime();
+        $this->subject->__construct($expectedDate);
 
         $this->assertEquals(
             $expectedDate,
@@ -256,19 +255,4 @@ class CalendarDayTest extends UnitTestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function constructorInitializesTimeZone()
-    {
-        $timeZone = new \DateTimeZone('Europe/Berlin');
-        $expectedDate = new \DateTime('today');
-        $expectedDate->setTimezone($timeZone);
-        $this->subject->__construct(strtotime('today'), $timeZone);
-
-        $this->assertEquals(
-            $expectedDate,
-            $this->subject->getDate()
-        );
-    }
 }

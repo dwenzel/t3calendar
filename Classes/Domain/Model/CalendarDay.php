@@ -38,16 +38,12 @@ class CalendarDay
     protected $isCurrent = false;
 
     /**
-     * @param int|NULL $timeStamp
-     * @param \DateTimeZone|NULL $timeZone
+     * @param \DateTime|null $date
      */
-    public function __construct($timeStamp = NULL, $timeZone = NULL)
+    public function __construct($date = NULL)
     {
-        if ($timeStamp !== NULL) {
-            $this->date = new \DateTime('@' . $timeStamp);
-        }
-        if ($timeZone !== NULL) {
-            $this->date->setTimezone($timeZone);
+        if ($date !== NULL) {
+            $this->date = $date;
         }
         $this->initStorageObjects();
     }
