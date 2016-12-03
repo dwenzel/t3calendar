@@ -1,5 +1,4 @@
 <?php
-
 namespace DWenzel\T3calendar\Domain\Factory;
 
 /**
@@ -16,18 +15,14 @@ namespace DWenzel\T3calendar\Domain\Factory;
  */
 
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
-use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
-use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Class CalendarDayFactory
  *
  * @package DWenzel\T3calendar\Domain\Factory
  */
-class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterface
+interface CalendarDayFactoryInterface
 {
-    use ObjectManagerTrait;
-
     /**
      * Creates a calender day
      *
@@ -36,23 +31,5 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
      * @param bool $current Mark created calendar day as current, default: false
      * @return CalendarDay
      */
-    public function create(\DateTime $date, $items = null, $current = false)
-    {
-        /** @var CalendarDay $calendarDay */
-        $calendarDay = $this->objectManager->get(CalendarDay::class, $date);
-        if (count($items)) {
-            foreach ($items as $item) {
-                if (
-                    $item instanceof CalendarItemInterface
-                    && $item->getDate() == $calendarDay->getDate()
-                ) {
-                    $calendarDay->addItem($item);
-                }
-            }
-        }
-
-        $calendarDay->setIsCurrent(true);
-
-        return $calendarDay;
-    }
+    public function create(\DateTime $date, $items = null, $current = false);
 }

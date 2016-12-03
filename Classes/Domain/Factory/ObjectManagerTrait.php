@@ -1,8 +1,7 @@
 <?php
-
 namespace DWenzel\T3calendar\Domain\Factory;
 
-/**
+ /**
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -14,12 +13,24 @@ namespace DWenzel\T3calendar\Domain\Factory;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use TYPO3\CMS\Core\SingletonInterface;
+
+ use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 
 /**
- * Class CalendarFactory
+ * Class ObjectManagerTrait
+ *
  * @package DWenzel\T3calendar\Domain\Factory
  */
-class CalendarFactory implements SingletonInterface
+trait ObjectManagerTrait
 {
+    /**
+     * Object manager
+     * @var ObjectManagerInterface
+     */
+    protected $objectManager;
+
+    public function injectObjectManager(ObjectManagerInterface $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
 }

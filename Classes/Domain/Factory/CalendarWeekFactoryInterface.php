@@ -1,5 +1,4 @@
 <?php
-
 namespace DWenzel\T3calendar\Domain\Factory;
 
 /**
@@ -14,12 +13,22 @@ namespace DWenzel\T3calendar\Domain\Factory;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use TYPO3\CMS\Core\SingletonInterface;
+
+use DWenzel\T3calendar\Domain\Model\CalendarWeek;
 
 /**
- * Class CalendarFactory
+ * CalendarWeekFactoryInterface
  * @package DWenzel\T3calendar\Domain\Factory
  */
-class CalendarFactory implements SingletonInterface
+interface CalendarWeekFactoryInterface
 {
+    /**
+     * creates a CalendarDayFactoryObject
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $currentDate
+     * @param array|\Iterator|null $items
+     * @return CalendarWeek
+     */
+    public function create(\DateTime $startDate, \DateTime $currentDate, $items = null);
 }
