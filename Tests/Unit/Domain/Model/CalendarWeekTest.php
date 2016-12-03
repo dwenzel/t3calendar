@@ -15,7 +15,6 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
-use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
 
 /**
  * Class CalendarMonthTest
@@ -23,85 +22,92 @@ use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
  * @package DWenzel\T3calendar\Tests\Unit\Domain\Model
  * @coversDefaultClass \DWenzel\T3calendar\Domain\Model\CalendarWeek
  */
-class CalendarWeekTest extends UnitTestCase {
+class CalendarWeekTest extends UnitTestCase
+{
 
-	/**
-	 * @var CalendarWeek
-	 */
-	protected $fixture;
+    /**
+     * @var CalendarWeek
+     */
+    protected $subject;
 
-	public function setUp() {
-		$this->fixture = $this->getAccessibleMock(
-			'DWenzel\\T3calendar\\Domain\\Model\\CalendarWeek',
-			['dummy'], [], '', true
-		);
-	}
+    public function setUp()
+    {
+        $this->subject = $this->getAccessibleMock(
+            CalendarWeek::class,
+            ['dummy'], [], '', true
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::getDays
-	 */
-	public function getDaysReturnsInitiallyEmptyObjectStorage() {
-		$emptyObjectStorage = new ObjectStorage();
+    /**
+     * @test
+     * @covers ::getDays
+     */
+    public function getDaysReturnsInitiallyEmptyObjectStorage()
+    {
+        $emptyObjectStorage = new ObjectStorage();
 
-		$this->assertEquals(
-			$emptyObjectStorage,
-			$this->fixture->getDays()
-		);
-	}
+        $this->assertEquals(
+            $emptyObjectStorage,
+            $this->subject->getDays()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::setDays
-	 */
-	public function setDaysForObjectStorageSetsWeeks() {
-		$emptyObjectStorage = new ObjectStorage();
-		$this->fixture->setDays($emptyObjectStorage);
+    /**
+     * @test
+     * @covers ::setDays
+     */
+    public function setDaysForObjectStorageSetsWeeks()
+    {
+        $emptyObjectStorage = new ObjectStorage();
+        $this->subject->setDays($emptyObjectStorage);
 
-		$this->assertSame(
-			$emptyObjectStorage,
-			$this->fixture->getDays()
-		);
-	}
+        $this->assertSame(
+            $emptyObjectStorage,
+            $this->subject->getDays()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::addDay
-	 */
-	public function addDayForObjectAddsEvent() {
-		$day = new CalendarDay();
-		$this->fixture->addDay($day);
-		$this->assertTrue(
-			$this->fixture->getDays()->contains($day)
-		);
-	}
+    /**
+     * @test
+     * @covers ::addDay
+     */
+    public function addDayForObjectAddsEvent()
+    {
+        $day = new CalendarDay();
+        $this->subject->addDay($day);
+        $this->assertTrue(
+            $this->subject->getDays()->contains($day)
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::removeDay
-	 */
-	public function removeDayForObjectRemovesEvent() {
-		$day = new CalendarDay();
-		$objectStorageContainingOneDay = new ObjectStorage();
-		$objectStorageContainingOneDay->attach($day);
+    /**
+     * @test
+     * @covers ::removeDay
+     */
+    public function removeDayForObjectRemovesEvent()
+    {
+        $day = new CalendarDay();
+        $objectStorageContainingOneDay = new ObjectStorage();
+        $objectStorageContainingOneDay->attach($day);
 
-		$this->fixture->setDays($objectStorageContainingOneDay);
-		$this->fixture->removeDay($day);
-		$this->assertFalse(
-			$this->fixture->getDays()->contains($day)
-		);
-	}
+        $this->subject->setDays($objectStorageContainingOneDay);
+        $this->subject->removeDay($day);
+        $this->assertFalse(
+            $this->subject->getDays()->contains($day)
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function constructorInitializesStorageObjects() {
-		$expectedObjectStorage = new ObjectStorage();
-		$this->fixture->__construct();
+    /**
+     * @test
+     */
+    public function constructorInitializesStorageObjects()
+    {
+        $expectedObjectStorage = new ObjectStorage();
+        $this->subject->__construct();
 
-		$this->assertEquals(
-			$expectedObjectStorage,
-			$this->fixture->getDays()
-		);
-	}
+        $this->assertEquals(
+            $expectedObjectStorage,
+            $this->subject->getDays()
+        );
+    }
 }
