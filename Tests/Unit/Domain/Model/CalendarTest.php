@@ -32,10 +32,10 @@ class CalendarTest extends UnitTestCase {
 	/**
 	 * @var Calendar
 	 */
-	protected $fixture;
+	protected $subject;
 
 	public function setUp() {
-		$this->fixture = $this->getAccessibleMock(
+		$this->subject = $this->getAccessibleMock(
 			'DWenzel\\T3calendar\\Domain\\Model\\Calendar',
 			['dummy'], [], '', true
 		);
@@ -47,7 +47,7 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function getCurrentMonthReturnsInitiallyNull() {
 		$this->assertNull(
-			$this->fixture->getCurrentMonth()
+			$this->subject->getCurrentMonth()
 		);
 	}
 
@@ -57,11 +57,11 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function setCurrentMonthForObjectSetsCurrentMonth() {
 		$month = new CalendarMonth();
-		$this->fixture->setCurrentMonth($month);
+		$this->subject->setCurrentMonth($month);
 
 		$this->assertSame(
 			$month,
-			$this->fixture->getCurrentMonth()
+			$this->subject->getCurrentMonth()
 		);
 	}
 
@@ -71,7 +71,7 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function getViewModeReturnsInitiallyNull() {
 		$this->assertNull(
-			$this->fixture->getViewMode()
+			$this->subject->getViewMode()
 		);
 	}
 
@@ -80,10 +80,10 @@ class CalendarTest extends UnitTestCase {
 	 * @covers ::setViewMode
 	 */
 	public function setViewModeForIntegerSetsViewMode() {
-		$this->fixture->setViewMode(CalendarConfiguration::VIEW_MODE_MINI_MONTH);
+		$this->subject->setViewMode(CalendarConfiguration::VIEW_MODE_MINI_MONTH);
 		$this->assertSame(
 			CalendarConfiguration::VIEW_MODE_MINI_MONTH,
-			$this->fixture->getViewMode()
+			$this->subject->getViewMode()
 		);
 	}
 
@@ -93,7 +93,7 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function getDisplayPeriodReturnsInitiallyNull() {
 		$this->assertNull(
-			$this->fixture->getDisplayPeriod()
+			$this->subject->getDisplayPeriod()
 		);
 	}
 
@@ -102,10 +102,10 @@ class CalendarTest extends UnitTestCase {
 	 * @covers ::setDisplayPeriod
 	 */
 	public function setDisplayPeriodForIntegerSetsDisplayPeriod() {
-		$this->fixture->setDisplayPeriod(CalendarConfiguration::PERIOD_MONTH);
+		$this->subject->setDisplayPeriod(CalendarConfiguration::PERIOD_MONTH);
 		$this->assertSame(
 			CalendarConfiguration::PERIOD_MONTH,
-			$this->fixture->getDisplayPeriod()
+			$this->subject->getDisplayPeriod()
 		);
 	}
 
@@ -115,7 +115,7 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function getCurrentWeekReturnsInitiallyNull() {
 		$this->assertNull(
-			$this->fixture->getCurrentWeek()
+			$this->subject->getCurrentWeek()
 		);
 	}
 
@@ -125,11 +125,11 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function setCurrentWeekForObjectSetsCurrentWeek() {
 		$week = new CalendarWeek();
-		$this->fixture->setCurrentWeek($week);
+		$this->subject->setCurrentWeek($week);
 
 		$this->assertSame(
 			$week,
-			$this->fixture->getCurrentWeek()
+			$this->subject->getCurrentWeek()
 		);
 	}
 
@@ -139,7 +139,7 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function getCurrentYearReturnsInitiallyNull() {
 		$this->assertNull(
-			$this->fixture->getCurrentYear()
+			$this->subject->getCurrentYear()
 		);
 	}
 
@@ -149,11 +149,11 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function setCurrentYearForObjectSetsCurrentYear() {
 		$year = new CalendarYear();
-		$this->fixture->setCurrentYear($year);
+		$this->subject->setCurrentYear($year);
 
 		$this->assertSame(
 			$year,
-			$this->fixture->getCurrentYear()
+			$this->subject->getCurrentYear()
 		);
 	}
 
@@ -163,7 +163,7 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function getCurrentDayReturnsInitiallyNull() {
 		$this->assertNull(
-			$this->fixture->getCurrentDay()
+			$this->subject->getCurrentDay()
 		);
 	}
 
@@ -173,11 +173,69 @@ class CalendarTest extends UnitTestCase {
 	 */
 	public function setCurrentDayForObjectSetsCurrentDay() {
 		$day = new CalendarDay();
-		$this->fixture->setCurrentDay($day);
+		$this->subject->setCurrentDay($day);
 
 		$this->assertSame(
 			$day,
-			$this->fixture->getCurrentDay()
+			$this->subject->getCurrentDay()
 		);
 	}
+
+    /**
+     * weekday label dataprovider
+     */
+    public function weekDayLabelDataProvider()
+    {
+        $modeFormats = [
+            0 => '%A',
+            CalendarConfiguration::VIEW_MODE_MINI_MONTH => '%a'
+        ];
+
+        $dataSets = [];
+
+        foreach ($modeFormats as $mode=>$format) {
+            $weekDayLabels = [];
+            for ($dayOfWeek = 0; $dayOfWeek < 7; $dayOfWeek++) {
+
+                $weekDayLabels[] = strftime($format, strtotime('next Monday +' . $dayOfWeek . ' days'));
+            }
+            // mode, expectedLabels
+            $dataSets[] = [
+                $mode, $weekDayLabels
+            ];
+        }
+
+        return $dataSets;
+    }
+
+    /**
+     * @test
+     * @dataProvider weekDayLabelDataProvider
+     * @param int $mode A CalendarConfiguration::VIEW_MODE_* constant
+     * @param array $weekDayLabels
+     */
+	public function getWeekDayLabelsInitiallyReturnsLabelsInCorrectFormat($mode, $weekDayLabels)
+    {
+        $this->subject->setViewMode($mode);
+        $this->assertSame(
+            $weekDayLabels,
+            $this->subject->getWeekDayLabels()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getMonthLabelsReturnsLabels()
+    {
+        $monthNames = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $monthNames[] = date('F', mktime(0, 0, 0, $month));
+        }
+        $this->assertSame(
+            $monthNames,
+            $this->subject->getMonthLabels()
+        );
+    }
 }
