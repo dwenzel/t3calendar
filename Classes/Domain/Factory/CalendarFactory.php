@@ -1,5 +1,4 @@
 <?php
-
 namespace DWenzel\T3calendar\Domain\Factory;
 
 /**
@@ -14,12 +13,61 @@ namespace DWenzel\T3calendar\Domain\Factory;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use DWenzel\T3calendar\Domain\Model\Calendar;
+use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Class CalendarFactory
  * @package DWenzel\T3calendar\Domain\Factory
  */
-class CalendarFactory implements SingletonInterface
+class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
 {
+    use ObjectManagerTrait, CalendarDayFactoryTrait,
+        CalendarWeekFactoryTrait, CalendarMonthFactoryTrait,
+        CalendarYearFactoryTrait;
+
+    /**
+     * Creates a Calendar from configuration.
+     * Items will be added to matching CalendarDays
+     *
+     * @param CalendarConfiguration $configuration
+     * @param array $items Array holding CalendarItemInterface objects
+     * @return Calendar
+     */
+    public function create(CalendarConfiguration $configuration, array $items)
+    {
+        /** @var Calendar $calendar */
+        $calendar = $this->objectManager->get(Calendar::class);
+        $viewMode = $configuration->getViewMode();
+        $calendar->setViewMode($viewMode);
+        $displayPeriod = $configuration->getDisplayPeriod();
+        $calendar->setDisplayPeriod($displayPeriod);
+
+        $startDate = $configuration->getStartDate();
+        $currentDate = $configuration->getCurrentDate();
+        $calendarMonth = $this->calendarMonthFactory->create($startDate, $currentDate, $items);
+        $calendar->setCurrentMonth($calendarMonth);
+
+        if ($viewMode == CalendarConfiguration::VIEW_MODE_COMBO_PANE) {
+            switch ($displayPeriod) {
+                case CalendarConfiguration::PERIOD_DAY:
+                    $calendarDay = $this->calendarDayFactory->create($currentDate, $items, true);
+                    $calendar->setCurrentDay($calendarDay);
+                    break;
+                case CalendarConfiguration::PERIOD_WEEK:
+                    $calendarWeek = $this->calendarWeekFactory->create($startDate, $currentDate, $items);
+                    $calendar->setCurrentWeek($calendarWeek);
+                    break;
+                case CalendarConfiguration::PERIOD_YEAR:
+                    $calendarYear = $this->calendarYearFactory->create($startDate, $currentDate, $items);
+                    $calendar->setCurrentYear($calendarYear);
+                    break;
+                default:
+            }
+        }
+
+        return $calendar;
+    }
 }
