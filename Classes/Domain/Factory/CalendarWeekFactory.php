@@ -23,24 +23,9 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class CalendarWeekFactory implements CalendarWeekFactoryInterface, SingletonInterface
 {
-    use ObjectManagerTrait;
-
+    use ObjectManagerTrait, CalendarDayFactoryTrait;
     /**
-     * @var CalendarDayFactoryInterface
-     */
-    protected $calendarDayFactory;
-
-    /**
-     * injects a calendar day factory
-     * @param CalendarDayFactoryInterface $calendarDayFactory
-     */
-    public function injectCalendarDayFactory(CalendarDayFactoryInterface $calendarDayFactory)
-    {
-        $this->calendarDayFactory = $calendarDayFactory;
-    }
-
-    /**
-     * creates a CalendarDayFactoryObject
+     * creates a CalendarWeek object
      *
      * @param \DateTime $startDate
      * @param \DateTime $currentDate

@@ -14,21 +14,21 @@ namespace DWenzel\T3calendar\Domain\Factory;
  * The TYPO3 project - inspiring people to share!
  */
 
-use DWenzel\T3calendar\Domain\Model\CalendarWeek;
+use DWenzel\T3calendar\Domain\Model\CalendarMonth;
 
 /**
- * CalendarWeekFactoryInterface
+ * Class CalendarMonthFactory
  * @package DWenzel\T3calendar\Domain\Factory
  */
-interface CalendarWeekFactoryInterface
+interface CalendarMonthFactoryInterface
 {
     /**
-     * creates a CalendarWeek object
+     * creates a CalendarMonth object
      *
      * @param \DateTime $startDate
      * @param \DateTime $currentDate
      * @param array|\Iterator|null $items
-     * @return CalendarWeek
+     * @return CalendarMonth
      */
     public function create(\DateTime $startDate, \DateTime $currentDate, $items = null);
 }

@@ -14,21 +14,25 @@ namespace DWenzel\T3calendar\Domain\Factory;
  * The TYPO3 project - inspiring people to share!
  */
 
-use DWenzel\T3calendar\Domain\Model\CalendarWeek;
-
 /**
- * CalendarWeekFactoryInterface
+ * Class CalendarMonthFactoryTrait
+ * Provides a CalendarMonthFactory
+ *
  * @package DWenzel\T3calendar\Domain\Factory
  */
-interface CalendarWeekFactoryInterface
+trait CalendarMonthFactoryTrait
 {
     /**
-     * creates a CalendarWeek object
-     *
-     * @param \DateTime $startDate
-     * @param \DateTime $currentDate
-     * @param array|\Iterator|null $items
-     * @return CalendarWeek
+     * @var CalendarMonthFactoryInterface
      */
-    public function create(\DateTime $startDate, \DateTime $currentDate, $items = null);
+    protected $calendarMonthFactory;
+
+    /**
+     * injects a calendar month factory
+     * @param CalendarMonthFactoryInterface $calendarMonthFactory
+     */
+    public function injectCalendarMonthFactory(CalendarMonthFactoryInterface $calendarMonthFactory)
+    {
+        $this->calendarMonthFactory = $calendarMonthFactory;
+    }
 }
