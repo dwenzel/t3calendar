@@ -45,7 +45,6 @@ class CalendarMonth {
 	protected function initStorageObjects() {
 		/**
 		 * Do not modify this method!
-		 * It will be rewritten on each save in the extension builder
 		 * You may modify the constructor of this class instead
 		 */
 		$this->weeks = new ObjectStorage();
@@ -112,10 +111,10 @@ class CalendarMonth {
 	 * @return null|string
 	 */
 	public function getMonth($format = 'n') {
-		if ($this->startDate !== NULL) {
+		if ($this->startDate !== null) {
 			return $this->startDate->format($format);
 		}
 
-		return NULL;
+		return null;
 	}
 }

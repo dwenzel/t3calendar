@@ -36,7 +36,9 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      */
     public function create(\DateTime $startDate, \DateTime $currentDate, $items = null)
     {
+        /** @var CalendarMonth $calendarMonth */
         $calendarMonth = $this->objectManager->get(CalendarMonth::class);
+        $calendarMonth->setStartDate($startDate);
         $daysOfMonth = $this->getDaysOfMonth($startDate, $currentDate, $items);
         $this->addWeeks($startDate, $calendarMonth, $daysOfMonth);
 

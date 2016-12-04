@@ -291,4 +291,31 @@ class CalendarMonthFactoryTest extends UnitTestCase
 
         $this->subject->create($startDate, $currentDate, $items);
     }
+
+    /**
+     * @test
+     */
+    public function createSetsStartDate()
+    {
+        $this->subject = $this->getAccessibleMock(
+            CalendarMonthFactory::class,
+            ['addDaysOfPreviousMonth', 'addDaysOfCurrentMonth', 'addDaysOfNextMonth', 'addWeeks']
+        );
+        $this->subject->injectObjectManager($this->objectManager);
+
+        $startDate = new \DateTime('now');
+        $currentDate = new \DateTime('now');
+        $mockCalendarMonth = $this->getMock(
+            CalendarMonth::class, ['setStartDate']
+        );
+        $this->objectManager->expects($this->at(0))
+            ->method('get')
+            ->with(CalendarMonth::class)
+            ->will($this->returnValue($mockCalendarMonth));
+        $mockCalendarMonth->expects($this->once())
+            ->method('setStartDate')
+            ->with($startDate);
+
+        $this->subject->create($startDate, $currentDate);
+    }
 }
