@@ -16,6 +16,7 @@ namespace DWenzel\T3calendar\Domain\Factory;
 
 use DWenzel\T3calendar\Domain\Model\Calendar;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * Class CalendarFactory
@@ -28,8 +29,8 @@ interface CalendarFactoryInterface
      * Items will be added to matching CalendarDays
      *
      * @param CalendarConfiguration $configuration
-     * @param array $items Array holding CalendarItemInterface objects
+     * @param QueryResultInterface|array|\Iterator $items Array holding CalendarItemInterface objects
      * @return Calendar
      */
-    public function create(CalendarConfiguration $configuration, array $items);
+    public function create(CalendarConfiguration $configuration, $items);
 }

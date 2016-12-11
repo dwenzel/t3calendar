@@ -14,7 +14,10 @@ namespace DWenzel\T3calendar\Tests\ViewHelpers\Widget\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
+use DWenzel\T3calendar\Domain\Factory\CalendarFactoryInterface;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
+use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactoryInterface;
 use DWenzel\T3calendar\ViewHelpers\Widget\Controller\CalendarController;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
@@ -49,6 +52,16 @@ class CalendarControllerTest extends UnitTestCase
     protected $configuration;
 
     /**
+     * @var CalendarConfigurationFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $calendarFactory;
+
+    /**
+     * @var array
+     */
+    protected $objects = [];
+
+    /**
      * set up subject
      */
     public function setUp()
@@ -62,6 +75,13 @@ class CalendarControllerTest extends UnitTestCase
         $this->subject->_set('configuration', $this->configuration);
         $this->objectManager = $this->getMock(ObjectManagerInterface::class);
         $this->subject->injectObjectManager($this->objectManager);
+        $this->calendarFactory = $this->getMock(
+            CalendarFactory::class, ['create']
+        );
+        $this->calendarFactory->method('create')->will($this->returnValue($this->configuration));
+        $this->subject->injectCalendarFactory($this->calendarFactory);
+        $this->subject->_set('objects', $this->objects);
+
     }
 
     /**
@@ -118,5 +138,27 @@ class CalendarControllerTest extends UnitTestCase
             $this->subject
         );
     }
-    
+
+    /**
+     * @test
+     */
+    public function indexActionGetsCalendarFromFactory()
+    {
+        $this->calendarFactory->expects($this->once())
+            ->method('create')
+            ->with($this->configuration, $this->objects);
+        $this->subject->indexAction();
+    }
+
+    /**
+     * @test
+     */
+    public function indexActionAssignsVariablesToView()
+    {
+        $this->view->expects($this->once())
+            ->method('assignMultiple');
+
+        $this->subject->indexAction();
+
+    }
 }

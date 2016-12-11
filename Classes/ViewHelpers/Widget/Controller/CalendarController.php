@@ -14,6 +14,7 @@ namespace DWenzel\T3calendar\ViewHelpers\Widget\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DWenzel\T3calendar\Domain\Factory\CalendarFactoryTrait;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
 
@@ -23,6 +24,8 @@ use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
  */
 class CalendarController extends AbstractWidgetController
 {
+    use CalendarFactoryTrait;
+
     /**
      * @var CalendarConfiguration
      */
@@ -46,5 +49,21 @@ class CalendarController extends AbstractWidgetController
         $this->objects = $this->widgetConfiguration['objects'];
         $this->configuration = $this->widgetConfiguration['configuration'];
         $this->id = $this->widgetConfiguration['id'];
+    }
+
+    /**
+     * index action
+     */
+    public function indexAction()
+    {
+        $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
+
+        $this->view->assignMultiple(
+            [
+                'configuration' => $this->configuration,
+                'calendar' => $calendar,
+                'calendarId' => $this->calendarId
+            ]
+        );
     }
 }

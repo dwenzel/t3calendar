@@ -1,0 +1,3 @@
+####################
+# include default CSS
+page.includeCSS.t3calendar = EXT:t3calendar/Resources/Public/CSS/calendar.css
