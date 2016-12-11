@@ -15,7 +15,6 @@ namespace DWenzel\T3calendar\Tests\ViewHelpers\Widget\Controller;
  */
 
 use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
-use DWenzel\T3calendar\Domain\Factory\CalendarFactoryInterface;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactoryInterface;
 use DWenzel\T3calendar\ViewHelpers\Widget\Controller\CalendarController;

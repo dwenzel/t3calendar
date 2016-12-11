@@ -3,17 +3,9 @@
 		<span class="legend">
 			<f:format.date format="{f:translate(key: 'format.day', default: 'l, j. F Y')}">{calendar.currentDay.date}</f:format.date>
 		</span>
-		<f:for each="{calendar.currentDay.events}" as="singleEvent">
-			<div class="event">
-				<f:link.action
-					pluginName="events"
-					controller="Event"
-					action="show"
-					arguments="{event: singleEvent}"
-					pageUid="{settings.detailPid}"
-					>
-					{singleEvent.headline}
-				</f:link.action>
+		<f:for each="{calendar.currentDay.items}" as="item">
+			<div class="item">
+					Item {item.uid}
 			</div>
 		</f:for>
 	</div>

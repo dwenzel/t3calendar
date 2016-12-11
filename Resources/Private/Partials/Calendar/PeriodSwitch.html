@@ -9,7 +9,7 @@
 			>
 			<f:translate key="displayPeriod.day" default="Day" />
 		</f:widget.link>
-		<f:widget.link argumenf="{period: 1, date: '{f:format.date(format: \'U\', base: \'+0d\', date: \'monday this week\')}'}"
+		<f:widget.link arguments="{period: 1, date: '{f:format.date(format: \'U\', base: \'+0d\', date: \'monday this week\')}'}"
 			class="button {f:if(condition: '{calendar.displayPeriod} == 1', then: 'active')}"
 			>
 			<f:translate key="displayPeriod.week" default="Week" />

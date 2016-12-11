@@ -41,19 +41,12 @@
 					<td class="day
 					{f:if(condition: '{calendarDay.month} != {month.month}', then: 'outOfMonth')}
 					{f:if(condition: '{calendarDay.isCurrent}', then: 'current')}
-					{f:if(condition: '{calendarDay.events->f:count()}',
+					{f:if(condition: '{calendarDay.items->f:count()}',
 						then: 'hasEvent')}">
 						<div class="labelDay">{calendarDay.day}</div>
-						<f:for each="{calendarDay.events}" as="singleEvent">
+						<f:for each="{calendarDay.items}" as="item">
 							<div class="eventTooltip">
-								<span class="eventTooltipHeadline">
-									<f:link.action
-										pluginName="events"
-										controller="Event"
-										action="show" arguments="{event: singleEvent}" pageUid="{settings.detailPid}">
-										{singleEvent.headline}
-									</f:link.action>
-								</span>
+								<span class="eventTooltipHeadline">Item {item.uid}</span>
 							</div>
 						</f:for>
 					</td>
