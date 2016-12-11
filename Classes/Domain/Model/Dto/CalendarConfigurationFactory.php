@@ -20,7 +20,7 @@ use DWenzel\T3calendar\Domain\Factory\ObjectManagerTrait;
  * Class CalendarConfigurationFactory
  * @package DWenzel\T3calendar\Domain\Model\Dto
  */
-class CalendarConfigurationFactory
+class CalendarConfigurationFactory implements CalendarConfigurationFactoryInterface
 {
     use ObjectManagerTrait;
 
