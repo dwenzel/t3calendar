@@ -54,10 +54,11 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      */
     public function addDaysOfPreviousMonth(\DateTime $startDate, array &$daysOfMonth)
     {
-        $prependDays = (int)$startDate->format('N') - 1;
+        $prependDays = $this->getNumberOfDaysToPrepend($startDate);
+
         for ($i = $prependDays; $i > 0; $i--) {
-            $timestamp = $startDate->getTimestamp() - ($i * 86400);
-            $dateOfDay = new \DateTime('@' . $timestamp);
+            $dateOfDay = clone $startDate;
+            $dateOfDay->modify('-' . $i . ' days');
             $daysOfMonth[] = $this->calendarDayFactory->create($dateOfDay);
         }
     }
@@ -76,14 +77,12 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      */
     public function addDaysOfCurrentMonth(\DateTime $startDate, \DateTime $currentDate, array  &$daysOfMonth, $items = [])
     {
-        $daysInMonth = (int)$startDate->format('t');
-        $month = (int)$startDate->format('n');
-        $year = (int)$startDate->format('Y');
+        $daysInMonth = $this->getNumberOfDaysInMonth($startDate);
 
-        for ($dayOfMonth = 1; $dayOfMonth <= $daysInMonth; $dayOfMonth++) {
-            $timestamp = mktime(0, 0, 0, $month, $dayOfMonth, $year);
-            $isCurrent = ($currentDate->getTimestamp() === $timestamp) ? true : false;
-            $dateOfDay = new \DateTime('@' . $timestamp);
+        for ($dayOfMonth = 0; $dayOfMonth < $daysInMonth; $dayOfMonth++) {
+            $dateOfDay = clone $startDate;
+            $dateOfDay->modify('+' . $dayOfMonth . ' days');
+            $isCurrent = ($currentDate == $dateOfDay) ? true : false;
             $daysOfMonth[] = $this->calendarDayFactory->create($dateOfDay, $items, $isCurrent);
         }
     }
@@ -98,17 +97,13 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      */
     public function addDaysOfNextMonth(\DateTime $startDate, array &$daysOfMonth)
     {
-        $daysInMonth = (int)$startDate->format('t');
-        $year = (int)$startDate->format('Y');
-        $prependDays = (int)$startDate->format('N') - 1;
-        $numberOfWeeks = (int)ceil(($daysInMonth + $prependDays) / 7);
-        $numberOfDaysOfNextMonth = $numberOfWeeks * 7 - $daysInMonth - $prependDays;
-        $month = (int)$startDate->format('n');
-        $nextMonth = ($month == 12) ? 1 : $month + 1;
+        $numberOfDaysOfNextMonth = $this->getNumberOfDaysToAppend($startDate);
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $lastDayOfThisMonth = new \DateTime('last day of this month', $timeZone);
 
         for ($appendDay = 1; $appendDay <= $numberOfDaysOfNextMonth; $appendDay++) {
-            $timestamp = mktime(0, 0, 0, $nextMonth, $appendDay, ($nextMonth == 1) ? $year++ : $year);
-            $dateOfDay = new \DateTime('@' . $timestamp);
+            $dateOfDay = clone $lastDayOfThisMonth;
+            $dateOfDay->modify('+' . $appendDay . ' day');
             $daysOfMonth[] = $this->calendarDayFactory->create($dateOfDay);
         }
     }
@@ -136,7 +131,7 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     }
 
     /**
-     * Spreads the CalendareDay objects hold by
+     * Spreads the CalendarDay objects hold by
      * $daysOfMonth evenly over a number of weeks
      * @param \DateTime $startDate
      * @param CalendarMonth $calendarMonth
@@ -144,9 +139,7 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      */
     protected function addWeeks(\DateTime $startDate, CalendarMonth $calendarMonth, array $daysOfMonth)
     {
-        $daysInMonth = (int)$startDate->format('t');
-        $prependDays = (int)$startDate->format('N') - 1;
-        $numberOfWeeks = (int)ceil(($daysInMonth + $prependDays) / 7);
+        $numberOfWeeks = $this->getNumberOfWeeks($startDate);
 
         for ($weekNumber = 0; $weekNumber < $numberOfWeeks; $weekNumber++) {
             /** @var CalendarWeek $week */
@@ -156,5 +149,50 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
             }
             $calendarMonth->addWeek($week);
         }
+    }
+
+    /**
+     * @param \DateTime $startDate
+     * @return int
+     */
+    protected function getNumberOfDaysInMonth(\DateTime $startDate)
+    {
+        $daysInMonth = (int)$startDate->format('t');
+        return $daysInMonth;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     * @return int
+     */
+    protected function getNumberOfDaysToAppend(\DateTime $startDate)
+    {
+        $daysInMonth = $this->getNumberOfDaysInMonth($startDate);
+        $prependDays = $this->getNumberOfDaysToPrepend($startDate);
+        $numberOfWeeks = $this->getNumberOfWeeks($startDate);
+        $numberOfDaysOfNextMonth = $numberOfWeeks * 7 - $daysInMonth - $prependDays;
+        return $numberOfDaysOfNextMonth;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     * @return int
+     */
+    protected function getNumberOfDaysToPrepend(\DateTime $startDate)
+    {
+        $prependDays = (int)$startDate->format('N') - 1;
+        return $prependDays;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     * @return int
+     */
+    protected function getNumberOfWeeks(\DateTime $startDate)
+    {
+        $daysInMonth = $this->getNumberOfDaysInMonth($startDate);
+        $prependDays = $this->getNumberOfDaysToPrepend($startDate);
+        $numberOfWeeks = (int)ceil(($daysInMonth + $prependDays) / 7);
+        return $numberOfWeeks;
     }
 }
