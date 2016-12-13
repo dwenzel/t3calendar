@@ -15,12 +15,13 @@ namespace DWenzel\T3calendar\Domain\Model\Dto;
  */
 
 use DWenzel\T3calendar\Domain\Factory\ObjectManagerTrait;
+use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Class CalendarConfigurationFactory
  * @package DWenzel\T3calendar\Domain\Model\Dto
  */
-class CalendarConfigurationFactory implements CalendarConfigurationFactoryInterface
+class CalendarConfigurationFactory implements CalendarConfigurationFactoryInterface, SingletonInterface
 {
     use ObjectManagerTrait;
 
