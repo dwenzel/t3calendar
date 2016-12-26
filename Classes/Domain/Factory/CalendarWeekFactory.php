@@ -36,16 +36,18 @@ class CalendarWeekFactory implements CalendarWeekFactoryInterface, SingletonInte
     {
         /** @var CalendarWeek $calendarWeek */
         $calendarWeek = $this->objectManager->get(CalendarWeek::class);
-        $interval = new \DateInterval('P1D');
+
 
         for ($weekDay = 0; $weekDay < 7; $weekDay++) {
+            $dateOfDay = clone $startDate;
             if ($weekDay > 0) {
-                $startDate->add($interval);
+                $interval = new \DateInterval('P' . $weekDay . 'D');
+                $dateOfDay->add($interval);
             }
-            $current = ($currentDate == $startDate) ? true : false;
+            $current = ($currentDate == $dateOfDay) ? true : false;
 
             $day = $this->calendarDayFactory->create(
-                clone $startDate,
+                $dateOfDay,
                 $items,
                 $current
             );

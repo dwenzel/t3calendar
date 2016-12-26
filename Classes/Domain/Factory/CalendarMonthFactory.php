@@ -64,7 +64,7 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     }
 
     /**
-     * Appends the last calendar days of current month to the
+     * Appends the calendar days of current month to the
      * daysOfMonth array. Current month and number of
      * days in month are determined by startDate.
      * CalendarItemInterface objects will be added to the matching
