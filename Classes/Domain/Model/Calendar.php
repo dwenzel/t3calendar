@@ -36,6 +36,27 @@ class Calendar
     protected $currentWeek;
 
     /**
+     * @return CalendarQuarter
+     */
+    public function getCurrentQuarter()
+    {
+        return $this->currentQuarter;
+    }
+
+    /**
+     * @param CalendarQuarter $currentQuarter
+     */
+    public function setCurrentQuarter($currentQuarter)
+    {
+        $this->currentQuarter = $currentQuarter;
+    }
+
+    /**
+     * @var CalendarQuarter
+     */
+    protected $currentQuarter;
+
+    /**
      * @var CalendarYear
      */
     protected $currentYear;

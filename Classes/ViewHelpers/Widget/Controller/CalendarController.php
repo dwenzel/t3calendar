@@ -125,6 +125,25 @@ class CalendarController extends AbstractWidgetController
     }
 
     /**
+     * Quarter action
+     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
+     * @param int $origin Timestamp indicating the current start date of calendar.
+     */
+    public function quarterAction($shift = null, $origin = null)
+    {
+        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_QUARTER);
+        $this->adjustStartDate(CalendarConfiguration::PERIOD_QUARTER, $shift, $origin);
+        $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
+        $this->view->assignMultiple(
+            [
+                'configuration' => $this->configuration,
+                'calendar' => $calendar,
+                'calendarId' => $this->id
+            ]
+        );
+    }
+
+    /**
      * Year action
      * @param string $shift Shift action. Allowed: 'previous' and 'next'.
      * @param int $origin Timestamp indicating the current start date of calendar.
@@ -176,6 +195,11 @@ class CalendarController extends AbstractWidgetController
                     break;
                 case CalendarConfiguration::PERIOD_MONTH:
                     $dateString = 'first day of this month 00:00:00';
+                    break;
+                case CalendarConfiguration::PERIOD_QUARTER:
+                    // same interval - fall trough
+                case CalendarConfiguration::PERIOD_TRIMESTER:
+                    $dateString = date(sprintf('Y-%s-01', floor((date('n') - 1) / 3) * 3 + 1));
                     break;
                 case CalendarConfiguration::PERIOD_YEAR:
                     $dateString = date('Y') . '-01-01';

@@ -10,6 +10,9 @@
 			<f:case value="2">
 				<f:render section="actionLink" arguments="{action: 'month', shift: 'previous', configuration: configuration}"/>
 			</f:case>
+			<f:case value="3">
+				<f:render section="actionLink" arguments="{action: 'quarter', shift: 'previous', configuration: configuration}"/>
+			</f:case>
 			<f:case value="6">
 				<f:render section="actionLink" arguments="{action: 'year', shift: 'previous', configuration: configuration}"/>
 			</f:case>
@@ -28,6 +31,10 @@
 				class="button {f:if(condition: '{calendar.displayPeriod} == 2', then: 'active')}"
 		><f:translate key="displayPeriod.month" default="Month"/></f:widget.link>
 		<f:widget.link
+				action="quarter"
+				class="button {f:if(condition: '{calendar.displayPeriod} == 3', then: 'active')}"
+		><f:translate key="displayPeriod.quarter" default="Quarter"/></f:widget.link>
+		<f:widget.link
 				action="year"
 				class="button {f:if(condition: '{calendar.displayPeriod} == 6', then: 'active')}"
 		><f:translate key="displayPeriod.year" default="Year"/></f:widget.link>
@@ -41,6 +48,9 @@
 			</f:case>
 			<f:case value="2">
 				<f:render section="actionLink" arguments="{action: 'month', shift: 'next', configuration: configuration}"/>
+			</f:case>
+			<f:case value="3">
+				<f:render section="actionLink" arguments="{action: 'quarter', shift: 'next', configuration: configuration}"/>
 			</f:case>
 			<f:case value="6">
 				<f:render section="actionLink" arguments="{action: 'year', shift: 'next', configuration: configuration}"/>

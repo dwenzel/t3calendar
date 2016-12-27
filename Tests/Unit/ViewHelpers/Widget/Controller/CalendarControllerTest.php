@@ -513,4 +513,92 @@ class CalendarControllerTest extends UnitTestCase
             $this->configuration->getStartDate()
         );
     }
+    //
+    /**
+     * @test
+     */
+    public function quarterActionSetsDisplayPeriod()
+    {
+        $this->configuration->expects($this->once())
+            ->method('setDisplayPeriod')
+            ->with(CalendarConfiguration::PERIOD_QUARTER);
+
+        $this->subject->quarterAction();
+    }
+
+    /**
+     * @test
+     */
+    public function quarterActionSetsDefaultStartDate()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $dateString = date(sprintf('Y-%s-01', floor((date('n') - 1) / 3) * 3 + 1));
+        $expectedStartDate = new \DateTime($dateString, $timeZone);
+        $this->subject->quarterAction();
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    /**
+     * @test
+     */
+    public function quarterActionSetsDefaultStartDateForInvalidShift()
+    {
+        $invalidShift = 'foo';
+
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $dateString = date(sprintf('Y-%s-01', floor((date('n') - 1) / 3) * 3 + 1));
+        $expectedStartDate = new \DateTime($dateString, $timeZone);
+        $this->subject->quarterAction($invalidShift);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    /**
+     * provides valid shift and origin arguments for quarterAction
+     * @return array
+     */
+    public function quarterActionShiftOriginDataProvider()
+    {
+        return [
+            [1482706800, 'next', 'P3M', false],
+            [1482706800, 'previous', 'P3M', true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider quarterActionShiftOriginDataProvider
+     * @param int $origin
+     * @param string $shift
+     * @param string $interval Interval spec
+     * @param bool $invertInterval
+     */
+    public function quarterActionAdjustsStartDateByShiftAndOrigin($origin, $shift, $interval, $invertInterval)
+    {
+        $this->configuration->expects($this->atLeast(1))
+            ->method('getDisplayPeriod')
+            ->will($this->returnValue(CalendarConfiguration::PERIOD_QUARTER));
+        $expectedInterval = new \DateInterval($interval);
+        $expectedInterval->invert = $invertInterval;
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('@' . $origin);
+        $expectedStartDate->setTimezone($timeZone);
+        $expectedStartDate->add($expectedInterval);
+
+        $this->subject->quarterAction($shift, $origin);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+    }
 }

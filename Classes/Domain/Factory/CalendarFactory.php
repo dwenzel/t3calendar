@@ -27,7 +27,7 @@ class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
 {
     use ObjectManagerTrait, CalendarDayFactoryTrait,
         CalendarWeekFactoryTrait, CalendarMonthFactoryTrait,
-        CalendarYearFactoryTrait;
+        CalendarQuarterFactoryTrait, CalendarYearFactoryTrait;
 
     /**
      * Creates a Calendar from configuration.
@@ -65,6 +65,12 @@ class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
                 case CalendarConfiguration::PERIOD_YEAR:
                     $calendarYear = $this->calendarYearFactory->create($startDate, $currentDate, $items);
                     $calendar->setCurrentYear($calendarYear);
+                    break;
+                case CalendarConfiguration::PERIOD_QUARTER:
+                    // same interval - fall trough
+                case CalendarConfiguration::PERIOD_TRIMESTER:
+                    $calendarQuarter = $this->calendarQuarterFactory->create($startDate, $currentDate, $items);
+                    $calendar->setCurrentQuarter($calendarQuarter);
                     break;
                 default:
             }

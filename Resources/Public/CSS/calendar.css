@@ -5,6 +5,8 @@
 
 .tx-t3calendar-widget .comboView .calendarMonth,
 .tx-t3calendar-widget .comboView .calendarWeek,
+.tx-t3calendar-widget .comboView .calendarQuarter,
+.tx-t3calendar-widget .comboView .calendarQuarter .month,
 .tx-t3calendar-widget .comboView .calendarYear {
     width: 100%;
 }
@@ -20,6 +22,10 @@
 .tx-t3calendar-widget .comboView td.day {
     height: 10em;
     width: 14.285%;
+}
+
+.tx-t3calendar-widget .comboView .calendarQuarter td.day {
+    height: 4em;
 }
 
 .tx-t3calendar-widget .comboView .calendarYear td.day {
@@ -76,7 +82,8 @@
     font-weight: 700;
 }
 
-.tx-t3calendar-widget .calendarYear .legend {
+.tx-t3calendar-widget .calendarYear .legend,
+.tx-t3calendar-widget .calendarQuarter .legend {
     text-align: center;
 }
 

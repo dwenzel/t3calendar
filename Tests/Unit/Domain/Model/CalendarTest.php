@@ -12,14 +12,13 @@ namespace DWenzel\T3calendar\Tests\Unit\Domain\Model;
  */
 
 use TYPO3\CMS\Core\Tests\UnitTestCase;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use DWenzel\T3calendar\Domain\Model\Calendar;
 use DWenzel\T3calendar\Domain\Model\CalendarMonth;
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarYear;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
+use DWenzel\T3calendar\Domain\Model\CalendarQuarter;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
-use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
 
 /**
  * Class CalendarTest
@@ -157,7 +156,31 @@ class CalendarTest extends UnitTestCase {
 		);
 	}
 
-	/**
+    /**
+     * @test
+     * @covers ::getCurrentQuarter
+     */
+    public function getCurrentQuarterReturnsInitiallyNull() {
+        $this->assertNull(
+            $this->subject->getCurrentQuarter()
+        );
+    }
+
+    /**
+     * @test
+     * @covers ::setCurrentQuarter
+     */
+    public function setCurrentQuarterForObjectSetsCurrentQuarter() {
+        $quarter = new CalendarQuarter();
+        $this->subject->setCurrentQuarter($quarter);
+
+        $this->assertSame(
+            $quarter,
+            $this->subject->getCurrentQuarter()
+        );
+    }
+
+    /**
 	 * @test
 	 * @covers ::getCurrentDay
 	 */
