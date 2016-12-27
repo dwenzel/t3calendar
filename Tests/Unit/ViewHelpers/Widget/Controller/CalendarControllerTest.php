@@ -70,8 +70,7 @@ class CalendarControllerTest extends UnitTestCase
         );
         $this->view = $this->getMock(ViewInterface::class);
         $this->subject->_set('view', $this->view);
-        $this->configuration = $this->getMock(CalendarConfiguration::class, ['getDisplayPeriod']);
-        $this->subject->_set('configuration', $this->configuration);
+        $this->mockConfiguration();
         $this->objectManager = $this->getMock(ObjectManagerInterface::class);
         $this->subject->injectObjectManager($this->objectManager);
         $this->calendarFactory = $this->getMock(
@@ -80,7 +79,21 @@ class CalendarControllerTest extends UnitTestCase
         $this->calendarFactory->method('create')->will($this->returnValue($this->configuration));
         $this->subject->injectCalendarFactory($this->calendarFactory);
         $this->subject->_set('objects', $this->objects);
+    }
 
+    /**
+     * mocks the configuration
+     */
+    protected function mockConfiguration()
+    {
+        $this->configuration = $this->getMock(
+            CalendarConfiguration::class,
+            ['getDisplayPeriod', 'setDisplayPeriod']
+        );
+        $startDate = new \DateTime();
+        $this->configuration->setStartDate($startDate);
+
+        $this->subject->_set('configuration', $this->configuration);
     }
 
     /**
@@ -159,5 +172,257 @@ class CalendarControllerTest extends UnitTestCase
 
         $this->subject->indexAction();
 
+    }
+
+    /**
+     * @test
+     */
+    public function dayActionSetsDisplayPeriod()
+    {
+        $this->configuration->expects($this->once())
+            ->method('setDisplayPeriod')
+            ->with(CalendarConfiguration::PERIOD_DAY);
+
+        $this->subject->dayAction();
+    }
+
+    /**
+     * @test
+     */
+    public function dayActionSetsDefaultStartDateToday()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('today', $timeZone);
+        $this->subject->dayAction();
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    public function dayActionShiftOriginDataProvider()
+    {
+        return [
+            [1234567, 'next', 'P1D', false],
+            [1234567, 'previous', 'P1D', true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider dayActionShiftOriginDataProvider
+     * @param int $origin
+     * @param string $shift
+     * @param string $interval Interval spec
+     * @param bool $invertInterval
+     */
+    public function dayActionAdjustsStartDateByShiftAndOrigin($origin, $shift, $interval, $invertInterval)
+    {
+        $expectedInterval = new \DateInterval($interval);
+        $expectedInterval->invert = $invertInterval;
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('@' . $origin, $timeZone);
+        $expectedStartDate->add($expectedInterval);
+
+        $this->subject->dayAction($shift, $origin);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function weekActionSetsDisplayPeriod()
+    {
+        $this->configuration->expects($this->once())
+            ->method('setDisplayPeriod')
+            ->with(CalendarConfiguration::PERIOD_WEEK);
+
+        $this->subject->weekAction();
+    }
+
+    /**
+     * @test
+     */
+    public function weekActionSetsDefaultStartDate()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('monday this week', $timeZone);
+        $this->subject->weekAction();
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    public function weekActionShiftOriginDataProvider()
+    {
+        return [
+            [1482706800, 'next', 'P1W', false],
+            [1482706800, 'previous', 'P1W', true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider weekActionShiftOriginDataProvider
+     * @param int $origin
+     * @param string $shift
+     * @param string $interval Interval spec
+     * @param bool $invertInterval
+     */
+    public function weekActionAdjustsStartDateByShiftAndOrigin($origin, $shift, $interval, $invertInterval)
+    {
+        $this->configuration->expects($this->atLeast(1))
+            ->method('getDisplayPeriod')
+            ->will($this->returnValue(CalendarConfiguration::PERIOD_WEEK));
+        $expectedInterval = new \DateInterval($interval);
+        $expectedInterval->invert = $invertInterval;
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('@' . $origin);
+        $expectedStartDate->setTimezone($timeZone);
+        $expectedStartDate->add($expectedInterval);
+
+        $this->subject->weekAction($shift, $origin);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function monthActionSetsDisplayPeriod()
+    {
+        $this->configuration->expects($this->once())
+            ->method('setDisplayPeriod')
+            ->with(CalendarConfiguration::PERIOD_MONTH);
+
+        $this->subject->monthAction();
+    }
+
+    /**
+     * @test
+     */
+    public function monthActionSetsDefaultStartDate()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('first day of this month 00:00:00', $timeZone);
+        $this->subject->monthAction();
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    public function monthActionShiftOriginDataProvider()
+    {
+        return [
+            [1482706800, 'next', 'P1M', false],
+            [1482706800, 'previous', 'P1M', true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider monthActionShiftOriginDataProvider
+     * @param int $origin
+     * @param string $shift
+     * @param string $interval Interval spec
+     * @param bool $invertInterval
+     */
+    public function monthActionAdjustsStartDateByShiftAndOrigin($origin, $shift, $interval, $invertInterval)
+    {
+        $this->configuration->expects($this->atLeast(1))
+            ->method('getDisplayPeriod')
+            ->will($this->returnValue(CalendarConfiguration::PERIOD_MONTH));
+        $expectedInterval = new \DateInterval($interval);
+        $expectedInterval->invert = $invertInterval;
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('@' . $origin);
+        $expectedStartDate->setTimezone($timeZone);
+        $expectedStartDate->add($expectedInterval);
+
+        $this->subject->monthAction($shift, $origin);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function yearActionSetsDisplayPeriod()
+    {
+        $this->configuration->expects($this->once())
+            ->method('setDisplayPeriod')
+            ->with(CalendarConfiguration::PERIOD_YEAR);
+
+        $this->subject->yearAction();
+    }
+
+    /**
+     * @test
+     */
+    public function yearActionSetsDefaultStartDate()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime(date('Y') . '-01-01', $timeZone);
+        $this->subject->yearAction();
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    public function yearActionShiftOriginDataProvider()
+    {
+        return [
+            [1482706800, 'next', 'P1Y', false],
+            [1482706800, 'previous', 'P1Y', true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider yearActionShiftOriginDataProvider
+     * @param int $origin
+     * @param string $shift
+     * @param string $interval Interval spec
+     * @param bool $invertInterval
+     */
+    public function yearActionAdjustsStartDateByShiftAndOrigin($origin, $shift, $interval, $invertInterval)
+    {
+        $this->configuration->expects($this->atLeast(1))
+            ->method('getDisplayPeriod')
+            ->will($this->returnValue(CalendarConfiguration::PERIOD_YEAR));
+        $expectedInterval = new \DateInterval($interval);
+        $expectedInterval->invert = $invertInterval;
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('@' . $origin);
+        $expectedStartDate->setTimezone($timeZone);
+        $expectedStartDate->add($expectedInterval);
+
+        $this->subject->yearAction($shift, $origin);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
     }
 }

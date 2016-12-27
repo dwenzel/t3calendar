@@ -7,20 +7,24 @@
                 <f:if condition="{settings.showCalendarNavigation}">
                     <td colspan="7" class="navigation">
                         <f:widget.link
-                                arguments="{display: 'previous', period: '2', date: '{f:format.date(format:\'U\',date:\'-11 months\',base:\'{configuration.startDate}\')}'}">
+                                action="month"
+                                arguments="{shift: 'previous', origin: '{f:format.date(format:\'U\',date:\'-11 months\',base:\'{configuration.startDate}\')}'}">
                             <i class="fa fa-2x fa-angle-double-left"></i>
                         </f:widget.link>
                         <f:widget.link
-                                arguments="{display: 'previous', period: '2', date: '{configuration.startDate.timestamp}'}">
+                                action="month"
+                                arguments="{shift: 'previous', origin: '{configuration.startDate.timestamp}'}">
                             <i class="fa fa-2x fa-angle-left"></i>
                         </f:widget.link>
                         <span class="legend">{month.startDate->f:format.date(format: '%B %Y')}</span>
                         <f:widget.link
-                                arguments="{display: 'next', period: '2', date: '{configuration.startDate.timestamp}'}">
+                                action="month"
+                                arguments="{shift: 'next', origin: '{configuration.startDate.timestamp}'}">
                             <i class="fa fa-2x fa-angle-right"></i>
                         </f:widget.link>
                         <f:widget.link
-                                arguments="{display: 'previous', period: '2', date: '{f:format.date(format:\'U\',date:\'+13 months\',base:\'{configuration.startDate}\')}'}">
+                                action="month"
+                                arguments="{shift: 'next', origin: '{f:format.date(format:\'U\',date:\'+13 months\',base:\'{configuration.startDate}\')}'}">
                             <i class="fa fa-2x fa-angle-double-right"></i>
                         </f:widget.link>
                     </td>

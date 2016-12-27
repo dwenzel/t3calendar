@@ -1,30 +1,65 @@
-<div class="navigation">
+<div class="navigation" xmlns:f="https://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers">
 	<div class="button-group">
-		<f:widget.link arguments="{display: 'previous', period: '{configuration.displayPeriod}', date: '{configuration.startDate.timestamp}'}">
-			<i class="fa fa-2x fa-angle-left"></i>
-		</f:widget.link>
+		<f:switch expression="{calendar.displayPeriod}">
+			<f:case value="0">
+				<f:render section="actionLink" arguments="{action: 'day', shift: 'previous', configuration: configuration}"/>
+			</f:case>
+			<f:case value="1">
+				<f:render section="actionLink" arguments="{action: 'week', shift: 'previous', configuration: configuration}"/>
+			</f:case>
+			<f:case value="2">
+				<f:render section="actionLink" arguments="{action: 'month', shift: 'previous', configuration: configuration}"/>
+			</f:case>
+			<f:case value="6">
+				<f:render section="actionLink" arguments="{action: 'year', shift: 'previous', configuration: configuration}"/>
+			</f:case>
+		</f:switch>
+
 		<f:widget.link
-			arguments="{date: '{f:format.date(format: \'U\', base: \'+1d\', date: \'today\')}', period: 0}"
-			class="button {f:if(condition: '{calendar.displayPeriod} == 0', then: 'active')}"
-			>
-			<f:translate key="displayPeriod.day" default="Day" />
-		</f:widget.link>
-		<f:widget.link arguments="{period: 1, date: '{f:format.date(format: \'U\', base: \'+0d\', date: \'monday this week\')}'}"
-			class="button {f:if(condition: '{calendar.displayPeriod} == 1', then: 'active')}"
-			>
-			<f:translate key="displayPeriod.week" default="Week" />
-		</f:widget.link>
-		<f:widget.link arguments="{period: 2, date: '{f:format.date(format: \'U\', base: \'+1d\', date: \'first day of this month\')}'}"
-			class="button {f:if(condition: '{calendar.displayPeriod} == 2', then: 'active')}">
-			<f:translate key="displayPeriod.month" default="Month"/>
-		</f:widget.link>
-		<f:widget.link arguments="{period: 6, date: '{configuration.startDate.timestamp}'}"
-			class="button {f:if(condition: '{calendar.displayPeriod} == 6', then: 'active')}">
-			<f:translate key="displayPeriod.year" default="Year"/>
-		</f:widget.link>
-		<f:widget.link arguments="{display: 'next', period: '{configuration.displayPeriod}', date: '{configuration.startDate.timestamp}'}">
-			<i class="fa fa-2x fa-angle-right"></i>
-		</f:widget.link>
+				action="day"
+				class="button {f:if(condition: '{calendar.displayPeriod} == 0', then: 'active')}"
+		><f:translate key="displayPeriod.day" default="Day" /></f:widget.link>
+		<f:widget.link
+				action="week"
+				class="button {f:if(condition: '{calendar.displayPeriod} == 1', then: 'active')}"
+		><f:translate key="displayPeriod.week" default="Week" /></f:widget.link>
+		<f:widget.link
+				action="month"
+				class="button {f:if(condition: '{calendar.displayPeriod} == 2', then: 'active')}"
+		><f:translate key="displayPeriod.month" default="Month"/></f:widget.link>
+		<f:widget.link
+				action="year"
+				class="button {f:if(condition: '{calendar.displayPeriod} == 6', then: 'active')}"
+		><f:translate key="displayPeriod.year" default="Year"/></f:widget.link>
+
+		<f:switch expression="{calendar.displayPeriod}">
+			<f:case value="0">
+				<f:render section="actionLink" arguments="{action: 'day', shift: 'next', configuration: configuration}"/>
+			</f:case>
+			<f:case value="1">
+				<f:render section="actionLink" arguments="{action: 'week', shift: 'next', configuration: configuration}"/>
+			</f:case>
+			<f:case value="2">
+				<f:render section="actionLink" arguments="{action: 'month', shift: 'next', configuration: configuration}"/>
+			</f:case>
+			<f:case value="6">
+				<f:render section="actionLink" arguments="{action: 'year', shift: 'next', configuration: configuration}"/>
+			</f:case>
+		</f:switch>
 	</div>
 </div>
 
+<f:section name="actionLink">
+	<f:widget.link
+			action="{action}"
+			arguments="{shift: shift, origin: '{f:format.date(format:\'U\', date: \'{configuration.startDate}\')}'}">
+		<f:if condition="{0: shift} == {0: 'previous'}">
+			<f:then>
+				<i class="fa fa-2x fa-angle-left"></i>
+			</f:then>
+			<f:else>
+				<i class="fa fa-2x fa-angle-right" ></i>
+			</f:else>
+		</f:if>
+	</f:widget.link>
+</f:section>
