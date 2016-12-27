@@ -6,11 +6,13 @@ use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
 use DWenzel\T3calendar\Domain\Factory\CalendarMonthFactory;
 use DWenzel\T3calendar\Domain\Factory\CalendarWeekFactory;
 use DWenzel\T3calendar\Domain\Factory\CalendarYearFactory;
+use DWenzel\T3calendar\Domain\Factory\CalendarQuarterFactory;
 use DWenzel\T3calendar\Domain\Model\Calendar;
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarMonth;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
 use DWenzel\T3calendar\Domain\Model\CalendarYear;
+use DWenzel\T3calendar\Domain\Model\CalendarQuarter;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -58,6 +60,11 @@ class CalendarFactoryTest extends UnitTestCase
     protected $calendarYearFactory;
 
     /**
+     * @var CalendarQuarterFactory|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $calendarQuarterFactory;
+
+    /**
      * @var ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $objectManager;
@@ -82,6 +89,8 @@ class CalendarFactoryTest extends UnitTestCase
         $this->calendarMonthFactory->expects($this->any())
             ->method('create')
             ->will($this->returnValue($mockCalendarMonth));
+        $this->calendarQuarterFactory = $this->getMock(CalendarQuarterFactory::class, ['create']);
+        $this->subject->injectCalendarQuarterFactory($this->calendarQuarterFactory);
 
         $this->calendarYearFactory = $this->getMock(CalendarYearFactory::class, ['create']);
         $this->subject->injectCalendarYearFactory($this->calendarYearFactory);
@@ -333,4 +342,43 @@ class CalendarFactoryTest extends UnitTestCase
 
         $this->subject->create($mockConfiguration, $items);
     }
+
+    /**
+     * @test
+     */
+    public function createSetsCurrentQuarterForDisplayPeriodQuarterAndViewModeComboPane()
+    {
+        $viewMode = CalendarConfiguration::VIEW_MODE_COMBO_PANE;
+        $displayPeriod = CalendarConfiguration::PERIOD_QUARTER;
+
+        $startDate = new \DateTime();
+        $currentDate = new \DateTime();
+
+        $mockConfiguration = $this->mockConfiguration();
+        $items = [];
+
+        $mockCalendar = $this->getMock(Calendar::class);
+        $mockCalendarQuarter = $this->getMock(CalendarQuarter::class);
+        $this->objectManager->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($mockCalendar));
+        $mockConfiguration->expects($this->once())
+            ->method('getViewMode')
+            ->will($this->returnValue($viewMode));
+        $mockConfiguration->expects($this->once())
+            ->method('getDisplayPeriod')
+            ->will($this->returnValue($displayPeriod));
+
+        $this->calendarQuarterFactory->expects($this->once())
+            ->method('create')
+            ->with($startDate, $currentDate, $items)
+            ->will($this->returnValue($mockCalendarQuarter));
+
+        $mockCalendar->expects($this->once())
+            ->method('setCurrentQuarter')
+            ->with($mockCalendarQuarter);
+
+        $this->subject->create($mockConfiguration, $items);
+    }
+
 }
