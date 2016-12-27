@@ -54,7 +54,8 @@ class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
         if ($viewMode == CalendarConfiguration::VIEW_MODE_COMBO_PANE) {
             switch ($displayPeriod) {
                 case CalendarConfiguration::PERIOD_DAY:
-                    $calendarDay = $this->calendarDayFactory->create($currentDate, $items, true);
+                    $isCurrent = ($startDate == $currentDate)? true : false;
+                    $calendarDay = $this->calendarDayFactory->create($startDate, $items, $isCurrent);
                     $calendar->setCurrentDay($calendarDay);
                     break;
                 case CalendarConfiguration::PERIOD_WEEK:
