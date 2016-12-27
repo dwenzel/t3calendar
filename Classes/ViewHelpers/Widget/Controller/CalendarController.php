@@ -197,8 +197,6 @@ class CalendarController extends AbstractWidgetController
                     $dateString = 'first day of this month 00:00:00';
                     break;
                 case CalendarConfiguration::PERIOD_QUARTER:
-                    // same interval - fall trough
-                case CalendarConfiguration::PERIOD_TRIMESTER:
                     $dateString = date(sprintf('Y-%s-01', floor((date('n') - 1) / 3) * 3 + 1));
                     break;
                 case CalendarConfiguration::PERIOD_YEAR:
@@ -239,13 +237,8 @@ class CalendarController extends AbstractWidgetController
             case CalendarConfiguration::PERIOD_MONTH:
                 $intervalString = 'P1M';
                 break;
-            case CalendarConfiguration::PERIOD_TRIMESTER:
-                // same interval - fall trough
             case CalendarConfiguration::PERIOD_QUARTER:
                 $intervalString = 'P3M';
-                break;
-            case CalendarConfiguration::PERIOD_SEMESTER:
-                $intervalString = 'P6M';
                 break;
             case CalendarConfiguration::PERIOD_YEAR:
                 $intervalString = 'P1Y';

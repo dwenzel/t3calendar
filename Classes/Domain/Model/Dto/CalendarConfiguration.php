@@ -20,7 +20,6 @@ class CalendarConfiguration
     const PERIOD_WEEK = 1;
     const PERIOD_MONTH = 2;
     const PERIOD_QUARTER = 3;
-    const PERIOD_TRIMESTER = 4;
     const PERIOD_SEMESTER = 5;
     const PERIOD_YEAR = 6;
     const VIEW_MODE_COMBO_PANE = 1;

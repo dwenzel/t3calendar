@@ -67,8 +67,6 @@ class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
                     $calendar->setCurrentYear($calendarYear);
                     break;
                 case CalendarConfiguration::PERIOD_QUARTER:
-                    // same interval - fall trough
-                case CalendarConfiguration::PERIOD_TRIMESTER:
                     $calendarQuarter = $this->calendarQuarterFactory->create($startDate, $currentDate, $items);
                     $calendar->setCurrentQuarter($calendarQuarter);
                     break;
