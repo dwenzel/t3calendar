@@ -202,11 +202,15 @@ class CalendarControllerTest extends UnitTestCase
 
     }
 
+    /**
+     * provides valid shift and origin arguments for dayAction
+     * @return array
+     */
     public function dayActionShiftOriginDataProvider()
     {
         return [
             [1234567, 'next', 'P1D', false],
-            [1234567, 'previous', 'P1D', true],
+            [1234567, 'previous', 'P1D', true]
         ];
     }
 
@@ -237,6 +241,24 @@ class CalendarControllerTest extends UnitTestCase
     /**
      * @test
      */
+    public function dayActionSetsDefaultStartDateForInvalidShift()
+    {
+        $invalidShift = 'foo';
+
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('today', $timeZone);
+        $this->subject->dayAction($invalidShift);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    /**
+     * @test
+     */
     public function weekActionSetsDisplayPeriod()
     {
         $this->configuration->expects($this->once())
@@ -262,6 +284,28 @@ class CalendarControllerTest extends UnitTestCase
 
     }
 
+    /**
+     * @test
+     */
+    public function weekActionSetsDefaultStartDateForInvalidShift()
+    {
+        $invalidShift = 'foo';
+
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('monday this week', $timeZone);
+        $this->subject->weekAction($invalidShift);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    /**
+     * provides valid shift and origin arguments for weekAction
+     * @return array
+     */
     public function weekActionShiftOriginDataProvider()
     {
         return [
@@ -326,6 +370,28 @@ class CalendarControllerTest extends UnitTestCase
 
     }
 
+    /**
+     * @test
+     */
+    public function monthActionSetsDefaultStartDateForInvalidShift()
+    {
+        $invalidShift = 'foo';
+
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime('first day of this month 00:00:00', $timeZone);
+        $this->subject->monthAction($invalidShift);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    /**
+     * provides valid shift and origin arguments for monthAction
+     * @return array
+     */
     public function monthActionShiftOriginDataProvider()
     {
         return [
@@ -390,6 +456,28 @@ class CalendarControllerTest extends UnitTestCase
 
     }
 
+    /**
+     * @test
+     */
+    public function yearActionSetsDefaultStartDateForInvalidShift()
+    {
+        $invalidShift = 'foo';
+
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $expectedStartDate = new \DateTime(date('Y') . '-01-01', $timeZone);
+        $this->subject->yearAction($invalidShift);
+
+        $this->assertEquals(
+            $expectedStartDate,
+            $this->configuration->getStartDate()
+        );
+
+    }
+
+    /**
+     * provides valid shift and origin arguments for yearAction
+     * @return array
+     */
     public function yearActionShiftOriginDataProvider()
     {
         return [
