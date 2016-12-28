@@ -36,22 +36,6 @@ class Calendar
     protected $currentWeek;
 
     /**
-     * @return CalendarQuarter
-     */
-    public function getCurrentQuarter()
-    {
-        return $this->currentQuarter;
-    }
-
-    /**
-     * @param CalendarQuarter $currentQuarter
-     */
-    public function setCurrentQuarter($currentQuarter)
-    {
-        $this->currentQuarter = $currentQuarter;
-    }
-
-    /**
      * @var CalendarQuarter
      */
     protected $currentQuarter;
@@ -113,6 +97,26 @@ class Calendar
     public function setCurrentWeek(CalendarWeek $calendarWeek)
     {
         $this->currentWeek = $calendarWeek;
+    }
+
+    /**
+     * Gets the current quarter
+     *
+     * @return CalendarQuarter
+     */
+    public function getCurrentQuarter()
+    {
+        return $this->currentQuarter;
+    }
+
+    /**
+     * Sets the current quarter
+     *
+     * @param CalendarQuarter $currentQuarter
+     */
+    public function setCurrentQuarter(CalendarQuarter $currentQuarter)
+    {
+        $this->currentQuarter = $currentQuarter;
     }
 
     /**

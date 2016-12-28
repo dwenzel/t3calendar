@@ -33,7 +33,7 @@
 					<td class="day
 					{f:if(condition: '{calendarDay.month} != {month.month}', then: 'outOfMonth')}
 					{f:if(condition: '{calendarDay.isCurrent}', then: 'current')}
-					{f:if(condition: '{calendarDay.items->f:count()}', then: 'hasEvent')}">
+					{f:if(condition: '{calendarDay.hasItems}', then: 'hasEvent')}">
 						<div class="labelDay">{calendarDay.day}</div>
 						<f:for each="{calendarDay.items}" as="item">
 							<div class="eventTooltip">

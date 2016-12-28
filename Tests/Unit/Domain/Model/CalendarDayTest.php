@@ -255,4 +255,26 @@ class CalendarDayTest extends UnitTestCase
         );
     }
 
+    /**
+     * @test
+     */
+    public function hasItemsInitiallyReturnsFalse()
+    {
+        $this->assertFalse(
+            $this->subject->getHasItems()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function hasItemsReturnsTrueIfItemsNotEmpty()
+    {
+        $item = $this->getMockForAbstractClass(CalendarItemInterface::class);
+        $this->subject->addItem($item);
+
+        $this->assertTrue(
+            $this->subject->getHasItems()
+        );
+    }
 }

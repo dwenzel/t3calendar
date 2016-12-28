@@ -21,6 +21,8 @@ use DWenzel\T3calendar\Domain\Factory\CalendarWeekFactoryInterface;
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarMonth;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
@@ -53,6 +55,16 @@ class CalendarMonthFactoryTest extends UnitTestCase
     protected $calendarWeekFactory;
 
     /**
+     * @var CacheManager|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $cacheManager;
+
+    /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $monthCache;
+
+    /**
      * set up subject
      */
     public function setUp()
@@ -70,6 +82,21 @@ class CalendarMonthFactoryTest extends UnitTestCase
             CalendarWeekFactoryInterface::class
         );
         $this->subject->injectCalendarWeekFactory($this->calendarWeekFactory);
+
+        $this->monthCache = $this->getMock(VariableFrontend::class, ['get', 'set'], [], '', false);
+        $this->monthCache->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue(false));
+        $this->inject(
+            $this->subject,
+            'monthCache',
+            $this->monthCache
+        );
+        $this->cacheManager = $this->getMock(CacheManager::class, ['getCache']);
+        $this->cacheManager->expects($this->any())
+            ->method('getCache')
+            ->will($this->returnValue($this->monthCache));
+        $this->subject->injectCacheManager($this->cacheManager);
     }
 
     /**
@@ -166,6 +193,7 @@ class CalendarMonthFactoryTest extends UnitTestCase
             ['addDaysOfPreviousMonth', 'addDaysOfCurrentMonth', 'addDaysOfNextMonth', 'addWeeks']
         );
         $this->subject->injectObjectManager($this->objectManager);
+        $this->inject($this->subject, 'monthCache', $this->monthCache);
         $startDate = new \DateTime('now');
         $currentDate = new \DateTime('now');
         $mockCalendarMonth = $this->getMock(
@@ -193,6 +221,7 @@ class CalendarMonthFactoryTest extends UnitTestCase
             ['addDaysOfPreviousMonth', 'addDaysOfCurrentMonth', 'addDaysOfNextMonth', 'addWeeks']
         );
         $this->subject->injectObjectManager($this->objectManager);
+        $this->inject($this->subject, 'monthCache', $this->monthCache);
         $startDate = new \DateTime('now');
         $currentDate = new \DateTime('now');
         $mockCalendarMonth = $this->getMock(
@@ -220,6 +249,7 @@ class CalendarMonthFactoryTest extends UnitTestCase
             ['addDaysOfPreviousMonth', 'addDaysOfCurrentMonth', 'addDaysOfNextMonth', 'addWeeks']
         );
         $this->subject->injectObjectManager($this->objectManager);
+        $this->inject($this->subject, 'monthCache', $this->monthCache);
         $startDate = new \DateTime('now');
         $currentDate = new \DateTime('now');
         $mockCalendarMonth = $this->getMock(
@@ -246,6 +276,7 @@ class CalendarMonthFactoryTest extends UnitTestCase
             CalendarMonthFactory::class, ['getDaysOfMonth']
         );
         $this->subject->injectObjectManager($this->objectManager);
+        $this->inject($this->subject, 'monthCache', $this->monthCache);
 
         $startDate = new \DateTime('now');
         $currentDate = new \DateTime('now');
@@ -302,6 +333,7 @@ class CalendarMonthFactoryTest extends UnitTestCase
             ['addDaysOfPreviousMonth', 'addDaysOfCurrentMonth', 'addDaysOfNextMonth', 'addWeeks']
         );
         $this->subject->injectObjectManager($this->objectManager);
+        $this->inject($this->subject, 'monthCache', $this->monthCache);
 
         $startDate = new \DateTime('now');
         $currentDate = new \DateTime('now');
@@ -317,5 +349,63 @@ class CalendarMonthFactoryTest extends UnitTestCase
             ->with($startDate);
 
         $this->subject->create($startDate, $currentDate);
+    }
+
+    /**
+     * @test
+     */
+    public function initializeObjectGetsCalendarCacheFromManager()
+    {
+        $this->cacheManager->expects($this->once())
+            ->method('getCache')
+            ->with('t3calendar_month');
+        $this->subject->initializeObject();
+    }
+
+    /**
+     * @test
+     */
+    public function createAddsObjectToCache()
+    {
+        $startDate = new \DateTime('now');
+        $currentDate = new \DateTime('now');
+
+        $expectedCacheIdentifier = sha1(serialize($startDate) . serialize($currentDate));
+        $mockCalendarMonth = $this->getMock(CalendarMonth::class);
+
+        $this->objectManager->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($mockCalendarMonth));
+        $this->monthCache->expects($this->once())
+            ->method('set')
+            ->with($expectedCacheIdentifier, $mockCalendarMonth);
+
+        $this->subject->create($startDate, $currentDate);
+    }
+
+    /**
+     * @test
+     */
+    public function createReturnsObjectFromCache()
+    {
+        $startDate = new \DateTime('now');
+        $currentDate = new \DateTime('now');
+
+        $expectedCacheIdentifier = sha1(serialize($startDate) . serialize($currentDate));
+        $this->monthCache = $this->getMock(VariableFrontend::class, ['get'], [], '', false);
+        $this->inject($this->subject, 'monthCache', $this->monthCache);
+
+        $mockCalendarMonth = $this->getMock(CalendarMonth::class);
+
+        $this->objectManager->expects($this->never())->method('get');
+        $this->monthCache->expects($this->once())
+            ->method('get')
+            ->with($expectedCacheIdentifier)
+            ->will($this->returnValue($mockCalendarMonth));
+
+        $this->assertSame(
+            $mockCalendarMonth,
+            $this->subject->create($startDate, $currentDate)
+        );
     }
 }

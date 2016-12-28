@@ -14,6 +14,7 @@ namespace DWenzel\T3calendar\Domain\Factory;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DWenzel\T3calendar\Cache\CacheManagerTrait;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
 use TYPO3\CMS\Core\SingletonInterface;
 use DWenzel\T3calendar\Domain\Model\CalendarMonth;
@@ -24,7 +25,23 @@ use DWenzel\T3calendar\Domain\Model\CalendarMonth;
  */
 class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonInterface
 {
-    use ObjectManagerTrait, CalendarDayFactoryTrait, CalendarWeekFactoryTrait;
+    use ObjectManagerTrait, CacheManagerTrait,
+        CalendarDayFactoryTrait, CalendarWeekFactoryTrait;
+
+    /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
+     */
+    protected $monthCache;
+
+    /**
+     * Lifecycle method
+     *
+     * @return void
+     */
+    public function initializeObject()
+    {
+        $this->monthCache = $this->cacheManager->getCache('t3calendar_month');
+    }
 
     /**
      * creates a CalendarMonth object
@@ -36,11 +53,18 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      */
     public function create(\DateTime $startDate, \DateTime $currentDate, $items = null)
     {
-        /** @var CalendarMonth $calendarMonth */
-        $calendarMonth = $this->objectManager->get(CalendarMonth::class);
-        $calendarMonth->setStartDate($startDate);
-        $daysOfMonth = $this->getDaysOfMonth($startDate, $currentDate, $items);
-        $this->addWeeks($startDate, $calendarMonth, $daysOfMonth);
+        $cacheIdentifier = sha1(serialize($startDate) . serialize($currentDate));
+        $calendarMonth = $this->monthCache->get($cacheIdentifier);
+
+        if ($calendarMonth === false) {
+            /** @var CalendarMonth $calendarMonth */
+            $calendarMonth = $this->objectManager->get(CalendarMonth::class);
+            $calendarMonth->setStartDate($startDate);
+            $daysOfMonth = $this->getDaysOfMonth($startDate, $currentDate, $items);
+            $this->addWeeks($startDate, $calendarMonth, $daysOfMonth);
+
+            $this->monthCache->set($cacheIdentifier, $calendarMonth);
+        }
 
         return $calendarMonth;
     }

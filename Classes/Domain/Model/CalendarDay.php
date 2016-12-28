@@ -186,4 +186,13 @@ class CalendarDay
 
         return NULL;
     }
+
+    /**
+     * Tells if the calendar day has items
+     * @return bool
+     */
+    public function getHasItems()
+    {
+        return ($this->items->count())? true : false;
+    }
 }
