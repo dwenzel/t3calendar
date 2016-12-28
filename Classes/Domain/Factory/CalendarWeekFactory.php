@@ -14,6 +14,7 @@ namespace DWenzel\T3calendar\Domain\Factory;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DWenzel\T3calendar\Cache\CacheManagerTrait;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
 use TYPO3\CMS\Core\SingletonInterface;
 
@@ -23,7 +24,23 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class CalendarWeekFactory implements CalendarWeekFactoryInterface, SingletonInterface
 {
-    use ObjectManagerTrait, CalendarDayFactoryTrait;
+    use CacheManagerTrait, ObjectManagerTrait, CalendarDayFactoryTrait;
+
+    /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
+     */
+    protected $weekCache;
+
+    /**
+     * Lifecycle method
+     *
+     * @return void
+     */
+    public function initializeObject()
+    {
+        $this->weekCache = $this->cacheManager->getCache('t3calendar_week');
+    }
+
     /**
      * creates a CalendarWeek object
      *
@@ -34,24 +51,30 @@ class CalendarWeekFactory implements CalendarWeekFactoryInterface, SingletonInte
      */
     public function create(\DateTime $startDate, \DateTime $currentDate, $items = null)
     {
-        /** @var CalendarWeek $calendarWeek */
-        $calendarWeek = $this->objectManager->get(CalendarWeek::class);
+        $cacheIdentifier = sha1(serialize($startDate) . serialize($currentDate));
+        $calendarWeek = $this->weekCache->get($cacheIdentifier);
 
+        if ($calendarWeek === false) {
+            /** @var CalendarWeek $calendarWeek */
+            $calendarWeek = $this->objectManager->get(CalendarWeek::class);
 
-        for ($weekDay = 0; $weekDay < 7; $weekDay++) {
-            $dateOfDay = clone $startDate;
-            if ($weekDay > 0) {
-                $interval = new \DateInterval('P' . $weekDay . 'D');
-                $dateOfDay->add($interval);
+            for ($weekDay = 0; $weekDay < 7; $weekDay++) {
+                $dateOfDay = clone $startDate;
+                if ($weekDay > 0) {
+                    $interval = new \DateInterval('P' . $weekDay . 'D');
+                    $dateOfDay->add($interval);
+                }
+                $current = ($currentDate == $dateOfDay) ? true : false;
+
+                $day = $this->calendarDayFactory->create(
+                    $dateOfDay,
+                    $items,
+                    $current
+                );
+                $calendarWeek->addDay($day);
             }
-            $current = ($currentDate == $dateOfDay) ? true : false;
 
-            $day = $this->calendarDayFactory->create(
-                $dateOfDay,
-                $items,
-                $current
-            );
-            $calendarWeek->addDay($day);
+            $this->weekCache->set($cacheIdentifier, $calendarWeek);
         }
 
         return $calendarWeek;

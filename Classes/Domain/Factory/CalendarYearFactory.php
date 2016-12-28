@@ -14,6 +14,7 @@ namespace DWenzel\T3calendar\Domain\Factory;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DWenzel\T3calendar\Cache\CacheManagerTrait;
 use TYPO3\CMS\Core\SingletonInterface;
 use DWenzel\T3calendar\Domain\Model\CalendarYear;
 
@@ -23,7 +24,22 @@ use DWenzel\T3calendar\Domain\Model\CalendarYear;
  */
 class CalendarYearFactory implements CalendarYearFactoryInterface, SingletonInterface
 {
-    use ObjectManagerTrait, CalendarMonthFactoryTrait;
+    use CacheManagerTrait, ObjectManagerTrait, CalendarMonthFactoryTrait;
+
+    /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
+     */
+    protected $yearCache;
+
+    /**
+     * Lifecycle method
+     *
+     * @return void
+     */
+    public function initializeObject()
+    {
+        $this->yearCache = $this->cacheManager->getCache('t3calendar_year');
+    }
 
     /**
      * creates a CalendarYear object
@@ -35,20 +51,28 @@ class CalendarYearFactory implements CalendarYearFactoryInterface, SingletonInte
      */
     public function create(\DateTime $startDate, \DateTime $currentDate, $items = null)
     {
-        /** @var CalendarYear $calendarYear */
-        $calendarYear = $this->objectManager->get(CalendarYear::class);
-        $calendarYear->setStartDate($startDate);
+        $cacheIdentifier = sha1(serialize($startDate) . serialize($currentDate));
+        $calendarYear = $this->yearCache->get($cacheIdentifier);
 
-        for ($monthOfYear = 0; $monthOfYear < 12; $monthOfYear++) {
-            $startDateOfMonth = clone $startDate;
+        if ($calendarYear === false) {
+            echo 'no cache';
+            /** @var CalendarYear $calendarYear */
+            $calendarYear = $this->objectManager->get(CalendarYear::class);
+            $calendarYear->setStartDate($startDate);
 
-            if ($monthOfYear > 0) {
-                $interval = new \DateInterval('P' . $monthOfYear . 'M');
-                $startDateOfMonth->add($interval);
+            for ($monthOfYear = 0; $monthOfYear < 12; $monthOfYear++) {
+                $startDateOfMonth = clone $startDate;
+
+                if ($monthOfYear > 0) {
+                    $interval = new \DateInterval('P' . $monthOfYear . 'M');
+                    $startDateOfMonth->add($interval);
+                }
+
+                $currentMonth = $this->calendarMonthFactory->create($startDateOfMonth, $currentDate, $items);
+                $calendarYear->addMonth($currentMonth);
             }
 
-            $currentMonth = $this->calendarMonthFactory->create($startDateOfMonth, $currentDate, $items);
-            $calendarYear->addMonth($currentMonth);
+            $this->yearCache->set($cacheIdentifier, $calendarYear);
         }
 
         return $calendarYear;

@@ -20,6 +20,8 @@ use DWenzel\T3calendar\Domain\Factory\CalendarWeekFactory;
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
 use phpDocumentor\Reflection\Types\Boolean;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
@@ -47,6 +49,16 @@ class CalendarWeekFactoryTest extends UnitTestCase
     protected $calendarDayFactory;
 
     /**
+     * @var CacheManager|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $cacheManager;
+
+    /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $weekCache;
+
+    /**
      * set up subject
      */
     public function setUp()
@@ -60,6 +72,20 @@ class CalendarWeekFactoryTest extends UnitTestCase
             CalendarDayFactoryInterface::class
         );
         $this->subject->injectCalendarDayFactory($this->calendarDayFactory);
+        $this->weekCache = $this->getMock(VariableFrontend::class, ['get', 'set'], [], '', false);
+        $this->weekCache->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue(false));
+        $this->inject(
+            $this->subject,
+            'weekCache',
+            $this->weekCache
+        );
+        $this->cacheManager = $this->getMock(CacheManager::class, ['getCache']);
+        $this->cacheManager->expects($this->any())
+            ->method('getCache')
+            ->will($this->returnValue($this->weekCache));
+        $this->subject->injectCacheManager($this->cacheManager);
     }
 
     /**
@@ -146,5 +172,67 @@ class CalendarWeekFactoryTest extends UnitTestCase
             ->with($mockCalendarDay);
 
         $this->subject->create($mockStartDate, $mockCurrentDate, $items);
+    }
+
+    /**
+     * @test
+     */
+    public function initializeObjectGetsCalendarCacheFromManager()
+    {
+        $this->cacheManager->expects($this->once())
+            ->method('getCache')
+            ->with('t3calendar_week');
+        $this->subject->initializeObject();
+    }
+
+    /**
+     * @test
+     */
+    public function createAddsObjectToCache()
+    {
+        $startDate = new \DateTime('now');
+        $currentDate = new \DateTime('now');
+
+        $expectedCacheIdentifier = sha1(serialize($startDate) . serialize($currentDate));
+        $mockCalendarWeek = $this->getMock(CalendarWeek::class);
+        $mockCalendarDay = $this->getMock(CalendarDay::class);
+        $this->calendarDayFactory->expects($this->any())
+            ->method('create')
+            ->will($this->returnValue($mockCalendarDay));
+
+        $this->objectManager->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($mockCalendarWeek));
+        $this->weekCache->expects($this->once())
+            ->method('set')
+            ->with($expectedCacheIdentifier, $mockCalendarWeek);
+
+        $this->subject->create($startDate, $currentDate);
+    }
+
+    /**
+     * @test
+     */
+    public function createReturnsObjectFromCache()
+    {
+        $startDate = new \DateTime('now');
+        $currentDate = new \DateTime('now');
+
+        $expectedCacheIdentifier = sha1(serialize($startDate) . serialize($currentDate));
+        $this->weekCache = $this->getMock(VariableFrontend::class, ['get'], [], '', false);
+        $this->inject($this->subject, 'weekCache', $this->weekCache);
+
+        $mockCalendarWeek = $this->getMock(CalendarWeek::class);
+
+        $this->objectManager->expects($this->never())->method('get');
+        $this->weekCache->expects($this->once())
+            ->method('get')
+            ->with($expectedCacheIdentifier)
+            ->will($this->returnValue($mockCalendarWeek));
+
+        $this->assertSame(
+            $mockCalendarWeek,
+            $this->subject->create($startDate, $currentDate)
+        );
     }
 }
