@@ -55,7 +55,6 @@ class CalendarYearFactory implements CalendarYearFactoryInterface, SingletonInte
         $calendarYear = $this->yearCache->get($cacheIdentifier);
 
         if ($calendarYear === false) {
-            echo 'no cache';
             /** @var CalendarYear $calendarYear */
             $calendarYear = $this->objectManager->get(CalendarYear::class);
             $calendarYear->setStartDate($startDate);
