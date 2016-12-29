@@ -1,0 +1,89 @@
+
+.tx-t3calendar-widget .miniMonth .calendarMonth {
+    display: inline-block;
+}
+
+.tx-t3calendar-widget .comboView .calendarMonth,
+.tx-t3calendar-widget .comboView .calendarWeek,
+.tx-t3calendar-widget .comboView .calendarQuarter,
+.tx-t3calendar-widget .comboView .calendarQuarter .month,
+.tx-t3calendar-widget .comboView .calendarYear {
+    width: 100%;
+}
+
+.tx-t3calendar-widget .day {
+    padding: 0.3em;
+}
+
+.tx-t3calendar-widget .miniMonth td.day {
+    text-align: center;
+}
+
+.tx-t3calendar-widget .comboView td.day {
+    height: 10em;
+    width: 14.285%;
+}
+
+.tx-t3calendar-widget .comboView .calendarQuarter td.day {
+    height: 4em;
+}
+
+.tx-t3calendar-widget .comboView .calendarYear td.day {
+    height: 1em;
+    width: 15%;
+}
+
+.tx-t3calendar-widget .comboView .labelDay {
+    text-align: right;
+}
+
+.tx-t3calendar-widget td.current {
+    border: 1px solid;
+}
+
+.tx-t3calendar-widget td.outOfMonth {
+    color: #CCCCCC;
+}
+
+.tx-t3calendar-widget .hasEvent {
+    background-color: #E6E6E6;
+    position: relative;
+}
+
+.tx-t3calendar-widget .hasEvent .eventTooltip {
+    display: none;
+}
+
+.tx-t3calendar-widget .hasEvent:hover .eventTooltip {
+    display: block;
+    position: absolute;
+    bottom: 60%;
+    right: 30%;
+    padding: 5px;
+    background-color: #F2F2F2;
+    text-align: left;
+}
+
+.tx-t3calendar-widget .header,
+.tx-t3calendar-widget .navigation {
+    text-align: center;
+}
+
+.tx-t3calendar-widget .navigation i.fa-2x.fa-angle-left,
+.tx-t3calendar-widget .navigation i.fa-2x.fa-angle-right,
+.tx-t3calendar-widget .navigation i.fa-2x.fa-angle-double-right,
+.tx-t3calendar-widget .navigation i.fa-2x.fa-angle-double-left {
+    position: relative;
+    top: 0.1em;
+}
+
+.tx-t3calendar-widget .legend {
+    margin: 0 1em;
+    font-weight: 700;
+}
+
+.tx-t3calendar-widget .calendarYear .legend,
+.tx-t3calendar-widget .calendarQuarter .legend {
+    text-align: center;
+}
+

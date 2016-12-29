@@ -1,0 +1,24 @@
+<div class="calendar {f:if(condition: '{configuration.viewMode} == 2', then: 'miniMonth', else: 'comboView')}">
+    <f:if condition="{configuration.ajaxEnabled}">
+        <div id="loader">loading...</div>
+    </f:if>
+    <f:if condition="{configuration.viewMode} == 1">
+        <f:if condition="{settings.showCalendarNavigation}">
+            <f:then>
+                <f:render partial="Calendar/PeriodSwitch"
+                          arguments="{
+                    calendar: calendar,
+                    configuration: configuration,
+                    settings: settings,
+                    calendarId: calendarId}"/>
+            </f:then>
+        </f:if>
+    </f:if>
+    <f:render partial="Calendar/Month"
+              arguments="{
+            calendar: calendar,
+            month: '{calendar.currentMonth}',
+            configuration: configuration,
+            settings: settings,
+            calendarId: calendarId}"/>
+</div>

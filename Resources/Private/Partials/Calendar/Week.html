@@ -1,0 +1,36 @@
+<table class="calendarWeek">
+    <thead>
+    <tr class="header">
+        <td colspan="7" class="navigation">
+            <f:if condition="{calendar.currentWeek.days.0.month} == {calendar.currentWeek.days.6.month}">
+                <f:then>
+                    <span class="legend">{configuration.startDate->f:format.date(format: 'd.')} - {f:format.date(base: configuration.startDate, date:'+6 days',format: 'd. F Y')}</span>
+                </f:then>
+                <f:else>
+                    <span class="legend">{configuration.startDate->f:format.date(format: 'd. F Y')} - {f:format.date(base: configuration.startDate, date:'+6 days',format: 'd. F Y')}</span>
+                </f:else>
+            </f:if>
+        </td>
+    </tr>
+    <tr>
+        <f:for each="{calendar.weekDayLabels}" as="weekDay">
+            <th class="weekDay">{weekDay}</th>
+        </f:for>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <f:for each="{calendar.currentWeek.days}" as="calendarDay">
+            <td class="day {f:if(condition: '{calendarDay.isCurrent}', then: 'current')} {f:if(condition: '{calendarDay.hasItems}',then: 'hasEvent')}">
+                <div class="labelDay">{calendarDay.day}</div>
+                <f:for each="{calendarDay.items}" as="item">
+                    <div class="event">
+                        Item {item.uid}
+                    </div>
+                </f:for>
+            </td>
+        </f:for>
+    </tr>
+    </tbody>
+</table>
+

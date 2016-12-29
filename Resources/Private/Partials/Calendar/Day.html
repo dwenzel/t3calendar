@@ -1,0 +1,12 @@
+<div class="day {f:if(condition: '{calendarDay.month} != {calendar.currentMonth.month}', then: 'outOfMonth')} {f:if(condition: '{calendarDay.isCurrent}', then: 'current')} {f:if(condition: '{calendarDay.hasItems}',then: 'hasEvent')}">
+	<div class="header">
+		<span class="legend">
+			<f:format.date format="{f:translate(key: 'format.day', default: 'l, j. F Y')}">{calendar.currentDay.date}</f:format.date>
+		</span>
+		<f:for each="{calendar.currentDay.items}" as="item">
+			<div class="item">
+					Item {item.uid}
+			</div>
+		</f:for>
+	</div>
+</div>
