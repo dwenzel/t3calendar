@@ -1,3 +1,7 @@
+2016-12-30         [RELEASE] Release of t3calendar 0.1.1 (Dirk Wenzel)
+2016-12-30 bf20010 [TASK] call codecov script with branch variable (Dirk Wenzel)
+2016-12-29 24c062b [BUGFIX] obsolete echo statement removed (Dirk Wenzel)
+
 2016-12-29         [RELEASE] Release of t3calendar 0.1.0 (Dirk Wenzel)
 2016-12-28 5e73a5c [TASK] CalendarWeekFactory and CalendarYearFactory now do use caches too. (Dirk Wenzel)
 2016-12-28 16e8eeb [TASK] CacheManagerTrait implemented. CalendarFactory and CalendarMonthFactory now use caches. CalendarDay extended by method getHasItems to prevent expensive usage of f:count view helper in templates. (Dirk Wenzel)
@@ -24,5 +28,3 @@
 2016-12-03 9f3cbb7 [TASK] Unit tests for Calendar added. (Dirk Wenzel)
 2016-12-03 a26222d [BUGFIX] fixed missing getter and setter methods in  CalendarDay. Code style. (Dirk Wenzel)
 2016-12-03 4215f29 [TASK] Calendar classes ported from t3events. CalendarFactory and CalendarItemInterface added. (Dirk Wenzel)
-
-
