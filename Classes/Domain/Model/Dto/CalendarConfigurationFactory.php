@@ -78,6 +78,10 @@ class CalendarConfigurationFactory implements CalendarConfigurationFactoryInterf
             $configuration->setAjaxEnabled((bool)$settings['ajaxEnabled']);
         }
 
+        if (isset($settings['showCalendarNavigation'])) {
+            $configuration->setShowNavigation((bool)$settings['showCalendarNavigation']);
+        }
+
         $configuration->setViewMode($viewMode);
 
         return $configuration;

@@ -4,9 +4,10 @@ if (!defined('TYPO3_MODE')) {
 }
 
 // register caches
-foreach (['calendar', 'year', 'quarter', 'month', 'week'] as $period)
+foreach (['content'] as $identifier)
 {
-    if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['t3calendar_' . $period])) {
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['t3calendar_' . $period] = [];
+    if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['t3calendar_' . $identifier])) {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['t3calendar_' . $identifier] = [];
     }
 }
+unset($identifier);

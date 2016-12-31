@@ -3,7 +3,7 @@
         <div id="loader">loading...</div>
     </f:if>
     <f:if condition="{configuration.viewMode} == 1">
-        <f:if condition="{settings.showCalendarNavigation}">
+        <f:if condition="{configuration.showNavigation}">
             <f:then>
                 <f:render partial="Calendar/PeriodSwitch"
                           arguments="{

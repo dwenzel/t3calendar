@@ -29,6 +29,7 @@ class CalendarDay
 
     /**
      * @var ObjectStorage
+     * @lazy
      */
     protected $items;
 
@@ -194,5 +195,10 @@ class CalendarDay
     public function getHasItems()
     {
         return ($this->items->count())? true : false;
+    }
+
+    public function __sleep()
+    {
+        // TODO: Implement __sleep() method.
     }
 }

@@ -18,6 +18,8 @@ use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactoryInterface;
 use DWenzel\T3calendar\ViewHelpers\Widget\Controller\CalendarController;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -61,6 +63,16 @@ class CalendarControllerTest extends UnitTestCase
     protected $objects = [];
 
     /**
+     * @var CacheManager|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $cacheManager;
+
+    /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $contentCache;
+
+    /**
      * set up subject
      */
     public function setUp()
@@ -79,6 +91,21 @@ class CalendarControllerTest extends UnitTestCase
         $this->calendarFactory->method('create')->will($this->returnValue($this->configuration));
         $this->subject->injectCalendarFactory($this->calendarFactory);
         $this->subject->_set('objects', $this->objects);
+        $this->contentCache = $this->getMock(VariableFrontend::class, ['get', 'set'], [], '', false);
+        $this->contentCache->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue(false));
+        $this->inject(
+            $this->subject,
+            'contentCache',
+            $this->contentCache
+        );
+        $this->cacheManager = $this->getMock(CacheManager::class, ['getCache']);
+        $this->cacheManager->expects($this->any())
+            ->method('getCache')
+            ->will($this->returnValue($this->contentCache));
+        $this->subject->injectCacheManager($this->cacheManager);
+
     }
 
     /**
@@ -600,5 +627,16 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function initializeObjectGetsCalendarCacheFromManager()
+    {
+        $this->cacheManager->expects($this->once())
+            ->method('getCache')
+            ->with('t3calendar_content');
+        $this->subject->initializeObject();
     }
 }
