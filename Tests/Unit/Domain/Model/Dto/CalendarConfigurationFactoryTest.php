@@ -52,7 +52,15 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
     {
         $mockConfiguration = $this->getMock(
             CalendarConfiguration::class,
-            ['setDisplayPeriod', 'getDisplayPeriod', 'setStartDate', 'setCurrentDate', 'setViewMode', 'setAjaxEnabled']
+            [
+                'setDisplayPeriod',
+                'getDisplayPeriod',
+                'setStartDate',
+                'setCurrentDate',
+                'setViewMode',
+                'setAjaxEnabled',
+                'setShowNavigation'
+            ]
         );
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -254,4 +262,37 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
         $this->subject->create($settings);
     }
 
+    /**
+     * Data provider for setting showNavigation
+     *
+     * @return array
+     */
+    public function showNavigationDataProvider()
+    {
+        return [
+            ['', false],
+            ['foo', true],
+            ['0', false],
+            [0, false],
+            ['1', true],
+            [1, true]
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider showNavigationDataProvider
+     */
+    public function createSetsShowNavigation($valueFromSettings, $expectedValue)
+    {
+        $settings = [
+            'showCalendarNavigation' => $valueFromSettings
+        ];
+        $mockConfiguration = $this->mockConfiguration();
+        $mockConfiguration->expects($this->once())
+            ->method('setShowNavigation')
+            ->with($expectedValue);
+
+        $this->subject->create($settings);
+    }
 }

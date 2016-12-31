@@ -4,7 +4,7 @@
         <f:if condition="{configuration.viewMode}==2">
             <f:then>
                 <f:comment> allow display of navigation in view mode miniMonth</f:comment>
-                <f:if condition="{settings.showCalendarNavigation}">
+                <f:if condition="{configuration.showNavigation}">
                     <td colspan="7" class="navigation">
                         <f:widget.link
                                 action="month"

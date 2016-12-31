@@ -61,6 +61,11 @@ class CalendarConfiguration
     protected $ajaxEnabled = false;
 
     /**
+     * @var bool
+     */
+    protected $showNavigation = false;
+
+    /**
      * Gets the start date
      *
      * @return \DateTime
@@ -153,5 +158,21 @@ class CalendarConfiguration
     public function setAjaxEnabled($enabled)
     {
         $this->ajaxEnabled = $enabled;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isShowNavigation()
+    {
+        return $this->showNavigation;
+    }
+
+    /**
+     * @param boolean $showNavigation
+     */
+    public function setShowNavigation($showNavigation)
+    {
+        $this->showNavigation = $showNavigation;
     }
 }

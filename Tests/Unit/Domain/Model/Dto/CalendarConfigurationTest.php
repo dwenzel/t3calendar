@@ -154,4 +154,25 @@ class CalendarConfigurationTest extends UnitTestCase
             $this->subject->getAjaxEnabled()
         );
     }
+
+    /**
+     * @test
+     */
+    public function isShowNavigationInitiallyReturnsFalse()
+    {
+        $this->assertFalse(
+            $this->subject->isShowNavigation()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setShowNavigationForBoolSetsShowNavigation()
+    {
+        $this->subject->setShowNavigation(true);
+        $this->assertTrue(
+            $this->subject->isShowNavigation()
+        );
+    }
 }
