@@ -266,8 +266,6 @@ class CalendarController extends AbstractWidgetController
 
             $content = $this->view->render();
             $this->contentCache->set($identifier, $content);
-
-            return $content;
         }
 
         return $content;
