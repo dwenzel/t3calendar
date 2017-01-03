@@ -47,8 +47,10 @@ class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
 
         $startDate = $configuration->getStartDate();
         $currentDate = $configuration->getCurrentDate();
-        $calendarMonth = $this->calendarMonthFactory->create($startDate, $currentDate, $items);
-        $calendar->setCurrentMonth($calendarMonth);
+        if ($viewMode === CalendarConfiguration::VIEW_MODE_MINI_MONTH) {
+            $calendarMonth = $this->calendarMonthFactory->create($startDate, $currentDate, $items);
+            $calendar->setCurrentMonth($calendarMonth);
+        }
 
         if ($viewMode == CalendarConfiguration::VIEW_MODE_COMBO_PANE) {
             switch ($displayPeriod) {
@@ -61,6 +63,9 @@ class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
                     $calendarWeek = $this->calendarWeekFactory->create($startDate, $currentDate, $items);
                     $calendar->setCurrentWeek($calendarWeek);
                     break;
+                case CalendarConfiguration::PERIOD_MONTH:
+                    $calendarMonth = $this->calendarMonthFactory->create($startDate, $currentDate, $items);
+                    $calendar->setCurrentMonth($calendarMonth);
                 case CalendarConfiguration::PERIOD_YEAR:
                     $calendarYear = $this->calendarYearFactory->create($startDate, $currentDate, $items);
                     $calendar->setCurrentYear($calendarYear);
