@@ -197,14 +197,15 @@ class CalendarFactoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function createAlwaysSetsCurrentMonth()
+    public function createSetsCurrentMonthForViewModeMiniMonth()
     {
         $startDate = new \DateTime();
         $currentDate = new \DateTime();
+        $viewMode = CalendarConfiguration::VIEW_MODE_MINI_MONTH;
 
         $mockConfiguration = $this->getMock(
             CalendarConfiguration::class,
-            ['getStartDate', 'getCurrentDate']
+            ['getStartDate', 'getCurrentDate', 'getViewMode']
         );
         $items = [];
 
@@ -213,6 +214,9 @@ class CalendarFactoryTest extends UnitTestCase
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockCalendar));
+        $mockConfiguration->expects($this->atLeastOnce())
+            ->method('getViewMode')
+            ->will($this->returnValue($viewMode));
         $mockConfiguration->expects($this->atLeastOnce())
             ->method('getStartDate')
             ->will($this->returnValue($startDate));
@@ -379,6 +383,44 @@ class CalendarFactoryTest extends UnitTestCase
         $mockCalendar->expects($this->once())
             ->method('setCurrentQuarter')
             ->with($mockCalendarQuarter);
+
+        $this->subject->create($mockConfiguration, $items);
+    }
+
+    /**
+     * @test
+     */
+    public function createSetsCurrentMonthForDisplayPeriodMonthAndViewModeComboPane()
+    {
+        $viewMode = CalendarConfiguration::VIEW_MODE_COMBO_PANE;
+        $displayPeriod = CalendarConfiguration::PERIOD_MONTH;
+
+        $startDate = new \DateTime();
+        $currentDate = new \DateTime();
+
+        $mockConfiguration = $this->mockConfiguration();
+        $items = [];
+
+        $mockCalendar = $this->getMock(Calendar::class);
+        $mockCalendarMonth = $this->getMock(CalendarMonth::class);
+        $this->objectManager->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($mockCalendar));
+        $mockConfiguration->expects($this->once())
+            ->method('getViewMode')
+            ->will($this->returnValue($viewMode));
+        $mockConfiguration->expects($this->once())
+            ->method('getDisplayPeriod')
+            ->will($this->returnValue($displayPeriod));
+
+        $this->calendarMonthFactory->expects($this->once())
+            ->method('create')
+            ->with($startDate, $currentDate, $items)
+            ->will($this->returnValue($mockCalendarMonth));
+
+        $mockCalendar->expects($this->once())
+            ->method('setCurrentMonth')
+            ->with($mockCalendarMonth);
 
         $this->subject->create($mockConfiguration, $items);
     }

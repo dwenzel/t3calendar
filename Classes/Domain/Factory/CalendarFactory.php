@@ -66,6 +66,7 @@ class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
                 case CalendarConfiguration::PERIOD_MONTH:
                     $calendarMonth = $this->calendarMonthFactory->create($startDate, $currentDate, $items);
                     $calendar->setCurrentMonth($calendarMonth);
+                    break;
                 case CalendarConfiguration::PERIOD_YEAR:
                     $calendarYear = $this->calendarYearFactory->create($startDate, $currentDate, $items);
                     $calendar->setCurrentYear($calendarYear);
