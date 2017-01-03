@@ -3,45 +3,26 @@ namespace DWenzel\T3calendar\Domain\Factory;
 
 /**
  * This file is part of the TYPO3 CMS project.
- *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
  * of the License, or any later version.
- *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
- *
  * The TYPO3 project - inspiring people to share!
  */
 
-use DWenzel\T3calendar\Cache\CacheManagerTrait;
+use DWenzel\T3calendar\Domain\Model\CalendarMonth;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
 use TYPO3\CMS\Core\SingletonInterface;
-use DWenzel\T3calendar\Domain\Model\CalendarMonth;
 
 /**
  * Class CalendarMonthFactory
+ *
  * @package DWenzel\T3calendar\Domain\Factory
  */
 class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonInterface
 {
-    use ObjectManagerTrait, CacheManagerTrait,
-        CalendarDayFactoryTrait, CalendarWeekFactoryTrait;
-
-    /**
-     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
-     */
-    protected $monthCache;
-
-    /**
-     * Lifecycle method
-     *
-     * @return void
-     */
-    public function initializeObject()
-    {
-        $this->monthCache = $this->cacheManager->getCache('t3calendar_month');
-    }
+    use ObjectManagerTrait, CalendarDayFactoryTrait, CalendarWeekFactoryTrait;
 
     /**
      * creates a CalendarMonth object
@@ -53,18 +34,11 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      */
     public function create(\DateTime $startDate, \DateTime $currentDate, $items = null)
     {
-        $cacheIdentifier = sha1(serialize($startDate) . serialize($currentDate));
-        $calendarMonth = $this->monthCache->get($cacheIdentifier);
-
-        if ($calendarMonth === false) {
-            /** @var CalendarMonth $calendarMonth */
-            $calendarMonth = $this->objectManager->get(CalendarMonth::class);
-            $calendarMonth->setStartDate($startDate);
-            $daysOfMonth = $this->getDaysOfMonth($startDate, $currentDate, $items);
-            $this->addWeeks($startDate, $calendarMonth, $daysOfMonth);
-
-            $this->monthCache->set($cacheIdentifier, $calendarMonth);
-        }
+        /** @var CalendarMonth $calendarMonth */
+        $calendarMonth = $this->objectManager->get(CalendarMonth::class);
+        $calendarMonth->setStartDate($startDate);
+        $daysOfMonth = $this->getDaysOfMonth($startDate, $currentDate, $items);
+        $this->addWeeks($startDate, $calendarMonth, $daysOfMonth);
 
         return $calendarMonth;
     }
@@ -99,8 +73,12 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      * @param array $daysOfMonth An array holding the days of month.
      * @param array $items An array of CalendarItemInterface objects
      */
-    public function addDaysOfCurrentMonth(\DateTime $startDate, \DateTime $currentDate, array  &$daysOfMonth, $items = [])
-    {
+    public function addDaysOfCurrentMonth(
+        \DateTime $startDate,
+        \DateTime $currentDate,
+        array  &$daysOfMonth,
+        $items = []
+    ) {
         $daysInMonth = $this->getNumberOfDaysInMonth($startDate);
 
         for ($dayOfMonth = 0; $dayOfMonth < $daysInMonth; $dayOfMonth++) {
@@ -157,6 +135,7 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     /**
      * Spreads the CalendarDay objects hold by
      * $daysOfMonth evenly over a number of weeks
+     *
      * @param \DateTime $startDate
      * @param CalendarMonth $calendarMonth
      * @param array $daysOfMonth
@@ -182,6 +161,7 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     protected function getNumberOfDaysInMonth(\DateTime $startDate)
     {
         $daysInMonth = (int)$startDate->format('t');
+
         return $daysInMonth;
     }
 
@@ -195,6 +175,7 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
         $prependDays = $this->getNumberOfDaysToPrepend($startDate);
         $numberOfWeeks = $this->getNumberOfWeeks($startDate);
         $numberOfDaysOfNextMonth = $numberOfWeeks * 7 - $daysInMonth - $prependDays;
+
         return $numberOfDaysOfNextMonth;
     }
 
@@ -205,6 +186,7 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     protected function getNumberOfDaysToPrepend(\DateTime $startDate)
     {
         $prependDays = (int)$startDate->format('N') - 1;
+
         return $prependDays;
     }
 
@@ -217,6 +199,7 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
         $daysInMonth = $this->getNumberOfDaysInMonth($startDate);
         $prependDays = $this->getNumberOfDaysToPrepend($startDate);
         $numberOfWeeks = (int)ceil(($daysInMonth + $prependDays) / 7);
+
         return $numberOfWeeks;
     }
 }
