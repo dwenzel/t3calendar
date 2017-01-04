@@ -5,9 +5,11 @@ namespace DWenzel\T3calendar\Tests\Unit\Domain\Factory;
 use DWenzel\T3calendar\Domain\Factory\CalendarDayFactory;
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
+use DWenzel\T3calendar\Persistence\CalendarItemStorage;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 
 /**
@@ -88,6 +90,41 @@ class CalendarDayFactoryTest extends UnitTestCase
             ->will($this->returnValue($date));
 
         $this->subject->create($date, [$mockItemWithMatchingDate]);
+    }
+
+    /**
+     * @test
+     */
+    public function createSetsItemsFromCalendarItemStorage()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $date = new \DateTime('now', $timeZone);
+        /** @var CalendarDay|\PHPUnit_Framework_MockObject_MockObject $mockCalendarDay */
+        $mockCalendarDay = $this->getMock(
+            CalendarDay::class, ['addItem'], [$date]
+        );
+
+        $mockCalendarItemStorage = $this->getMock(CalendarItemStorage::class, ['getByDate']);
+        $mockObjectStorage = $this->getMock(ObjectStorage::class);
+
+        $this->objectManager->expects($this->once())
+            ->method('get')
+            ->with(CalendarDay::class, $date)
+            ->will($this->returnValue($mockCalendarDay));
+
+        $mockCalendarDay->expects($this->never())
+            ->method('addItem');
+
+        $mockCalendarItemStorage->expects($this->atLeastOnce())
+            ->method('getByDate')
+            ->with($date)
+            ->will($this->returnValue($mockObjectStorage));
+        $this->subject->create($date, $mockCalendarItemStorage);
+
+        $this->assertSame(
+            $mockObjectStorage,
+            $mockCalendarDay->getItems()
+        );
     }
 
     /**

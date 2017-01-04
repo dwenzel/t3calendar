@@ -1,0 +1,103 @@
+<?php
+namespace DWenzel\T3calendar\Tests\Unit\Storage;
+
+/**
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
+use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
+use DWenzel\T3calendar\Persistence\CalendarItemStorage;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
+/**
+ * Class CalendarItemStorageTest
+ * @package DWenzel\T3calendar\Tests\Unit\Storage
+ */
+class CalendarItemStorageTest extends UnitTestCase
+{
+    /**
+     * @var CalendarItemStorage|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $subject;
+
+    /**
+     * set up subject
+     */
+    public function setUp()
+    {
+        $this->subject = $this->getMock(CalendarItemStorage::class, ['dummy']);
+    }
+
+    /**
+     * @test
+     */
+    public function hasItemsForDateInitiallyReturnsFalse()
+    {
+        $date = new \DateTime();
+        $this->assertFalse(
+            $this->subject->hasItemsForDate($date)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getByDateInitiallyReturnsEmptyObjectStorage()
+    {
+        $date = new \DateTime();
+        $expectedStorage = new ObjectStorage();
+        $this->assertEquals(
+            $expectedStorage,
+            $this->subject->getByDate($date)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function attachAddsItems()
+    {
+        $date = new \DateTime();
+        $item = $this->getMockForAbstractClass(CalendarItemInterface::class);
+        $item->expects($this->atLeastOnce())
+            ->method('getDate')
+            ->will($this->returnValue($date));
+        $this->subject->attach($item);
+
+        $this->assertTrue(
+            $this->subject->contains($item)
+        );
+        $this->assertTrue(
+            $this->subject->getByDate($date)->contains($item)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function detachUnsetDateIfLastItemHasBeenRemoved()
+    {
+        $date = new \DateTime();
+        $item = $this->getMockForAbstractClass(CalendarItemInterface::class);
+        $item->expects($this->atLeastOnce())
+            ->method('getDate')
+            ->will($this->returnValue($date));
+        $this->subject->attach($item);
+        $this->subject->detach($item);
+        $this->assertAttributeEmpty(
+            'dateStorage',
+            $this->subject
+        );
+
+    }
+}
