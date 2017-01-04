@@ -29,12 +29,16 @@ class CalendarItemStorage extends ObjectStorage
 
     /**
      * An array holding the objects. The key of the array items are
+     * unix time stamps indicating the date of CalendarItems.
+     * The value at each key is an ObjectStorage containing only objects
+     * which implement the CalendarItemInterface.
      * @var array
      */
     protected $dateStorage = [];
 
     /**
      * Adds an object in the storage, and optionally associate it to some data.
+     * Objects which do not implement the CalendarItemInterface are ignored.
      *
      * @param CalendarItemInterface|object $object The object to add.
      * @param mixed $information The data to associate with the object.
@@ -54,6 +58,7 @@ class CalendarItemStorage extends ObjectStorage
 
     /**
      * Removes an object from the storage.
+     * Objects which do not implement the CalendarItemInterface are ignored.
      *
      * @param CalendarItemInterface|object $object The object to remove.
      */
@@ -74,6 +79,8 @@ class CalendarItemStorage extends ObjectStorage
     }
 
     /**
+     * Tells if any calendar item for a given date exist in storage
+     *
      * @param \DateTime $dateTime
      * @return bool
      */
@@ -83,7 +90,9 @@ class CalendarItemStorage extends ObjectStorage
     }
 
     /**
-     * Gets all objects for given date
+     * Get all calendar items for a given date.
+     * If any exist an ObjectStorage containing the items
+     * is returned otherwise an empty ObjectStorage
      *
      * @param \DateTime $dateTime
      * @return ObjectStorage
@@ -98,6 +107,10 @@ class CalendarItemStorage extends ObjectStorage
     }
 
     /**
+     * Tells if an object is valid. It must be an instance of
+     * CalendarItemInterface and its method getDate must return an
+     * instance of \DateTime
+     *
      * @param $object
      * @return bool
      */
