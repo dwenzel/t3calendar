@@ -17,6 +17,7 @@ namespace DWenzel\T3calendar\Persistence;
 
 use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
  * Class CalendarItemStorage
  * Transient storage for calendar items. Items must implement the CalendarItemInterface.
@@ -41,8 +42,7 @@ class CalendarItemStorage extends ObjectStorage
      */
     public function attach($object, $information = null)
     {
-        if (!$this->isValidObject($object))
-        {
+        if (!$this->isValidObject($object)) {
             return;
         }
         $date = $object->getDate();
@@ -59,8 +59,7 @@ class CalendarItemStorage extends ObjectStorage
      */
     public function detach($object)
     {
-        if (!$this->isValidObject($object))
-        {
+        if (!$this->isValidObject($object)) {
             return;
         }
         $date = $object->getDate();
@@ -91,8 +90,7 @@ class CalendarItemStorage extends ObjectStorage
      */
     public function getByDate(\DateTime $dateTime)
     {
-        if ($this->hasItemsForDate($dateTime))
-        {
+        if ($this->hasItemsForDate($dateTime)) {
             return $this->dateStorage[$dateTime->getTimestamp()];
         }
 
@@ -106,6 +104,6 @@ class CalendarItemStorage extends ObjectStorage
     protected function isValidObject($object)
     {
         return ($object instanceof CalendarItemInterface
-        && $object->getDate() instanceof \DateTime);
+            && $object->getDate() instanceof \DateTime);
     }
 }

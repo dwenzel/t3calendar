@@ -1,5 +1,5 @@
 <?php
-namespace DWenzel\T3calendar\Tests\Unit\Storage;
+namespace DWenzel\T3calendar\Tests\Unit\Persistence;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -21,7 +21,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class CalendarItemStorageTest
- * @package DWenzel\T3calendar\Tests\Unit\Storage
+ * @package DWenzel\T3calendar\Tests\Unit\Persistence
  */
 class CalendarItemStorageTest extends UnitTestCase
 {
