@@ -17,6 +17,7 @@ namespace DWenzel\T3calendar\Domain\Factory;
 
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
+use DWenzel\T3calendar\Persistence\CalendarItemStorage;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
@@ -40,7 +41,11 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
     {
         /** @var CalendarDay $calendarDay */
         $calendarDay = $this->objectManager->get(CalendarDay::class, $date);
-        if (count($items)) {
+
+        if ($items instanceof CalendarItemStorage)
+        {
+            $calendarDay->setItems($items->getByDate($date));
+        } elseif (count($items)) {
             foreach ($items as $item) {
                 if (
                     $item instanceof CalendarItemInterface
