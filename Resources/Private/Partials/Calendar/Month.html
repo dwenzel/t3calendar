@@ -1,3 +1,4 @@
+{namespace t3c=DWenzel\T3calendar\ViewHelpers}
 <table class="calendarMonth">
     <thead>
     <tr class="header">
@@ -8,7 +9,7 @@
                     <td colspan="7" class="navigation">
                         <f:widget.link
                                 action="month"
-                                arguments="{shift: 'previous', origin: '{f:format.date(format:\'U\',date:\'-11 months\',base:\'{configuration.startDate}\')}'}">
+                                arguments="{shift: 'previous', origin: '{t3c:format.date(format:\'U\',date:\'-11 months\',base:\'{configuration.startDate}\')}'}">
                             <i class="fa fa-2x fa-angle-double-left"></i>
                         </f:widget.link>
                         <f:widget.link
@@ -24,7 +25,7 @@
                         </f:widget.link>
                         <f:widget.link
                                 action="month"
-                                arguments="{shift: 'next', origin: '{f:format.date(format:\'U\',date:\'+13 months\',base:\'{configuration.startDate}\')}'}">
+                                arguments="{shift: 'next', origin: '{t3c:format.date(format:\'U\',date:\'+13 months\',base:\'{configuration.startDate}\')}'}">
                             <i class="fa fa-2x fa-angle-double-right"></i>
                         </f:widget.link>
                     </td>
