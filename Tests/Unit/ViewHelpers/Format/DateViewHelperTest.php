@@ -18,13 +18,16 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  * The TYPO3 project - inspiring people to share!
  */
 
-class FormatViewHelperTest extends UnitTestCase
+class DateViewHelperTest extends UnitTestCase
 {
     /**
      * @var DateViewHelper|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $subject;
 
+    /**
+     * set up subject
+     */
     public function setUp()
     {
         $this->subject = $this->getMock(DateViewHelper::class, ['dummy']);
@@ -35,6 +38,7 @@ class FormatViewHelperTest extends UnitTestCase
      */
     public function renderReturnsDateTimeFormattedWithDefaultFormat()
     {
+        unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']);
         $defaultFormat = 'Y-m-d';
         $date = new \DateTime();
 
@@ -43,6 +47,39 @@ class FormatViewHelperTest extends UnitTestCase
         $this->assertSame(
             $expectedString,
             $this->subject->render($date)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function renderReturnsDateTimeFormattedWithFormatFromGlobals()
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] = 'd.m.Y';
+
+        $date = new \DateTime();
+
+        $expectedString = $date->format($GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']);
+
+        $this->assertSame(
+            $expectedString,
+            $this->subject->render($date)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function renderReturnsDateTimeFormattedWithFormatFromArgument()
+    {
+        $format = 'Y/m/d';
+        $date = new \DateTime();
+
+        $expectedString = $date->format($format);
+
+        $this->assertSame(
+            $expectedString,
+            $this->subject->render($date, $format)
         );
     }
 }
