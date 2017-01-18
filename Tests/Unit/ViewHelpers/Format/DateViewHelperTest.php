@@ -178,4 +178,19 @@ class DateViewHelperTest extends UnitTestCase
             $this->subject->render($date)
         );
     }
+
+    /**
+     * test
+     */
+    public function renderReturnsStrftimeFormattedValue()
+    {
+        $format = '%a';
+        $date = 12345;
+        $expectedValue = strftime($format, $date);
+
+        $this->assertSame(
+            $expectedValue,
+            $this->subject->render($date, $format)
+        );
+    }
 }
