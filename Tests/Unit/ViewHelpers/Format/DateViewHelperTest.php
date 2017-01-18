@@ -1,6 +1,7 @@
 <?php
 
 namespace DWenzel\T3calendar\Tests\Unit\ViewHelpers\Format;
+
 use DWenzel\T3calendar\ViewHelpers\Format\DateViewHelper;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 
@@ -17,7 +18,6 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 class DateViewHelperTest extends UnitTestCase
 {
     /**
@@ -180,7 +180,7 @@ class DateViewHelperTest extends UnitTestCase
     }
 
     /**
-     * test
+     * @test
      */
     public function renderReturnsStrftimeFormattedValue()
     {
@@ -191,6 +191,42 @@ class DateViewHelperTest extends UnitTestCase
         $this->assertSame(
             $expectedValue,
             $this->subject->render($date, $format)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function renderAddsTimeFromArgument()
+    {
+        $format = 'Y-m-d h:m';
+        $date = new \DateTime('today');
+        $time = 3600;
+        $expectedDate = clone($date);
+        $expectedDate->setTimestamp($expectedDate->getTimestamp() + $time);
+
+        $this->assertSame(
+            $expectedDate->format($format),
+            $this->subject->render($date, $format, $time)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function renderInterpretsRelativeDateWithBase()
+    {
+        $format = 'Y-m-d h:m';
+        $date = '+ 6 days';
+        $time = null;
+        $base = new \DateTime('today');
+        $timeStamp = strtotime($date, $base->format('U'));
+        $expectedDate = new \DateTime();
+        $expectedDate->setTimestamp($timeStamp);
+
+        $this->assertSame(
+            $expectedDate->format($format),
+            $this->subject->render($date, $format, $time, $base)
         );
     }
 }

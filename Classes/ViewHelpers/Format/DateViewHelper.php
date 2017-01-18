@@ -2,7 +2,7 @@
 namespace DWenzel\T3calendar\ViewHelpers\Format;
 
 /*                                                                        *
- * This script is backported from the TYPO3 Flow package "TYPO3.Fluid".   *
+ * This script is back ported from the TYPO3 Flow package "TYPO3.Fluid".   *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -63,66 +63,68 @@ use TYPO3\CMS\Fluid\Core\ViewHelper\Exception;
  * </output>
  *
  */
-class DateViewHelper extends AbstractViewHelper {
+class DateViewHelper extends AbstractViewHelper
+{
     const DEFAULT_DATE_FORMAT = 'Y-m-d';
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapingInterceptorEnabled = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapingInterceptorEnabled = false;
 
-	/**
-	 * Render the supplied DateTime object as a formatted date.
-	 * If a time is given it will be added to the date (by adding the timestamps)
-	 *
-	 * @param mixed $date either a DateTime object or a string that is accepted by DateTime constructor
-	 * @param string $format Format String which is taken to format the Date/Time
-	 * @param int $time an integer representing a time value
-	 * @param mixed $base A base time (a DateTime object or a string) used if $date is a relative date specification. Defaults to current time.
-	 * @return string Formatted date
-	 * @throws Exception
-	 */
-	public function render($date = null, $format = '', $time = null, $base = null) {
-		if ($format === '') {
-			$format = $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] ?: static::DEFAULT_DATE_FORMAT;
-		}
+    /**
+     * Render the supplied DateTime object as a formatted date.
+     * If a time is given it will be added to the date (by adding the timestamps)
+     *
+     * @param mixed $date either a DateTime object or a string that is accepted by DateTime constructor
+     * @param string $format Format String which is taken to format the Date/Time
+     * @param int $time an integer representing a time value
+     * @param mixed $base A base time (a DateTime object or a string) used if $date is a relative date specification. Defaults to current time.
+     * @return string Formatted date
+     * @throws Exception
+     */
+    public function render($date = null, $format = '', $time = null, $base = null)
+    {
+        if ($format === '') {
+            $format = $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] ?: static::DEFAULT_DATE_FORMAT;
+        }
 
-		if (empty($base)) {
-			$base = time();
-		}
+        if (empty($base)) {
+            $base = time();
+        }
 
-		if ($date === null) {
-			$date = $this->renderChildren();
-			if ($date === null) {
-				return '';
-			}
-		}
+        if ($date === null) {
+            $date = $this->renderChildren();
+            if ($date === null) {
+                return '';
+            }
+        }
 
-		if ($date === '') {
-			$date = 'now';
-		}
+        if ($date === '') {
+            $date = 'now';
+        }
 
-		if (!$date instanceof \DateTime) {
-			try {
-				$base = $base instanceof \DateTime ? $base->format('U') : strtotime((MathUtility::canBeInterpretedAsInteger($base) ? '@' : '') . $base);
-				$dateTimestamp = strtotime((MathUtility::canBeInterpretedAsInteger($date) ? '@' : '') . $date, $base);
-				$modifiedDate = new \DateTime('@' . $dateTimestamp);
-				$modifiedDate->setTimezone(new \DateTimeZone(date_default_timezone_get()));
-			} catch (\Exception $exception) {
-				throw new Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579);
-			}
-		} else {
-			$modifiedDate = clone($date);
-		}
+        if (!$date instanceof \DateTime) {
+            try {
+                $base = $base instanceof \DateTime ? $base->format('U') : strtotime((MathUtility::canBeInterpretedAsInteger($base) ? '@' : '') . $base);
+                $dateTimestamp = strtotime((MathUtility::canBeInterpretedAsInteger($date) ? '@' : '') . $date, $base);
+                $modifiedDate = new \DateTime('@' . $dateTimestamp);
+                $modifiedDate->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+            } catch (\Exception $exception) {
+                throw new Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579);
+            }
+        } else {
+            $modifiedDate = clone($date);
+        }
 
-		if ($time !== null) {
-			$modifiedDate->setTimestamp($modifiedDate->getTimestamp() + $time);
-		}
+        if ($time !== null) {
+            $modifiedDate->setTimestamp($modifiedDate->getTimestamp() + $time);
+        }
 
-		if (strpos($format, '%') !== FALSE) {
-			return strftime($format, $modifiedDate->format('U'));
-		} else {
-			return $modifiedDate->format($format);
-		}
-	}
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $modifiedDate->format('U'));
+        } else {
+            return $modifiedDate->format($format);
+        }
+    }
 }
