@@ -30,7 +30,7 @@ class DateViewHelperTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = $this->getMock(DateViewHelper::class, ['dummy']);
+        $this->subject = $this->getMock(DateViewHelper::class, ['renderChildren']);
     }
 
     /**
@@ -39,10 +39,9 @@ class DateViewHelperTest extends UnitTestCase
     public function renderReturnsDateTimeFormattedWithDefaultFormat()
     {
         unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']);
-        $defaultFormat = 'Y-m-d';
         $date = new \DateTime();
 
-        $expectedString = $date->format($defaultFormat);
+        $expectedString = $date->format(DateViewHelper::DEFAULT_DATE_FORMAT);
 
         $this->assertSame(
             $expectedString,
@@ -80,6 +79,103 @@ class DateViewHelperTest extends UnitTestCase
         $this->assertSame(
             $expectedString,
             $this->subject->render($date, $format)
+        );
+    }
+
+    /**
+     * @test
+     * @expectedException \TYPO3\CMS\Fluid\Core\ViewHelper\Exception
+     * @expectedExceptionCode 1241722579
+     */
+    public function renderThrowsExceptionForInvalidRenderChildrenResult()
+    {
+        $renderChildrenResult = 'foo';
+        $this->subject->expects($this->once())
+            ->method('renderChildren')
+            ->will($this->returnValue($renderChildrenResult));
+        $this->assertSame(
+            $renderChildrenResult,
+            $this->subject->render()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function renderReturnsResultForValidRenderChildrenResult()
+    {
+        unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']);
+        $renderChildrenResult = '2016-01-01';
+        $expectedDateTime = new \DateTime(
+            $renderChildrenResult,
+            new \DateTimeZone(date_default_timezone_get())
+        );
+
+        $this->subject->expects($this->once())
+            ->method('renderChildren')
+            ->will($this->returnValue($renderChildrenResult));
+        $this->assertSame(
+            $expectedDateTime->format(DateViewHelper::DEFAULT_DATE_FORMAT),
+            $this->subject->render()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function renderReturnsEmptyStringIfRenderChildrenResultIsNull()
+    {
+        $renderChildrenResult = null;
+        $expectedResult = '';
+
+        $this->subject->expects($this->once())
+            ->method('renderChildren')
+            ->will($this->returnValue($renderChildrenResult));
+
+        $this->assertSame(
+            $expectedResult,
+            $this->subject->render()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function renderReturnsResultNowIfRenderChildrenResultIsEmptyString()
+    {
+        unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']);
+        $renderChildrenResult = '';
+        $expectedDateTime = new \DateTime(
+            'now',
+            new \DateTimeZone(date_default_timezone_get())
+        );
+
+        $this->subject->expects($this->once())
+            ->method('renderChildren')
+            ->will($this->returnValue($renderChildrenResult));
+        $this->assertSame(
+            $expectedDateTime->format(DateViewHelper::DEFAULT_DATE_FORMAT),
+            $this->subject->render()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function renderReturnsResultNowIfArgumentDateIsEmptyString()
+    {
+        $date = '';
+        unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']);
+        $expectedDateTime = new \DateTime(
+            'now',
+            new \DateTimeZone(date_default_timezone_get())
+        );
+
+        $this->subject->expects($this->never())
+            ->method('renderChildren');
+        $this->assertSame(
+            $expectedDateTime->format(DateViewHelper::DEFAULT_DATE_FORMAT),
+            $this->subject->render($date)
         );
     }
 }

@@ -12,6 +12,7 @@ namespace DWenzel\T3calendar\ViewHelpers\Format;
  *                                                                        */
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\CMS\Fluid\Core\ViewHelper\Exception;
 
 /**
  * Formats a \DateTime object. This is an extended version which allows to
@@ -19,42 +20,42 @@ use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
  * formatted according to the date (day light saving, time zone etc.)
  * = Examples =
  * <code title="Defaults">
- * <f:format.date>{dateObject}</f:format.date>
+ * <t3c:format.date>{dateObject}</t3c:format.date>
  * </code>
  * <output>
  * 1980-12-13
  * (depending on the current date)
  * </output>
  * <code title="Custom date format">
- * <f:format.date format="H:i">{dateObject}</f:format.date>
+ * <t3c:format.date format="H:i">{dateObject}</t3c:format.date>
  * </code>
  * <output>
  * 01:23
  * (depending on the current time)
  * </output>
  * <code title="strtotime string">
- * <f:format.date format="d.m.Y - H:i:s">+1 week 2 days 4 hours 2 seconds</f:format.date>
+ * <t3c:format.date format="d.m.Y - H:i:s">+1 week 2 days 4 hours 2 seconds</t3c:format.date>
  * </code>
  * <output>
  * 13.12.1980 - 21:03:42
  * (depending on the current time, see http://www.php.net/manual/en/function.strtotime.php)
  * </output>
  * <code title="Localized dates using strftime date format">
- * <f:format.date format="%d. %B %Y">{dateObject}</f:format.date>
+ * <t3c:format.date format="%d. %B %Y">{dateObject}</t3c:format.date>
  * </code>
  * <output>
  * 13. Dezember 1980
  * (depending on the current date and defined locale. In the example you see the 1980-12-13 in a german locale)
  * </output>
  * <code title="Inline notation">
- * {f:format.date(date: dateObject)}
+ * {t3c:format.date(date: dateObject)}
  * </code>
  * <output>
  * 1980-12-13
  * (depending on the value of {dateObject})
  * </output>
  * <code title="Inline notation (2nd variant)">
- * {dateObject -> f:format.date()}
+ * {dateObject -> t3c:format.date()}
  * </code>
  * <output>
  * 1980-12-13
@@ -63,6 +64,7 @@ use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  */
 class DateViewHelper extends AbstractViewHelper {
+    const DEFAULT_DATE_FORMAT = 'Y-m-d';
 
 	/**
 	 * @var boolean
@@ -78,20 +80,20 @@ class DateViewHelper extends AbstractViewHelper {
 	 * @param int $time an integer representing a time value
 	 * @param mixed $base A base time (a DateTime object or a string) used if $date is a relative date specification. Defaults to current time.
 	 * @return string Formatted date
-	 * @throws \TYPO3\CMS\Fluid\Core\ViewHelper\Exception
+	 * @throws Exception
 	 */
-	public function render($date = NULL, $format = '', $time = NULL, $base = NULL) {
+	public function render($date = null, $format = '', $time = null, $base = null) {
 		if ($format === '') {
-			$format = $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] ?: 'Y-m-d';
+			$format = $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] ?: static::DEFAULT_DATE_FORMAT;
 		}
 
 		if (empty($base)) {
 			$base = time();
 		}
 
-		if ($date === NULL) {
+		if ($date === null) {
 			$date = $this->renderChildren();
-			if ($date === NULL) {
+			if ($date === null) {
 				return '';
 			}
 		}
@@ -107,13 +109,13 @@ class DateViewHelper extends AbstractViewHelper {
 				$modifiedDate = new \DateTime('@' . $dateTimestamp);
 				$modifiedDate->setTimezone(new \DateTimeZone(date_default_timezone_get()));
 			} catch (\Exception $exception) {
-				throw new \TYPO3\CMS\Fluid\Core\ViewHelper\Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579);
+				throw new Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579);
 			}
 		} else {
 			$modifiedDate = clone($date);
 		}
 
-		if ($time !== NULL) {
+		if ($time !== null) {
 			$modifiedDate->setTimestamp($modifiedDate->getTimestamp() + $time);
 		}
 
