@@ -61,11 +61,13 @@
 					{f:if(condition: '{calendarDay.isCurrent}', then: 'current')}
 					{f:if(condition: '{calendarDay.hasItems}', then: 'hasEvent')}">
                     <div class="labelDay">{calendarDay.day}</div>
-                    <f:for each="{calendarDay.items}" as="item">
+                    <f:if condition="{calendarDay.hasItems}">
                         <div class="eventTooltip">
-                            <span class="eventTooltipHeadline">Item {item.uid}</span>
+                            <f:for each="{calendarDay.items}" as="item">
+                                <span class="eventTooltipHeadline">{f:render(partial: 'Calendar/Item', arguments: '{item: item}')}</span>
+                            </f:for>
                         </div>
-                    </f:for>
+                    </f:if>
                 </td>
             </f:for>
         </tr>
