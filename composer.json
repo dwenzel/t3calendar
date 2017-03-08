@@ -1,51 +1,56 @@
 {
-    "name": "dwenzel/t3calendar",
-    "description": "Calendar extension for the TYPO3 CMS",
-    "type": "typo3-cms-extension",
-    "license": "GPL-2.0+",
-    "authors": [
-        {
-            "name": "Dirk Wenzel",
-            "email": "der-wenzel@gmx.de"
-        }
-    ],
-    "require": {
-        "typo3/cms-core": ">=6.2.0,<=8.99.99"
-    },
-    "require-dev": {
-        "phpunit/phpunit": ">=4.8.0,<5.4.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "DWenzel\\T3calendar\\": "Classes"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "DWenzel\\T3calendar\\Tests\\": "Tests",
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-            "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
-        }
-    },
-    "config": {
-        "vendor-dir": ".Build/vendor",
-        "bin-dir": ".Build/bin"
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "mkdir -p .Build/Web/typo3conf/ext/",
-            "mkdir -p .Build/log/coverage/",
-            "[ -L .Build/Web/typo3conf/ext/t3calendar ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3calendar"
-        ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.1.x-dev",
-            "dev-develop": "0.1.x-dev"
-        },
-        "typo3/cms": {
-            "cms-package-dir": "{$vendor-dir}/typo3/cms",
-            "web-dir": ".Build/Web"
-        }
+  "name": "dwenzel/t3calendar",
+  "description": "Calendar extension for the TYPO3 CMS",
+  "type": "typo3-cms-extension",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Dirk Wenzel",
+      "email": "der-wenzel@gmx.de"
     }
+  ],
+  "require": {
+    "typo3/cms-core": ">=6.2.0,<=8.99.99"
+  },
+  "require-dev": {
+    "phpunit/phpunit": ">=4.8.0,<5.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "DWenzel\\T3calendar\\": "Classes"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DWenzel\\T3calendar\\Tests\\": "Tests",
+      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
+      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+    }
+  },
+  "config": {
+    "vendor-dir": ".Build/vendor",
+    "bin-dir": ".Build/bin",
+    "preferred-install": {
+      "typo3/cms": "source",
+      "typo3/cms-core": "source",
+      "*": "dist"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "mkdir -p .Build/Web/typo3conf/ext/",
+      "mkdir -p .Build/log/coverage/",
+      "[ -L .Build/Web/typo3conf/ext/t3calendar ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3calendar"
+    ]
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1.x-dev",
+      "dev-develop": "0.1.x-dev"
+    },
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/Web"
+    }
+  }
 }
