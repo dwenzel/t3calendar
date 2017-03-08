@@ -19,7 +19,8 @@ This is an extension for the TYPO3 CMS.
         * [Date](./Documentation/ViewHelpers/Format/DateViewHelper.md)
     * Widget
         * [Calendar](./Documentation/ViewHelpers/Widget/CalendarViewHelper.md)
+* Users Manual
+    * [Cache](./Documentation/UsersManual/Cache.md)
 * Developers Manual
     * [Custom Items](./Documentation/DevelopersManual/CustomItems.md)
     * [Custom Calendars](./Documentation/DevelopersManual/CustomCalendars.md)
-    * [Cache](./Documentation/DevelopersManual/Cache.md)
