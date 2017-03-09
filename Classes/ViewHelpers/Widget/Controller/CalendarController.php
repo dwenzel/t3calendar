@@ -17,7 +17,11 @@ namespace DWenzel\T3calendar\ViewHelpers\Widget\Controller;
 use DWenzel\T3calendar\Cache\CacheManagerTrait;
 use DWenzel\T3calendar\Domain\Factory\CalendarFactoryTrait;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
+use DWenzel\T3calendar\Utility\TemplateUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
+use TYPO3\CMS\Fluid\Core\Widget\WidgetRequest;
 
 /**
  * Class CalendarController
@@ -46,6 +50,21 @@ class CalendarController extends AbstractWidgetController
      * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
      */
     protected $contentCache;
+
+    /**
+     * @var TemplateUtility
+     */
+    protected $templateUtility;
+
+    /**
+     * Injects the template utility
+     *
+     * @param TemplateUtility $templateUtility
+     */
+    public function injectTemplateUtility(TemplateUtility $templateUtility)
+    {
+        $this->templateUtility = $templateUtility;
+    }
 
     /**
      * @return void
@@ -269,5 +288,39 @@ class CalendarController extends AbstractWidgetController
         }
 
         return $content;
+    }
+
+    /**
+     * Prevent from overriding template path in parent method
+     * @see initializeView
+     *
+     * @param ViewInterface $view
+     * @return void
+     */
+    protected function setViewConfiguration(ViewInterface $view)
+    {
+    }
+
+    /**
+     * Allows the widget template and partial root paths to be overridden via the framework configuration,
+     * e.g. plugin.tx_extension.view.widget.<WidgetViewHelperClassName>.templateRootPaths
+     * Note: we use the new syntax (plural: *Paths) here and allow the old (*Path) too
+     *
+     * @param ViewInterface $view
+     * @return void
+     */
+    protected function initializeView(ViewInterface $view)
+    {
+        if (!$this->request instanceof WidgetRequest) {
+            return;
+        }
+
+        $frameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
+        $widgetViewHelperClassName = $this->request->getWidgetContext()->getWidgetViewHelperClassName();
+
+        if (isset($frameworkConfiguration['view']['widget'][$widgetViewHelperClassName])) {
+            $widgetViewHelperConfiguration = $frameworkConfiguration['view']['widget'][$widgetViewHelperClassName];
+            $this->templateUtility->configureTemplatePaths($view, $widgetViewHelperConfiguration);
+        }
     }
 }
