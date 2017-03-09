@@ -17,11 +17,11 @@ namespace DWenzel\T3calendar\ViewHelpers\Widget\Controller;
 use DWenzel\T3calendar\Cache\CacheManagerTrait;
 use DWenzel\T3calendar\Domain\Factory\CalendarFactoryTrait;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use DWenzel\T3calendar\Utility\TemplateUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
-use TYPO3\CMS\Extbase\Utility\ArrayUtility;
 use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
+use TYPO3\CMS\Fluid\Core\Widget\WidgetRequest;
 
 /**
  * Class CalendarController
@@ -50,6 +50,21 @@ class CalendarController extends AbstractWidgetController
      * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
      */
     protected $contentCache;
+
+    /**
+     * @var TemplateUtility
+     */
+    protected $templateUtility;
+
+    /**
+     * Injects the template utility
+     *
+     * @param TemplateUtility $templateUtility
+     */
+    public function injectTemplateUtility(TemplateUtility $templateUtility)
+    {
+        $this->templateUtility = $templateUtility;
+    }
 
     /**
      * @return void
@@ -296,9 +311,8 @@ class CalendarController extends AbstractWidgetController
      */
     protected function initializeView(ViewInterface $view)
     {
-        $templateRootPaths = [];
-        if (method_exists($view, 'getTemplateRootPaths')) {
-            $templateRootPaths = $view->getTemplateRootPaths();
+        if (!$this->request instanceof WidgetRequest) {
+            return;
         }
 
         $frameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
@@ -306,77 +320,7 @@ class CalendarController extends AbstractWidgetController
 
         if (isset($frameworkConfiguration['view']['widget'][$widgetViewHelperClassName])) {
             $widgetViewHelperConfiguration = $frameworkConfiguration['view']['widget'][$widgetViewHelperClassName];
-
-            $widgetProperties = [
-                'partialRootPaths' => [
-                    'fallback' => $this->getDefaultPartialRootPaths(),
-                    'deprecatedKey' => 'partialRootPath'
-                ],
-                'templateRootPaths' => [
-                    'fallback' => $templateRootPaths,
-                    'deprecatedKey' => 'templateRootPath'
-                ]
-            ];
-
-            foreach ($widgetProperties as $propertyName => $config) {
-                $viewFunctionName = 'set' . ucfirst($propertyName);
-                if (method_exists($view, $viewFunctionName)) {
-                    $deprecatedKey = $config['deprecatedKey'];
-                    $rootPaths = $config['fallback'];
-
-                    $additionalPaths = $this->getWidgetViewProperty($widgetViewHelperConfiguration, $propertyName, $deprecatedKey);
-                    if ($additionalPaths) {
-                        $rootPaths = $additionalPaths + $rootPaths;
-                    }
-                    $view->$viewFunctionName($rootPaths);
-                }
-            }
+            $this->templateUtility->configureTemplatePaths($view, $widgetViewHelperConfiguration);
         }
-    }
-
-    /**
-     * Handles the path resolving for *rootPath(s)
-     * singular one is deprecated and will be removed two versions after 6.2
-     * if deprecated setting is found, use it as the very last fallback target
-     *
-     * numerical arrays get ordered by key ascending
-     *
-     * @param array $widgetConfiguration
-     * @param string $setting parameter name from TypoScript
-     * @param string $deprecatedSetting parameter name from TypoScript
-     *
-     * @return array
-     */
-    protected function getWidgetViewProperty($widgetConfiguration, $setting, $deprecatedSetting = '')
-    {
-
-        $values = [];
-
-        if (
-            !empty($widgetConfiguration[$setting])
-            && is_array($widgetConfiguration[$setting])
-        ) {
-            $values = ArrayUtility::sortArrayWithIntegerKeys($widgetConfiguration[$setting]);
-            $values = array_reverse($values, true);
-        }
-
-        // @todo remove handling of deprecatedSetting two versions after 6.2
-        if (
-            isset($widgetConfiguration[$deprecatedSetting])
-            && strlen($widgetConfiguration[$deprecatedSetting]) > 0
-        ) {
-            $values[] = $widgetConfiguration[$deprecatedSetting];
-        }
-
-        return $values;
-    }
-
-    /**
-     * Get the partial root paths (for this extension)
-     * @return array
-     */
-    protected function getDefaultPartialRootPaths()
-    {
-        return array(ExtensionManagementUtility::extPath($this->request->getControllerExtensionKey()) . 'Resources/Private/Partials');
     }
 }
