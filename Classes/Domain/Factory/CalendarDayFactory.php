@@ -66,12 +66,18 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
     protected function shouldAddItem($item, $calendarDay)
     {
         $calendarDayDate = $calendarDay->getDate();
-
-        return
-            ($item instanceof CalendarItemInterface
-            && $item->getDate() == $calendarDayDate)
-            || ($item instanceof CalendarItemInterface
+        if ($item instanceof CalendarItemInterface
+            && $item->getDate() == $calendarDayDate
+        ) {
+            return true;
+        }
+        if ($item instanceof CalendarItemInterface
             && method_exists($item, 'getEndDate')
-            && $item->getEndDate() >= $calendarDayDate );
+            && $item->getEndDate() >= $calendarDayDate
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -98,6 +98,63 @@ class CalendarItemStorageTest extends UnitTestCase
             'dateStorage',
             $this->subject
         );
-
     }
+
+    /**
+     * @test
+     */
+    public function attachAddsItemWithEndDateForEachDay(){
+        $date = new \DateTime('today');
+        $endDate = new \DateTime('tomorrow');
+        $item = $this->getMock(
+            CalendarItemInterface::class, ['getDate', 'getEndDate']
+        );
+        $item->expects($this->atLeastOnce())
+            ->method('getDate')
+            ->will($this->returnValue($date));
+        $item->expects($this->atLeastOnce())
+            ->method('getEndDate')
+            ->will($this->returnValue($endDate));
+        $this->subject->attach($item);
+
+        $this->assertTrue(
+            $this->subject->contains($item)
+        );
+        $this->assertTrue(
+            $this->subject->getByDate($date)->contains($item)
+        );
+        $this->assertTrue(
+            $this->subject->getByDate($endDate)->contains($item)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function attachDoesNotAddItemForInvalidEndDate()
+    {
+        $date = new \DateTime('tomorrow');
+        $endDate = new \DateTime('today');
+        $item = $this->getMock(
+            CalendarItemInterface::class, ['getDate', 'getEndDate']
+        );
+        $item->expects($this->atLeastOnce())
+            ->method('getDate')
+            ->will($this->returnValue($date));
+        $item->expects($this->atLeastOnce())
+            ->method('getEndDate')
+            ->will($this->returnValue($endDate));
+        $this->subject->attach($item);
+
+        $this->assertTrue(
+            $this->subject->contains($item)
+        );
+        $this->assertTrue(
+            $this->subject->getByDate($date)->contains($item)
+        );
+        $this->assertFalse(
+            $this->subject->getByDate($endDate)->contains($item)
+        );
+    }
+
 }

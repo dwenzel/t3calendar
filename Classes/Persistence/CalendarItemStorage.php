@@ -49,11 +49,26 @@ class CalendarItemStorage extends ObjectStorage
         if (!$this->isValidObject($object)) {
             return;
         }
-        $date = $object->getDate();
         $this->offsetSet($object, $information);
-        $itemsForDate = $this->getByDate($date);
-        $itemsForDate->attach($object, $information);
-        $this->dateStorage[$date->getTimestamp()] = $itemsForDate;
+
+        $date = $object->getDate();
+        $endDate = clone $date;
+        if (
+            method_exists($object, 'getEndDate')
+        && $object->getEndDate() instanceof \DateTime
+            && $object->getEndDate() >= $date
+        ) {
+            $endDate = $object->getEndDate();
+        }
+
+        $current = clone $date;
+        while ($current <= $endDate) {
+            $interval = new \DateInterval('P1D');
+            $itemsForDate = $this->getByDate($current);
+            $itemsForDate->attach($object, $information);
+            $this->dateStorage[$current->getTimestamp()] = $itemsForDate;
+            $current->add($interval);
+        }
     }
 
     /**
