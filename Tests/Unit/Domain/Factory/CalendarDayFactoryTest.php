@@ -12,6 +12,14 @@ use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 
+class DummyItemWithEndDate implements CalendarItemInterface{
+    public function __construct($date)
+    {}
+
+    public function getDate(){}
+    public function getEndDate(){}
+}
+
 /**
  * This file is part of the TYPO3 CMS project.
  *
@@ -171,4 +179,69 @@ class CalendarDayFactoryTest extends UnitTestCase
         );
     }
 
+    /**
+     * @test
+     */
+    public function createAddsItemWithMatchingStartAndEndDate()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $calendarDayDate = new \DateTime('today', $timeZone);
+        $date = new \DateTime('yesterday', $timeZone);
+        $endDate = new \DateTime('tomorrow', $timeZone);
+        $mockCalendarDay = $this->getMock(
+            CalendarDay::class, ['addItem', 'getDate'], [$date]
+        );
+        $mockCalendarDay->expects($this->atLeastOnce())
+            ->method('getDate')->willReturn($calendarDayDate);
+
+        $this->objectManager->expects($this->once())
+            ->method('get')
+            ->with(CalendarDay::class, $calendarDayDate)
+            ->will($this->returnValue($mockCalendarDay));
+        $mockItemWithMatchingDate = $this->getMock(
+            DummyItemWithEndDate::class, ['getDate', 'getEndDate'], [], '', false
+        );
+        $mockItemWithMatchingDate->expects($this->atLeastOnce())
+            ->method('getDate')
+            ->willReturn($date);
+        $mockItemWithMatchingDate->expects($this->atLeastOnce())
+            ->method('getEndDate')
+            ->willReturn($endDate);
+        $mockCalendarDay->expects($this->once())
+            ->method('addItem')
+            ->with($mockItemWithMatchingDate);
+
+        $this->subject->create($calendarDayDate, [$mockItemWithMatchingDate]);
+    }
+
+    /**
+     * @test
+     */
+    public function createDoesNotAddItemWithPastEndDate()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $calendarDayDate = new \DateTime('today', $timeZone);
+        $date = new \DateTime('yesterday', $timeZone);
+        $endDate = new \DateTime('yesterday', $timeZone);
+        $mockCalendarDay = $this->getMock(
+            CalendarDay::class, ['addItem', 'getDate'], [$date]
+        );
+        $mockCalendarDay->expects($this->atLeastOnce())
+            ->method('getDate')->willReturn($calendarDayDate);
+
+        $this->objectManager->expects($this->once())
+            ->method('get')->with(CalendarDay::class, $calendarDayDate)
+            ->will($this->returnValue($mockCalendarDay));
+        $mockItemWithMatchingDate = $this->getMock(
+            DummyItemWithEndDate::class, ['getDate', 'getEndDate'], [], '', false
+        );
+        $mockItemWithMatchingDate->expects($this->atLeastOnce())
+            ->method('getDate')->willReturn($date);
+        $mockItemWithMatchingDate->expects($this->atLeastOnce())
+            ->method('getEndDate')->willReturn($endDate);
+        $mockCalendarDay->expects($this->never())
+            ->method('addItem');
+
+        $this->subject->create($calendarDayDate, [$mockItemWithMatchingDate]);
+    }
 }

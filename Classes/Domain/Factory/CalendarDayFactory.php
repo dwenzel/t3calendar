@@ -47,10 +47,7 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
             $calendarDay->setItems($items->getByDate($date));
         } elseif (count($items)) {
             foreach ($items as $item) {
-                if (
-                    $item instanceof CalendarItemInterface
-                    && $item->getDate() == $calendarDay->getDate()
-                ) {
+                if ($this->shouldAddItem($item, $calendarDay)) {
                     $calendarDay->addItem($item);
                 }
             }
@@ -59,5 +56,22 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
         $calendarDay->setIsCurrent($current);
 
         return $calendarDay;
+    }
+
+    /**
+     * @param object | array $item
+     * @param CalendarDay $calendarDay
+     * @return bool
+     */
+    protected function shouldAddItem($item, $calendarDay)
+    {
+        $calendarDayDate = $calendarDay->getDate();
+
+        return
+            ($item instanceof CalendarItemInterface
+            && $item->getDate() == $calendarDayDate)
+            || ($item instanceof CalendarItemInterface
+            && method_exists($item, 'getEndDate')
+            && $item->getEndDate() >= $calendarDayDate );
     }
 }
