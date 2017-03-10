@@ -1,0 +1,2 @@
+# cat=basic/enable; type=boolean; label=Cache: enable caching of widget content
+enableWidgetCache = false
