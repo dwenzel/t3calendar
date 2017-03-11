@@ -17,6 +17,7 @@ namespace DWenzel\T3calendar\Domain\Factory;
 
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
+use DWenzel\T3calendar\Persistence\CalendarItemStorage;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
@@ -40,12 +41,13 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
     {
         /** @var CalendarDay $calendarDay */
         $calendarDay = $this->objectManager->get(CalendarDay::class, $date);
-        if (count($items)) {
+
+        if ($items instanceof CalendarItemStorage)
+        {
+            $calendarDay->setItems($items->getByDate($date));
+        } elseif (count($items)) {
             foreach ($items as $item) {
-                if (
-                    $item instanceof CalendarItemInterface
-                    && $item->getDate() == $calendarDay->getDate()
-                ) {
+                if ($this->shouldAddItem($item, $calendarDay)) {
                     $calendarDay->addItem($item);
                 }
             }
@@ -54,5 +56,28 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
         $calendarDay->setIsCurrent($current);
 
         return $calendarDay;
+    }
+
+    /**
+     * @param object | array $item
+     * @param CalendarDay $calendarDay
+     * @return bool
+     */
+    protected function shouldAddItem($item, $calendarDay)
+    {
+        $calendarDayDate = $calendarDay->getDate();
+        if ($item instanceof CalendarItemInterface
+            && $item->getDate() == $calendarDayDate
+        ) {
+            return true;
+        }
+        if ($item instanceof CalendarItemInterface
+            && method_exists($item, 'getEndDate')
+            && $item->getEndDate() >= $calendarDayDate
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

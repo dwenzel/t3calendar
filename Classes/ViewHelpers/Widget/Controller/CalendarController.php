@@ -14,9 +14,14 @@ namespace DWenzel\T3calendar\ViewHelpers\Widget\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DWenzel\T3calendar\Cache\CacheManagerTrait;
 use DWenzel\T3calendar\Domain\Factory\CalendarFactoryTrait;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
+use DWenzel\T3calendar\Utility\TemplateUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
+use TYPO3\CMS\Fluid\Core\Widget\WidgetRequest;
 
 /**
  * Class CalendarController
@@ -24,7 +29,7 @@ use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
  */
 class CalendarController extends AbstractWidgetController
 {
-    use CalendarFactoryTrait;
+    use CacheManagerTrait, CalendarFactoryTrait;
 
     /**
      * @var CalendarConfiguration
@@ -42,6 +47,26 @@ class CalendarController extends AbstractWidgetController
     protected $id;
 
     /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
+     */
+    protected $contentCache;
+
+    /**
+     * @var TemplateUtility
+     */
+    protected $templateUtility;
+
+    /**
+     * Injects the template utility
+     *
+     * @param TemplateUtility $templateUtility
+     */
+    public function injectTemplateUtility(TemplateUtility $templateUtility)
+    {
+        $this->templateUtility = $templateUtility;
+    }
+
+    /**
      * @return void
      */
     public function initializeAction()
@@ -52,114 +77,97 @@ class CalendarController extends AbstractWidgetController
     }
 
     /**
+     * Lifecycle method
+     *
+     * @return void
+     */
+    public function initializeObject()
+    {
+        $this->contentCache = $this->cacheManager->getCache('t3calendar_content');
+    }
+
+
+    /**
      * index action
      */
     public function indexAction()
     {
-        $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
-
-        $this->view->assignMultiple(
-            [
-                'configuration' => $this->configuration,
-                'calendar' => $calendar,
-                'calendarId' => $this->id
-            ]
-        );
+        return $this->getContent();
     }
 
     /**
      * Day action
+     *
      * @param string $shift Shift action. Allowed: 'previous' and 'next'.
      * @param int $origin Timestamp indicating the current start date of calendar.
+     * @return mixed|string
      */
     public function dayAction($shift = null, $origin = null)
     {
         $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_DAY);
         $this->adjustStartDate(CalendarConfiguration::PERIOD_DAY, $shift, $origin);
-        $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
-        $this->view->assignMultiple(
-            [
-                'configuration' => $this->configuration,
-                'calendar' => $calendar,
-                'calendarId' => $this->id
-            ]
-        );
+
+        return $this->getContent();
     }
 
     /**
      * Week action
+     *
      * @param string $shift Shift action. Allowed: 'previous' and 'next'.
      * @param int $origin Timestamp indicating the current start date of calendar.
+     * @return mixed|string
      */
     public function weekAction($shift = null, $origin = null)
     {
         $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_WEEK);
         $this->adjustStartDate(CalendarConfiguration::PERIOD_WEEK, $shift, $origin);
-        $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
-        $this->view->assignMultiple(
-            [
-                'configuration' => $this->configuration,
-                'calendar' => $calendar,
-                'calendarId' => $this->id
-            ]
-        );
+
+        return $this->getContent();
     }
 
     /**
      * Month action
+     *
      * @param string $shift Shift action. Allowed: 'previous' and 'next'.
      * @param int $origin Timestamp indicating the current start date of calendar.
+     * @return mixed|string
      */
     public function monthAction($shift = null, $origin = null)
     {
         $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_MONTH);
         $this->adjustStartDate(CalendarConfiguration::PERIOD_MONTH, $shift, $origin);
-        $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
-        $this->view->assignMultiple(
-            [
-                'configuration' => $this->configuration,
-                'calendar' => $calendar,
-                'calendarId' => $this->id
-            ]
-        );
+
+        return $this->getContent();
     }
 
     /**
      * Quarter action
+     *
      * @param string $shift Shift action. Allowed: 'previous' and 'next'.
      * @param int $origin Timestamp indicating the current start date of calendar.
+     * @return mixed|string
      */
     public function quarterAction($shift = null, $origin = null)
     {
         $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_QUARTER);
         $this->adjustStartDate(CalendarConfiguration::PERIOD_QUARTER, $shift, $origin);
-        $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
-        $this->view->assignMultiple(
-            [
-                'configuration' => $this->configuration,
-                'calendar' => $calendar,
-                'calendarId' => $this->id
-            ]
-        );
+
+        return $this->getContent();
     }
 
     /**
      * Year action
+     *
      * @param string $shift Shift action. Allowed: 'previous' and 'next'.
      * @param int $origin Timestamp indicating the current start date of calendar.
+     * @return mixed|string
      */
     public function yearAction($shift = null, $origin = null)
     {
         $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_YEAR);
         $this->adjustStartDate(CalendarConfiguration::PERIOD_YEAR, $shift, $origin);
-        $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
-        $this->view->assignMultiple(
-            [
-                'configuration' => $this->configuration,
-                'calendar' => $calendar,
-                'calendarId' => $this->id
-            ]
-        );
+
+        return $this->getContent();
     }
 
     /**
@@ -256,5 +264,63 @@ class CalendarController extends AbstractWidgetController
         }
 
         return $interval;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    protected function getContent()
+    {
+        $identifier = sha1(serialize($this->configuration));
+        $content = $this->contentCache->get($identifier);
+        if ($content === false) {
+            $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
+            $this->view->assignMultiple(
+                [
+                    'configuration' => $this->configuration,
+                    'calendar' => $calendar,
+                    'calendarId' => $this->id
+                ]
+            );
+
+            $content = $this->view->render();
+            $this->contentCache->set($identifier, $content);
+        }
+
+        return $content;
+    }
+
+    /**
+     * Prevent from overriding template path in parent method
+     * @see initializeView
+     *
+     * @param ViewInterface $view
+     * @return void
+     */
+    protected function setViewConfiguration(ViewInterface $view)
+    {
+    }
+
+    /**
+     * Allows the widget template and partial root paths to be overridden via the framework configuration,
+     * e.g. plugin.tx_extension.view.widget.<WidgetViewHelperClassName>.templateRootPaths
+     * Note: we use the new syntax (plural: *Paths) here and allow the old (*Path) too
+     *
+     * @param ViewInterface $view
+     * @return void
+     */
+    protected function initializeView(ViewInterface $view)
+    {
+        if (!$this->request instanceof WidgetRequest) {
+            return;
+        }
+
+        $frameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
+        $widgetViewHelperClassName = $this->request->getWidgetContext()->getWidgetViewHelperClassName();
+
+        if (isset($frameworkConfiguration['view']['widget'][$widgetViewHelperClassName])) {
+            $widgetViewHelperConfiguration = $frameworkConfiguration['view']['widget'][$widgetViewHelperClassName];
+            $this->templateUtility->configureTemplatePaths($view, $widgetViewHelperConfiguration);
+        }
     }
 }

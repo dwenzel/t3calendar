@@ -29,6 +29,7 @@ class CalendarDay
 
     /**
      * @var ObjectStorage
+     * @lazy
      */
     protected $items;
 
@@ -193,6 +194,7 @@ class CalendarDay
      */
     public function getHasItems()
     {
-        return ($this->items->count())? true : false;
+        return ($this->items->count()) ? true : false;
     }
 }
+

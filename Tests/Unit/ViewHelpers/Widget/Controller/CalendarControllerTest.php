@@ -17,12 +17,19 @@ namespace DWenzel\T3calendar\Tests\ViewHelpers\Widget\Controller;
 use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactoryInterface;
+use DWenzel\T3calendar\Utility\TemplateUtility;
 use DWenzel\T3calendar\ViewHelpers\Widget\Controller\CalendarController;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Fluid\Core\Widget\WidgetContext;
+use TYPO3\CMS\Fluid\Core\Widget\WidgetRequest;
 
 /**
  * Class CalendarControllerTest
@@ -51,6 +58,11 @@ class CalendarControllerTest extends UnitTestCase
     protected $configuration;
 
     /**
+     * @var TemplateUtility | \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $templateUtility;
+
+    /**
      * @var CalendarConfigurationFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $calendarFactory;
@@ -59,6 +71,31 @@ class CalendarControllerTest extends UnitTestCase
      * @var array
      */
     protected $objects = [];
+
+    /**
+     * @var CacheManager|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $cacheManager;
+
+    /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $contentCache;
+
+    /**
+     * @var RequestInterface | \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $request;
+
+    /**
+     * @var WidgetContext | \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $widgetContext;
+
+    /**
+     * @var ConfigurationManagerInterface | \ PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $configurationManager;
 
     /**
      * set up subject
@@ -79,6 +116,35 @@ class CalendarControllerTest extends UnitTestCase
         $this->calendarFactory->method('create')->will($this->returnValue($this->configuration));
         $this->subject->injectCalendarFactory($this->calendarFactory);
         $this->subject->_set('objects', $this->objects);
+        $this->contentCache = $this->getMock(VariableFrontend::class, ['get', 'set'], [], '', false);
+        $this->contentCache->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue(false));
+        $this->inject(
+            $this->subject,
+            'contentCache',
+            $this->contentCache
+        );
+        $this->cacheManager = $this->getMock(CacheManager::class, ['getCache']);
+        $this->cacheManager->expects($this->any())
+            ->method('getCache')
+            ->will($this->returnValue($this->contentCache));
+        $this->subject->injectCacheManager($this->cacheManager);
+        $this->templateUtility = $this->getMockBuilder(TemplateUtility::class)
+            ->setMethods(['configureTemplatePaths'])->getMock();
+        $this->subject->injectTemplateUtility($this->templateUtility);
+        $this->widgetContext = $this->getMockBuilder(WidgetContext::class)
+            ->setMethods(['getWidgetViewHelperClassName'])->getMock();
+        $this->request = $this->getMockBuilder(WidgetRequest::class)
+            ->setMethods(['getWidgetContext'])
+            ->getMock();
+        $this->inject($this->subject, 'request', $this->request);
+        $this->request->expects($this->any())
+            ->method('getWidgetContext')
+            ->willReturn($this->widgetContext);
+        $this->configurationManager = $this->getMockBuilder(ConfigurationManagerInterface::class)
+            ->setMethods(['getConfiguration'])->getMockForAbstractClass();
+        $this->inject($this->subject, 'configurationManager', $this->configurationManager);
     }
 
     /**
@@ -94,6 +160,20 @@ class CalendarControllerTest extends UnitTestCase
         $this->configuration->setStartDate($startDate);
 
         $this->subject->_set('configuration', $this->configuration);
+    }
+
+    /**
+     * @test
+     */
+    public function templateUtilityCanBeInjected(){
+        $templateUtility = $this->getMockBuilder(TemplateUtility::class)
+            ->getMock();
+        $this->subject->injectTemplateUtility($templateUtility);
+        $this->assertAttributeSame(
+            $templateUtility,
+            'templateUtility',
+            $this->subject
+        );
     }
 
     /**
@@ -600,5 +680,48 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function initializeObjectGetsCalendarCacheFromManager()
+    {
+        $this->cacheManager->expects($this->once())
+            ->method('getCache')
+            ->with('t3calendar_content');
+        $this->subject->initializeObject();
+    }
+
+    /**
+     * @test
+     */
+    public function initializeViewConfiguresTemplatePaths(){
+        $viewHelperClassName = 'foo';
+        $widgetViewHelperConfig = ['baz'];
+        $frameWorkConfiguration = [
+            'view' => [
+                'widget' => [
+                    $viewHelperClassName => $widgetViewHelperConfig
+                ]
+            ]
+        ];
+        $this->configurationManager->expects($this->once())
+            ->method('getConfiguration')
+            ->with(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK)
+            ->willReturn($frameWorkConfiguration);
+        $this->widgetContext->expects($this->once())
+            ->method('getWidgetViewHelperClassName')
+            ->willReturn($viewHelperClassName);
+
+        $view = $this->getMockBuilder(ViewInterface::class)
+            ->getMockForAbstractClass();
+        $this->templateUtility->expects($this->once())
+            ->method('configureTemplatePaths')
+            ->willReturn($view, $widgetViewHelperConfig);
+
+        $params = [$view];
+        $this->subject->_callRef(
+            'initializeView', $view);
     }
 }
