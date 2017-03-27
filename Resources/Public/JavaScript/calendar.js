@@ -16,7 +16,7 @@ t3calendar.ajax = function (url, parentObject) {
             jQuery('#loader').removeClass('loading');
         })
 };
-jQuery('.tx-t3calendar-widget ').on('click', '.navigation a', function (e) {
+jQuery('.tx-t3calendar-widget ').on('click', '.navigation.ajax a', function (e) {
     e.preventDefault();
     var element = jQuery(this),
         calendarId = element.data('calendarid'),

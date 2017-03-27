@@ -34,7 +34,7 @@
 </f:section>
 
 <f:section name="comboView">
-	<div class="calendar comboView">
+	<div class="calendar comboView {f:if(condition: '{configuration.ajaxEnabled}', then: 'ajax')}">
 		<f:if condition="{configuration.ajaxEnabled}">
 			<div id="loader">loading...</div>
 		</f:if>

@@ -1,3 +1,9 @@
+2017-03-27         [RELEASE] Release of t3calendar 0.3.0 (Dirk Wenzel)
+2017-03-27 6f1740b [BUGFIX] missing css for loading indicator added. (Dirk Wenzel)
+2017-03-27 3593d83 [BUGFIX] missing class for ajax navigation added to month template. (Dirk Wenzel)
+2017-03-24 449d3a5 [TASK] Templates improved:  Ajax JavaScript is only active if Ajax is enabled for widget. Anchors added to navigation links. (Dirk Wenzel)
+2017-03-11 0e79de6 [TASK] travis ci configuration: use unit test config from package. (Dirk Wenzel)
+
 2017-03-11         [RELEASE] Release of t3calendar 0.2.0 (Dirk Wenzel)
 2017-03-10 dd1eebf [TASK] CalendarItemStorage now respects valid end dates of items and adds them for each day in between date and end date. (Dirk Wenzel)
 2017-03-10 629ffc6 [TASK] calendar items are now added to a calendar day if they have a matching end date. (Dirk Wenzel)
