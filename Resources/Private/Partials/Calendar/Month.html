@@ -6,7 +6,7 @@
             <f:then>
                 <f:comment> allow display of navigation in view mode miniMonth</f:comment>
                 <f:if condition="{configuration.showNavigation}">
-                    <td colspan="7" class="navigation">
+                    <td colspan="7" class="navigation {f:if(condition: '{configuration.ajaxEnabled}', then: 'ajax')}">
                         <f:widget.link
                                 action="month"
                                 section="{calendarId}"
