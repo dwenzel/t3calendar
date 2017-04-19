@@ -16,7 +16,7 @@ namespace DWenzel\T3calendar\Tests\Unit\Domain\Factory;
 
 use DWenzel\T3calendar\Cache\CacheManagerTrait;
 use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 
 /**

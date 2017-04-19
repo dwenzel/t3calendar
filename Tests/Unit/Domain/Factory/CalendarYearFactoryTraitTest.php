@@ -16,7 +16,7 @@ namespace DWenzel\T3calendar\Tests\Unit\Domain\Factory;
 
 use DWenzel\T3calendar\Domain\Factory\CalendarYearFactoryInterface;
 use DWenzel\T3calendar\Domain\Factory\CalendarYearFactoryTrait;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 
 /**

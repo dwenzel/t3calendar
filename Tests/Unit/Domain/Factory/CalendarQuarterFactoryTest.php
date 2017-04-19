@@ -6,7 +6,7 @@ use DWenzel\T3calendar\Domain\Factory\CalendarMonthFactoryInterface;
 use DWenzel\T3calendar\Domain\Factory\CalendarQuarterFactory;
 use DWenzel\T3calendar\Domain\Model\CalendarMonth;
 use DWenzel\T3calendar\Domain\Model\CalendarQuarter;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 

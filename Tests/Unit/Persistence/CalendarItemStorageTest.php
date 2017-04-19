@@ -16,7 +16,7 @@ namespace DWenzel\T3calendar\Tests\Unit\Persistence;
 
 use DWenzel\T3calendar\Domain\Model\CalendarItemInterface;
 use DWenzel\T3calendar\Persistence\CalendarItemStorage;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**

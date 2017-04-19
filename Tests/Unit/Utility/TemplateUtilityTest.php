@@ -3,7 +3,7 @@
 namespace DWenzel\T3calendar\Tests\Unit\Utility;
 
 use DWenzel\T3calendar\Utility\TemplateUtility;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 

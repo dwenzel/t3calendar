@@ -3,7 +3,7 @@
 namespace DWenzel\T3calendar\Tests\Unit\ViewHelpers\Format;
 
 use DWenzel\T3calendar\ViewHelpers\Format\DateViewHelper;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 
 /**

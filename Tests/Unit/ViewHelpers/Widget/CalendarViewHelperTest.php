@@ -19,7 +19,7 @@ namespace DWenzel\T3calendar\Tests\Unit\ViewHelpers\Widget;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use DWenzel\T3calendar\ViewHelpers\Widget\CalendarViewHelper;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * Class CalendarViewHelperTest

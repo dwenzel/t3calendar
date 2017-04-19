@@ -11,7 +11,7 @@ namespace DWenzel\T3calendar\Tests\Unit\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use DWenzel\T3calendar\Domain\Model\CalendarYear;
 use DWenzel\T3calendar\Domain\Model\CalendarMonth;
