@@ -23,9 +23,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "DWenzel\\T3calendar\\Tests\\": "Tests",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+      "DWenzel\\T3calendar\\Tests\\": "Tests"
     }
   },
   "config": {
@@ -45,10 +43,6 @@
     ]
   },
   "extra": {
-    "branch-alias": {
-      "dev-master": "0.3.x-dev",
-      "dev-develop": "0.3.x-dev"
-    },
     "typo3/cms": {
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/Web"
