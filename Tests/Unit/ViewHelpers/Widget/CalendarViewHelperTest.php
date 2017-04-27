@@ -18,8 +18,9 @@ namespace DWenzel\T3calendar\Tests\Unit\ViewHelpers\Widget;
 
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use DWenzel\T3calendar\ViewHelpers\Widget\CalendarViewHelper;
-use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
+use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class CalendarViewHelperTest
@@ -28,7 +29,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 class CalendarViewHelperTest extends UnitTestCase
 {
     /**
-     * @var CalendarViewHelper|\PHPUnit_Framework_MockObject_MockObject|AccessibleObjectInterface
+     * @var CalendarViewHelper|\PHPUnit_Framework_MockObject_MockObject|AccessibleMockObjectInterface
      */
     protected $subject;
 
@@ -38,7 +39,7 @@ class CalendarViewHelperTest extends UnitTestCase
     public function setUp()
     {
         $this->subject = $this->getAccessibleMock(
-            CalendarViewHelper::class, ['hasArgument', 'initiateSubRequest']
+            CalendarViewHelper::class, ['hasArgument', 'initiateSubRequest', 'registerArgument']
         );
     }
 
@@ -72,8 +73,86 @@ class CalendarViewHelperTest extends UnitTestCase
      */
     public function renderInitiatesSubRequest()
     {
+        $arguments = [
+            'objects' => []
+        ];
+        $this->subject->setArguments($arguments);
         $this->subject->expects($this->once())
             ->method('initiateSubRequest');
-        $this->subject->render([]);
+        $this->subject->render();
+    }
+
+    /**
+     * @test
+     */
+    public function initializeArgumentsRegistersArguments()
+    {
+        $this->subject->expects($this->exactly(4))
+            ->method('registerArgument')
+            ->withConsecutive(
+                ['customWidgetId', 'string', 'extend the widget identifier with a custom widget id'],
+                ['objects', 'mixed', 'Required: Array or instance of \Iterator or \TYPO3\CMS\Extbase\Persistence\QueryResultInterface or \DWenzel\T3calendar\Persistence\CalendarItemStorage', true],
+                ['configuration', 'mixed', 'Required: Instance of \DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration or array'],
+                ['id', 'string', 'Optional: String, identifier for widget']
+            )
+            ->willReturn($this->subject);
+
+        $this->subject->initializeArguments();
+    }
+
+    public function invalidObjectDataProvider()
+    {
+        return [
+            [5],
+            ['foo'],
+            [new ObjectStorage()],
+            [new \stdClass()]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidObjectDataProvider
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionCode 1493322353
+     */
+    public function renderThrowsExceptionForInvalidTypesOfObjects($invalidObject)
+    {
+        $arguments = [
+            'objects' => $invalidObject
+        ];
+        $this->subject->setArguments($arguments);
+
+        $this->subject->render();
+    }
+
+    public function invalidConfigurationDataProvider()
+    {
+        return [
+            [5],
+            ['foo'],
+            [new ObjectStorage()],
+            [new \stdClass()]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidConfigurationDataProvider
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionCode 1493322353
+     */
+    public function renderThrowsExceptionForInvalidTypesOfConfiguration($invalidConfiguration)
+    {
+        $arguments = [
+            'objects' => [],
+            'configuration' => $invalidConfiguration
+        ];
+        $this->subject->setArguments($arguments);
+        $this->subject->expects($this->once())
+            ->method('hasArgument')
+            ->with('configuration')
+            ->willReturn(true);
+        $this->subject->render();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace DWenzel\T3calendar\ViewHelpers\Widget\Controller;
 
 /**
@@ -17,6 +18,7 @@ namespace DWenzel\T3calendar\ViewHelpers\Widget\Controller;
 use DWenzel\T3calendar\Cache\CacheManagerTrait;
 use DWenzel\T3calendar\Domain\Factory\CalendarFactoryTrait;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
+use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactoryTrait;
 use DWenzel\T3calendar\Utility\TemplateUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -29,7 +31,7 @@ use TYPO3\CMS\Fluid\Core\Widget\WidgetRequest;
  */
 class CalendarController extends AbstractWidgetController
 {
-    use CacheManagerTrait, CalendarFactoryTrait;
+    use CacheManagerTrait, CalendarFactoryTrait, CalendarConfigurationFactoryTrait;
 
     /**
      * @var CalendarConfiguration
@@ -72,7 +74,12 @@ class CalendarController extends AbstractWidgetController
     public function initializeAction()
     {
         $this->objects = $this->widgetConfiguration['objects'];
-        $this->configuration = $this->widgetConfiguration['configuration'];
+
+        $calendarConfiguration = $this->widgetConfiguration['configuration'];
+        if (is_array($calendarConfiguration)) {
+            $calendarConfiguration = $this->calendarConfigurationFactory->create($calendarConfiguration);
+        }
+        $this->configuration = $calendarConfiguration;
         $this->id = $this->widgetConfiguration['id'];
     }
 
@@ -96,6 +103,30 @@ class CalendarController extends AbstractWidgetController
     }
 
     /**
+     * @return mixed|string
+     */
+    protected function getContent()
+    {
+        $identifier = sha1(serialize($this->configuration));
+        $content = $this->contentCache->get($identifier);
+        if ($content === false) {
+            $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
+            $this->view->assignMultiple(
+                [
+                    'configuration' => $this->configuration,
+                    'calendar' => $calendar,
+                    'calendarId' => $this->id
+                ]
+            );
+
+            $content = $this->view->render();
+            $this->contentCache->set($identifier, $content);
+        }
+
+        return $content;
+    }
+
+    /**
      * Day action
      *
      * @param string $shift Shift action. Allowed: 'previous' and 'next'.
@@ -106,66 +137,6 @@ class CalendarController extends AbstractWidgetController
     {
         $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_DAY);
         $this->adjustStartDate(CalendarConfiguration::PERIOD_DAY, $shift, $origin);
-
-        return $this->getContent();
-    }
-
-    /**
-     * Week action
-     *
-     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
-     * @param int $origin Timestamp indicating the current start date of calendar.
-     * @return mixed|string
-     */
-    public function weekAction($shift = null, $origin = null)
-    {
-        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_WEEK);
-        $this->adjustStartDate(CalendarConfiguration::PERIOD_WEEK, $shift, $origin);
-
-        return $this->getContent();
-    }
-
-    /**
-     * Month action
-     *
-     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
-     * @param int $origin Timestamp indicating the current start date of calendar.
-     * @return mixed|string
-     */
-    public function monthAction($shift = null, $origin = null)
-    {
-        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_MONTH);
-        $this->adjustStartDate(CalendarConfiguration::PERIOD_MONTH, $shift, $origin);
-
-        return $this->getContent();
-    }
-
-    /**
-     * Quarter action
-     *
-     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
-     * @param int $origin Timestamp indicating the current start date of calendar.
-     * @return mixed|string
-     */
-    public function quarterAction($shift = null, $origin = null)
-    {
-        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_QUARTER);
-        $this->adjustStartDate(CalendarConfiguration::PERIOD_QUARTER, $shift, $origin);
-
-        return $this->getContent();
-    }
-
-    /**
-     * Year action
-     *
-     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
-     * @param int $origin Timestamp indicating the current start date of calendar.
-     * @return mixed|string
-     */
-    public function yearAction($shift = null, $origin = null)
-    {
-        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_YEAR);
-        $this->adjustStartDate(CalendarConfiguration::PERIOD_YEAR, $shift, $origin);
 
         return $this->getContent();
     }
@@ -267,27 +238,63 @@ class CalendarController extends AbstractWidgetController
     }
 
     /**
+     * Week action
+     *
+     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
+     * @param int $origin Timestamp indicating the current start date of calendar.
      * @return mixed|string
      */
-    protected function getContent()
+    public function weekAction($shift = null, $origin = null)
     {
-        $identifier = sha1(serialize($this->configuration));
-        $content = $this->contentCache->get($identifier);
-        if ($content === false) {
-            $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
-            $this->view->assignMultiple(
-                [
-                    'configuration' => $this->configuration,
-                    'calendar' => $calendar,
-                    'calendarId' => $this->id
-                ]
-            );
+        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_WEEK);
+        $this->adjustStartDate(CalendarConfiguration::PERIOD_WEEK, $shift, $origin);
 
-            $content = $this->view->render();
-            $this->contentCache->set($identifier, $content);
-        }
+        return $this->getContent();
+    }
 
-        return $content;
+    /**
+     * Month action
+     *
+     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
+     * @param int $origin Timestamp indicating the current start date of calendar.
+     * @return mixed|string
+     */
+    public function monthAction($shift = null, $origin = null)
+    {
+        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_MONTH);
+        $this->adjustStartDate(CalendarConfiguration::PERIOD_MONTH, $shift, $origin);
+
+        return $this->getContent();
+    }
+
+    /**
+     * Quarter action
+     *
+     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
+     * @param int $origin Timestamp indicating the current start date of calendar.
+     * @return mixed|string
+     */
+    public function quarterAction($shift = null, $origin = null)
+    {
+        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_QUARTER);
+        $this->adjustStartDate(CalendarConfiguration::PERIOD_QUARTER, $shift, $origin);
+
+        return $this->getContent();
+    }
+
+    /**
+     * Year action
+     *
+     * @param string $shift Shift action. Allowed: 'previous' and 'next'.
+     * @param int $origin Timestamp indicating the current start date of calendar.
+     * @return mixed|string
+     */
+    public function yearAction($shift = null, $origin = null)
+    {
+        $this->configuration->setDisplayPeriod(CalendarConfiguration::PERIOD_YEAR);
+        $this->adjustStartDate(CalendarConfiguration::PERIOD_YEAR, $shift, $origin);
+
+        return $this->getContent();
     }
 
     /**

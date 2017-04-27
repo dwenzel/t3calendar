@@ -1,4 +1,5 @@
 <?php
+
 namespace DWenzel\T3calendar\Tests\ViewHelpers\Widget\Controller;
 
 /**
@@ -16,13 +17,14 @@ namespace DWenzel\T3calendar\Tests\ViewHelpers\Widget\Controller;
 
 use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
+use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactory;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactoryInterface;
 use DWenzel\T3calendar\Utility\TemplateUtility;
 use DWenzel\T3calendar\ViewHelpers\Widget\Controller\CalendarController;
+use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
-use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -38,7 +40,7 @@ use TYPO3\CMS\Fluid\Core\Widget\WidgetRequest;
 class CalendarControllerTest extends UnitTestCase
 {
     /**
-     * @var CalendarController|\PHPUnit_Framework_MockObject_MockObject|AccessibleObjectInterface
+     * @var CalendarController|\PHPUnit_Framework_MockObject_MockObject|AccessibleMockObjectInterface
      */
     protected $subject;
 
@@ -93,9 +95,14 @@ class CalendarControllerTest extends UnitTestCase
     protected $widgetContext;
 
     /**
-     * @var ConfigurationManagerInterface | \ PHPUnit_Framework_MockObject_MockObject
+     * @var ConfigurationManagerInterface | \PHPUnit_Framework_MockObject_MockObject
      */
     protected $configurationManager;
+
+    /**
+     * @var CalendarConfigurationFactoryInterface | \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $calendarConfigurationFactory;
 
     /**
      * set up subject
@@ -145,6 +152,11 @@ class CalendarControllerTest extends UnitTestCase
         $this->configurationManager = $this->getMockBuilder(ConfigurationManagerInterface::class)
             ->setMethods(['getConfiguration'])->getMockForAbstractClass();
         $this->inject($this->subject, 'configurationManager', $this->configurationManager);
+        $this->calendarConfigurationFactory = $this->getMock(
+            CalendarConfigurationFactory::class,
+            ['create']
+        );
+        $this->subject->injectCalendarConfigurationFactory($this->calendarConfigurationFactory);
     }
 
     /**
@@ -165,7 +177,8 @@ class CalendarControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function templateUtilityCanBeInjected(){
+    public function templateUtilityCanBeInjected()
+    {
         $templateUtility = $this->getMockBuilder(TemplateUtility::class)
             ->getMock();
         $this->subject->injectTemplateUtility($templateUtility);
@@ -594,6 +607,7 @@ class CalendarControllerTest extends UnitTestCase
         );
     }
     //
+
     /**
      * @test
      */
@@ -696,7 +710,8 @@ class CalendarControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function initializeViewConfiguresTemplatePaths(){
+    public function initializeViewConfiguresTemplatePaths()
+    {
         $viewHelperClassName = 'foo';
         $widgetViewHelperConfig = ['baz'];
         $frameWorkConfiguration = [
@@ -723,5 +738,30 @@ class CalendarControllerTest extends UnitTestCase
         $params = [$view];
         $this->subject->_callRef(
             'initializeView', $view);
+    }
+
+    /**
+     * @test
+     */
+    public function initializeActionCreatesConfigurationFromArray()
+    {
+        $configuration = [];
+        $widgetConfiguration = [
+            'configuration' => $configuration
+        ];
+        $mockConfiguration = $this->getMock(CalendarConfiguration::class);
+        $this->subject->_set('widgetConfiguration', $widgetConfiguration);
+        $this->calendarConfigurationFactory->expects($this->once())
+            ->method('create')
+            ->with($configuration)
+            ->will($this->returnValue($mockConfiguration));
+
+        $this->subject->initializeAction();
+
+        $this->assertAttributeSame(
+            $mockConfiguration,
+            'configuration',
+            $this->subject
+        );
     }
 }
