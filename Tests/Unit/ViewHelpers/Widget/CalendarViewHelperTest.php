@@ -87,7 +87,7 @@ class CalendarViewHelperTest extends UnitTestCase
      */
     public function initializeArgumentsRegistersArguments()
     {
-        $this->subject->expects($this->exactly(3))
+        $this->subject->expects($this->exactly(4))
             ->method('registerArgument')
             ->withConsecutive(
                 ['objects', 'mixed', 'Required: Array or instance of \Iterator or \TYPO3\CMS\Extbase\Persistence\QueryResultInterface or \DWenzel\T3calendar\Persistence\CalendarItemStorage', true],
