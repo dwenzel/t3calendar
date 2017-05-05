@@ -3,7 +3,7 @@ namespace DWenzel\T3calendar\Tests\Unit\Domain\Model\Dto;
 
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactory;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 
 /**
@@ -278,7 +278,7 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
             [1, true]
         ];
     }
-    
+
     /**
      * @test
      * @dataProvider showNavigationDataProvider

@@ -1,4 +1,5 @@
 <?php
+
 namespace DWenzel\T3calendar\Domain\Model\Dto;
 
 /**

@@ -19,7 +19,7 @@ use DWenzel\T3calendar\Domain\Factory\CalendarDayFactoryInterface;
 use DWenzel\T3calendar\Domain\Factory\CalendarWeekFactory;
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 

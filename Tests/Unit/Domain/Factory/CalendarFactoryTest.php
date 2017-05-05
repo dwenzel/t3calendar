@@ -16,7 +16,7 @@ use DWenzel\T3calendar\Domain\Model\CalendarQuarter;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 

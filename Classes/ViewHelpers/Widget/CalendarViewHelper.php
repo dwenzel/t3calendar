@@ -1,4 +1,5 @@
 <?php
+
 namespace DWenzel\T3calendar\ViewHelpers\Widget;
 
 /**
@@ -14,8 +15,10 @@ namespace DWenzel\T3calendar\ViewHelpers\Widget;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
+use DWenzel\T3calendar\Persistence\CalendarItemStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper;
 
 /**
  * This ViewHelper renders a Calendar.
@@ -55,13 +58,48 @@ class CalendarViewHelper extends AbstractWidgetViewHelper
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array|\Iterator $objects
-     * @param \DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration $configuration
-     * @param string $id
+     * initialize arguments
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('objects', 'mixed', 'Required: Array or instance of \Iterator or \TYPO3\CMS\Extbase\Persistence\QueryResultInterface or \DWenzel\T3calendar\Persistence\CalendarItemStorage', true)
+            ->registerArgument('configuration', 'mixed', 'Required: Instance of \DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration or array')
+            ->registerArgument('id', 'string', 'Optional: String, identifier for widget')
+            ->registerArgument('parameters', 'array', 'Optional: Array of parameters');
+    }
+
+    /**
      * @return string
      */
-    public function render($objects, CalendarConfiguration $configuration = null, $id = null)
+    public function render()
     {
+
+        $objects = $this->arguments['objects'];
+
+        if ($this->hasArgument('configuration')) {
+            $configuration = $this->arguments['configuration'];
+        }
+
+        if (!($objects instanceof QueryResultInterface || $objects instanceof CalendarItemStorage || is_array($objects))) {
+            $objectType = '';
+            if (is_object($objects)) {
+                $objectType = get_class($objects) . ' ';
+            }
+
+            throw new \UnexpectedValueException('Supplied object type ' . $objectType . 'must be QueryResultInterface or CalendarItemStorage or be an array.', 1493322353);
+        }
+
+        if (!empty($configuration) && !($configuration instanceof CalendarConfiguration || is_array($configuration))) {
+            $configurationType = '';
+            if (is_object($configuration)) {
+                $configurationType = get_class($configuration) . ' ';
+            }
+
+            throw new \UnexpectedValueException('Supplied configuration type ' . $configurationType . 'must be CalendarConfiguration or be an array.', 1493322353);
+        }
+
         return $this->initiateSubRequest();
     }
+
 }

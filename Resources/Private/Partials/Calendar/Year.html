@@ -1,58 +1,61 @@
 <table class="calendarYear">
-	<tr>
-		<td colspan=4 class="legend">
-			<span class="year">{calendar.currentYear.startDate->f:format.date(format: 'Y')}</span>
-		</td>
-	</tr>
-	<tr>
-		<f:for each="{calendar.currentYear.months}" as="month" iteration="monthIteration">
-			<td>
-				<f:render section="month"
-					arguments="{
-						calendar: calendar,
-						month: month,
-						configuration: configuration,
-						settings: settings,
-						calendarId: calendarId}" />
-			</td>
-			<f:if condition="{monthIteration.cycle} == 4">
-	</tr>
-	<tr>
-		</f:if>
-		<f:if condition="{monthIteration.cycle} == 8">
-	</tr>
-	<tr>
-		</f:if>
-		</f:for>
-	</tr>
+    <tr>
+        <td colspan=4 class="legend">
+            <span class="year">{calendar.currentYear.startDate->f:format.date(format: 'Y')}</span>
+        </td>
+    </tr>
+    <tr>
+        <f:for each="{calendar.currentYear.months}" as="month" iteration="monthIteration">
+            <td>
+                <f:render section="month"
+                          arguments="{
+                        calendar: calendar,
+                        month: month,
+                        configuration: configuration,
+                        settings: settings,
+                        calendarId: calendarId,
+                        parameters: parameters}"/>
+            </td>
+            <f:if condition="{monthIteration.cycle} == 4">
+    </tr>
+    <tr>
+        </f:if>
+        <f:if condition="{monthIteration.cycle} == 8">
+    </tr>
+    <tr>
+        </f:if>
+        </f:for>
+    </tr>
 </table>
 
 <f:section name="month">
-	<table class="month">
-		<tbody>
-		<tr>
-			<td colspan=7 class="legend">
-				<span>{month.startDate->f:format.date(format: 'F')}</span>
-			</td>
-		</tr>
-		<f:for each="{month.weeks}" as="calendarWeek">
-			<tr>
-				<f:for each="{calendarWeek.days}" as="calendarDay">
-					<td class="day
-					{f:if(condition: '{calendarDay.month} != {month.month}', then: 'outOfMonth')}
-					{f:if(condition: '{calendarDay.isCurrent}', then: 'current')}
-					{f:if(condition: '{calendarDay.hasItems}', then: 'hasEvent')}">
-						<div class="labelDay">{calendarDay.day}</div>
-						<f:for each="{calendarDay.items}" as="item">
-							<div class="eventTooltip">
-								<span class="eventTooltipHeadline">Item {item.uid}</span>
-							</div>
-						</f:for>
-					</td>
-				</f:for>
-			</tr>
-		</f:for>
-		</tbody>
-	</table>
+    <table class="month">
+        <tbody>
+        <tr>
+            <td colspan=7 class="legend">
+                <span>{month.startDate->f:format.date(format: 'F')}</span>
+            </td>
+        </tr>
+        <f:for each="{month.weeks}" as="calendarWeek">
+            <tr>
+                <f:for each="{calendarWeek.days}" as="calendarDay">
+                    <td class="day
+                    {f:if(condition: '{calendarDay.month} != {month.month}', then: 'outOfMonth')}
+                    {f:if(condition: '{calendarDay.isCurrent}', then: 'current')}
+                    {f:if(condition: '{calendarDay.hasItems}', then: 'hasEvent')}">
+                        <div class="labelDay">{calendarDay.day}</div>
+                        <f:for each="{calendarDay.items}" as="item">
+                            <div class="eventTooltip">
+                                <span class="eventTooltipHeadline">
+                                    Item {item.uid}
+                                </span>
+                            </div>
+                        </f:for>
+                    </td>
+                </f:for>
+            </tr>
+        </f:for>
+        </tbody>
+    </table>
 
 </f:section>
