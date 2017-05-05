@@ -68,7 +68,7 @@
                     <f:if condition="{calendarDay.hasItems}">
                         <div class="eventTooltip">
                             <f:for each="{calendarDay.items}" as="item">
-                                <span class="eventTooltipHeadline">{f:render(partial: 'Calendar/Item', arguments: '{item: item, settings: settings}' )}</span>
+                                <span class="eventTooltipHeadline">{f:render(partial: 'Calendar/Item', arguments: '{item: item, settings: settings, parameters: parameters}' )}</span>
                             </f:for>
                         </div>
                     </f:if>

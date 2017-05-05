@@ -6,16 +6,18 @@
         <f:then>
             <f:render partial="Calendar/PeriodSwitch"
                       arguments="{
-						calendar: calendar,
-						configuration: configuration,
-						settings: settings,
-						calendarId: calendarId}"/>
+                        calendar: calendar,
+                        configuration: configuration,
+                        settings: settings,
+                        calendarId: calendarId,
+                        parameters: parameters}"/>
         </f:then>
     </f:if>
     <f:render partial="Calendar/Year"
               arguments="{
-				calendar: calendar,
-				configuration: configuration,
-				settings: settings,
-				calendarId: calendarId}"/>
+                calendar: calendar,
+                configuration: configuration,
+                settings: settings,
+                calendarId: calendarId,
+                parameters: parameters}"/>
 </div>

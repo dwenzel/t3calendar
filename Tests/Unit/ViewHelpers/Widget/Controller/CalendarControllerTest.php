@@ -225,6 +225,23 @@ class CalendarControllerTest extends UnitTestCase
         );
     }
 
+    /**
+     * @test
+     */
+    public function initializeActionSetsParametersFromWidgetConfiguration()
+    {
+        $parameters = ['foo'];
+        $widgetParameters = [
+            'parameters' => $parameters
+        ];
+        $this->subject->_set('widgetParameters', $widgetParameters);
+        $this->subject->initializeAction();
+        $this->assertAttributeSame(
+            $parameters,
+            'parameters',
+            $this->subject
+        );
+    }
 
     /**
      * @test

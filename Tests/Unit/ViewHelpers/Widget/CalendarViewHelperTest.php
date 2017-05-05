@@ -92,7 +92,8 @@ class CalendarViewHelperTest extends UnitTestCase
             ->withConsecutive(
                 ['objects', 'mixed', 'Required: Array or instance of \Iterator or \TYPO3\CMS\Extbase\Persistence\QueryResultInterface or \DWenzel\T3calendar\Persistence\CalendarItemStorage', true],
                 ['configuration', 'mixed', 'Required: Instance of \DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration or array'],
-                ['id', 'string', 'Optional: String, identifier for widget']
+                ['id', 'string', 'Optional: String, identifier for widget'],
+                ['parameters', 'array', 'Optional: Array of parameters']
             )
             ->willReturn($this->subject);
 

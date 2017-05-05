@@ -65,7 +65,8 @@ class CalendarViewHelper extends AbstractWidgetViewHelper
     {
         $this->registerArgument('objects', 'mixed', 'Required: Array or instance of \Iterator or \TYPO3\CMS\Extbase\Persistence\QueryResultInterface or \DWenzel\T3calendar\Persistence\CalendarItemStorage', true)
             ->registerArgument('configuration', 'mixed', 'Required: Instance of \DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration or array')
-            ->registerArgument('id', 'string', 'Optional: String, identifier for widget');
+            ->registerArgument('id', 'string', 'Optional: String, identifier for widget')
+            ->registerArgument('parameters', 'array', 'Optional: Array of parameters');
     }
 
     /**

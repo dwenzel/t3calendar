@@ -175,4 +175,5 @@ class CalendarConfigurationTest extends UnitTestCase
             $this->subject->isShowNavigation()
         );
     }
+
 }

@@ -59,6 +59,13 @@ class CalendarController extends AbstractWidgetController
     protected $templateUtility;
 
     /**
+     * Parameters
+     *
+     * @var array
+     */
+    protected $parameters;
+
+    /**
      * Injects the template utility
      *
      * @param TemplateUtility $templateUtility
@@ -81,6 +88,7 @@ class CalendarController extends AbstractWidgetController
         }
         $this->configuration = $calendarConfiguration;
         $this->id = $this->widgetConfiguration['id'];
+        $this->parameters = $this->widgetConfiguration['parameters'];
     }
 
     /**
@@ -115,7 +123,8 @@ class CalendarController extends AbstractWidgetController
                 [
                     'configuration' => $this->configuration,
                     'calendar' => $calendar,
-                    'calendarId' => $this->id
+                    'calendarId' => $this->id,
+                    'parameters' => $this->parameters
                 ]
             );
 

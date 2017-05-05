@@ -11,6 +11,7 @@ Displays calendar views.
 				objects="{objects}"
 				configuration="{calendarConfiguration}"
 				id="tx-t3calendar-calendar-widget"
+				parameters="{settings}"
 		/>
 	</div>
 

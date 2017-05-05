@@ -26,7 +26,13 @@
                 <div class="labelDay">{calendarDay.day}</div>
                 <f:for each="{calendarDay.items}" as="item">
                     <div class="event">
-                        Item {item.uid}
+                        <f:render partial="Calendar/Item"
+                                  arguments="{
+                                    calendar: calendar,
+                                    configuration: configuration,
+                                    settings: settings,
+                                    calendarId: calendarId,
+                                    parameters: parameters}"/>
                     </div>
                 </f:for>
             </td>
