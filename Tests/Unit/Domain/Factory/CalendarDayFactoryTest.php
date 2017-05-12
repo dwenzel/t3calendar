@@ -244,4 +244,35 @@ class CalendarDayFactoryTest extends UnitTestCase
 
         $this->subject->create($calendarDayDate, [$mockItemWithMatchingDate]);
     }
+
+    /**
+     * @test
+     */
+    public function createDoesNotAddItemWithFutureEndDateBeforeStartDate()
+    {
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+        $calendarDayDate = new \DateTime('yesterday', $timeZone);
+        $date = new \DateTime('today', $timeZone);
+        $endDate = new \DateTime('today', $timeZone);
+        $mockCalendarDay = $this->getMock(
+            CalendarDay::class, ['addItem', 'getDate'], [$date]
+        );
+        $mockCalendarDay->expects($this->atLeastOnce())
+            ->method('getDate')->willReturn($calendarDayDate);
+
+        $this->objectManager->expects($this->once())
+            ->method('get')->with(CalendarDay::class, $calendarDayDate)
+            ->will($this->returnValue($mockCalendarDay));
+        $mockItemWithMatchingDate = $this->getMock(
+            DummyItemWithEndDate::class, ['getDate', 'getEndDate'], [], '', false
+        );
+        $mockItemWithMatchingDate->expects($this->atLeastOnce())
+            ->method('getDate')->willReturn($date);
+        $mockItemWithMatchingDate->expects($this->any())
+            ->method('getEndDate')->willReturn($endDate);
+        $mockCalendarDay->expects($this->never())
+            ->method('addItem');
+
+        $this->subject->create($calendarDayDate, [$mockItemWithMatchingDate]);
+    }
 }
