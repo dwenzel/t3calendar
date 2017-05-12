@@ -40,6 +40,7 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
     public function create(\DateTime $date, $items = null, $current = false)
     {
         /** @var CalendarDay $calendarDay */
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
         $calendarDay = $this->objectManager->get(CalendarDay::class, $date);
 
         if ($items instanceof CalendarItemStorage)
@@ -72,6 +73,7 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
             return true;
         }
         if ($item instanceof CalendarItemInterface
+            && $item->getDate() <= $calendarDayDate
             && method_exists($item, 'getEndDate')
             && $item->getEndDate() >= $calendarDayDate
         ) {
