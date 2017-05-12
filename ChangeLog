@@ -1,3 +1,6 @@
+2017-05-12         [RELEASE] Release of t3calendar 0.4.1 (Dirk Wenzel)
+2017-05-12 08abc8a [BUGFIX] fixed error which caused calendar items with end date being visible before their start date. (Dirk Wenzel)
+
 2017-05-05         [RELEASE] Release of t3calendar 0.4.0 (Dirk Wenzel)
 2017-05-05 9051f3d [BUGFIX] errors in unit test fixed (Dirk Wenzel)
 2017-05-05 3c52151 [TASK] CalendarViewHelper now has an optional argument  ‘parameters’ of type array. Default templates adapted. (Dirk Wenzel)
