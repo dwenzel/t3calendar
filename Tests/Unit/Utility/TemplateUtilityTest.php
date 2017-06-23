@@ -82,7 +82,8 @@ class TemplateUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function getPathsReturnsAddsValueForDeprecatedKey(){
+    public function getPathsReturnsAddsValueForDeprecatedKey()
+    {
         $propertyName = 'foo';
         $deprecatedKey = 'boom';
         $configuration = [
@@ -144,7 +145,8 @@ class TemplateUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function configureTemplatePathsAddsAdditionalPathsFromConfiguration(){
+    public function configureTemplatePathsAddsAdditionalPathsFromConfiguration()
+    {
         $configuration = [
             'templateRootPaths' => [
                 10 => 'templatePathFromConfig'

@@ -114,8 +114,7 @@ class CalendarWeekFactoryTest extends UnitTestCase
             CalendarWeek::class, ['addDay']
         );
         $expectedIntervals = [];
-        for ($dayOfWeek = 1; $dayOfWeek < 7; $dayOfWeek++)
-        {
+        for ($dayOfWeek = 1; $dayOfWeek < 7; $dayOfWeek++) {
             $expectedIntervals[] = [new \DateInterval('P' . $dayOfWeek . 'D')];
         }
         $mockCalendarDay = $this->getMock(CalendarDay::class);
@@ -146,5 +145,4 @@ class CalendarWeekFactoryTest extends UnitTestCase
 
         $this->subject->create($mockStartDate, $mockCurrentDate, $items);
     }
-
 }

@@ -43,8 +43,7 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
         /** @noinspection PhpMethodParametersCountMismatchInspection */
         $calendarDay = $this->objectManager->get(CalendarDay::class, $date);
 
-        if ($items instanceof CalendarItemStorage)
-        {
+        if ($items instanceof CalendarItemStorage) {
             $calendarDay->setItems($items->getByDate($date));
         } elseif (count($items)) {
             foreach ($items as $item) {

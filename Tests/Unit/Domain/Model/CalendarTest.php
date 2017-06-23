@@ -26,141 +26,154 @@ use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
  * @package DWenzel\T3calendar\Tests\Unit\Domain\Model
  * @coversDefaultClass \DWenzel\T3calendar\Domain\Model\Calendar
  */
-class CalendarTest extends UnitTestCase {
+class CalendarTest extends UnitTestCase
+{
 
-	/**
-	 * @var Calendar
-	 */
-	protected $subject;
+    /**
+     * @var Calendar
+     */
+    protected $subject;
 
-	public function setUp() {
-		$this->subject = $this->getAccessibleMock(
-			'DWenzel\\T3calendar\\Domain\\Model\\Calendar',
-			['dummy'], [], '', true
-		);
-	}
+    public function setUp()
+    {
+        $this->subject = $this->getAccessibleMock(
+            'DWenzel\\T3calendar\\Domain\\Model\\Calendar',
+            ['dummy'], [], '', true
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::getCurrentMonth
-	 */
-	public function getCurrentMonthReturnsInitiallyNull() {
-		$this->assertNull(
-			$this->subject->getCurrentMonth()
-		);
-	}
+    /**
+     * @test
+     * @covers ::getCurrentMonth
+     */
+    public function getCurrentMonthReturnsInitiallyNull()
+    {
+        $this->assertNull(
+            $this->subject->getCurrentMonth()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::setCurrentMonth
-	 */
-	public function setCurrentMonthForObjectSetsCurrentMonth() {
-		$month = new CalendarMonth();
-		$this->subject->setCurrentMonth($month);
+    /**
+     * @test
+     * @covers ::setCurrentMonth
+     */
+    public function setCurrentMonthForObjectSetsCurrentMonth()
+    {
+        $month = new CalendarMonth();
+        $this->subject->setCurrentMonth($month);
 
-		$this->assertSame(
-			$month,
-			$this->subject->getCurrentMonth()
-		);
-	}
+        $this->assertSame(
+            $month,
+            $this->subject->getCurrentMonth()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::getViewMode
-	 */
-	public function getViewModeReturnsInitiallyNull() {
-		$this->assertNull(
-			$this->subject->getViewMode()
-		);
-	}
+    /**
+     * @test
+     * @covers ::getViewMode
+     */
+    public function getViewModeReturnsInitiallyNull()
+    {
+        $this->assertNull(
+            $this->subject->getViewMode()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::setViewMode
-	 */
-	public function setViewModeForIntegerSetsViewMode() {
-		$this->subject->setViewMode(CalendarConfiguration::VIEW_MODE_MINI_MONTH);
-		$this->assertSame(
-			CalendarConfiguration::VIEW_MODE_MINI_MONTH,
-			$this->subject->getViewMode()
-		);
-	}
+    /**
+     * @test
+     * @covers ::setViewMode
+     */
+    public function setViewModeForIntegerSetsViewMode()
+    {
+        $this->subject->setViewMode(CalendarConfiguration::VIEW_MODE_MINI_MONTH);
+        $this->assertSame(
+            CalendarConfiguration::VIEW_MODE_MINI_MONTH,
+            $this->subject->getViewMode()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::getDisplayPeriod
-	 */
-	public function getDisplayPeriodReturnsInitiallyNull() {
-		$this->assertNull(
-			$this->subject->getDisplayPeriod()
-		);
-	}
+    /**
+     * @test
+     * @covers ::getDisplayPeriod
+     */
+    public function getDisplayPeriodReturnsInitiallyNull()
+    {
+        $this->assertNull(
+            $this->subject->getDisplayPeriod()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::setDisplayPeriod
-	 */
-	public function setDisplayPeriodForIntegerSetsDisplayPeriod() {
-		$this->subject->setDisplayPeriod(CalendarConfiguration::PERIOD_MONTH);
-		$this->assertSame(
-			CalendarConfiguration::PERIOD_MONTH,
-			$this->subject->getDisplayPeriod()
-		);
-	}
+    /**
+     * @test
+     * @covers ::setDisplayPeriod
+     */
+    public function setDisplayPeriodForIntegerSetsDisplayPeriod()
+    {
+        $this->subject->setDisplayPeriod(CalendarConfiguration::PERIOD_MONTH);
+        $this->assertSame(
+            CalendarConfiguration::PERIOD_MONTH,
+            $this->subject->getDisplayPeriod()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::getCurrentWeek
-	 */
-	public function getCurrentWeekReturnsInitiallyNull() {
-		$this->assertNull(
-			$this->subject->getCurrentWeek()
-		);
-	}
+    /**
+     * @test
+     * @covers ::getCurrentWeek
+     */
+    public function getCurrentWeekReturnsInitiallyNull()
+    {
+        $this->assertNull(
+            $this->subject->getCurrentWeek()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::setCurrentWeek
-	 */
-	public function setCurrentWeekForObjectSetsCurrentWeek() {
-		$week = new CalendarWeek();
-		$this->subject->setCurrentWeek($week);
+    /**
+     * @test
+     * @covers ::setCurrentWeek
+     */
+    public function setCurrentWeekForObjectSetsCurrentWeek()
+    {
+        $week = new CalendarWeek();
+        $this->subject->setCurrentWeek($week);
 
-		$this->assertSame(
-			$week,
-			$this->subject->getCurrentWeek()
-		);
-	}
+        $this->assertSame(
+            $week,
+            $this->subject->getCurrentWeek()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::getCurrentYear
-	 */
-	public function getCurrentYearReturnsInitiallyNull() {
-		$this->assertNull(
-			$this->subject->getCurrentYear()
-		);
-	}
+    /**
+     * @test
+     * @covers ::getCurrentYear
+     */
+    public function getCurrentYearReturnsInitiallyNull()
+    {
+        $this->assertNull(
+            $this->subject->getCurrentYear()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::setCurrentYear
-	 */
-	public function setCurrentYearForObjectSetsCurrentYear() {
-		$year = new CalendarYear();
-		$this->subject->setCurrentYear($year);
+    /**
+     * @test
+     * @covers ::setCurrentYear
+     */
+    public function setCurrentYearForObjectSetsCurrentYear()
+    {
+        $year = new CalendarYear();
+        $this->subject->setCurrentYear($year);
 
-		$this->assertSame(
-			$year,
-			$this->subject->getCurrentYear()
-		);
-	}
+        $this->assertSame(
+            $year,
+            $this->subject->getCurrentYear()
+        );
+    }
 
     /**
      * @test
      * @covers ::getCurrentQuarter
      */
-    public function getCurrentQuarterReturnsInitiallyNull() {
+    public function getCurrentQuarterReturnsInitiallyNull()
+    {
         $this->assertNull(
             $this->subject->getCurrentQuarter()
         );
@@ -170,7 +183,8 @@ class CalendarTest extends UnitTestCase {
      * @test
      * @covers ::setCurrentQuarter
      */
-    public function setCurrentQuarterForObjectSetsCurrentQuarter() {
+    public function setCurrentQuarterForObjectSetsCurrentQuarter()
+    {
         $quarter = new CalendarQuarter();
         $this->subject->setCurrentQuarter($quarter);
 
@@ -181,28 +195,30 @@ class CalendarTest extends UnitTestCase {
     }
 
     /**
-	 * @test
-	 * @covers ::getCurrentDay
-	 */
-	public function getCurrentDayReturnsInitiallyNull() {
-		$this->assertNull(
-			$this->subject->getCurrentDay()
-		);
-	}
+     * @test
+     * @covers ::getCurrentDay
+     */
+    public function getCurrentDayReturnsInitiallyNull()
+    {
+        $this->assertNull(
+            $this->subject->getCurrentDay()
+        );
+    }
 
-	/**
-	 * @test
-	 * @covers ::setCurrentDay
-	 */
-	public function setCurrentDayForObjectSetsCurrentDay() {
-		$day = new CalendarDay();
-		$this->subject->setCurrentDay($day);
+    /**
+     * @test
+     * @covers ::setCurrentDay
+     */
+    public function setCurrentDayForObjectSetsCurrentDay()
+    {
+        $day = new CalendarDay();
+        $this->subject->setCurrentDay($day);
 
-		$this->assertSame(
-			$day,
-			$this->subject->getCurrentDay()
-		);
-	}
+        $this->assertSame(
+            $day,
+            $this->subject->getCurrentDay()
+        );
+    }
 
     /**
      * weekday label dataprovider
@@ -219,7 +235,6 @@ class CalendarTest extends UnitTestCase {
         foreach ($modeFormats as $mode=>$format) {
             $weekDayLabels = [];
             for ($dayOfWeek = 0; $dayOfWeek < 7; $dayOfWeek++) {
-
                 $weekDayLabels[] = strftime($format, strtotime('next Monday +' . $dayOfWeek . ' days'));
             }
             // mode, expectedLabels
@@ -237,7 +252,7 @@ class CalendarTest extends UnitTestCase {
      * @param int $mode A CalendarConfiguration::VIEW_MODE_* constant
      * @param array $weekDayLabels
      */
-	public function getWeekDayLabelsInitiallyReturnsLabelsInCorrectFormat($mode, $weekDayLabels)
+    public function getWeekDayLabelsInitiallyReturnsLabelsInCorrectFormat($mode, $weekDayLabels)
     {
         $this->subject->setViewMode($mode);
         $this->assertSame(

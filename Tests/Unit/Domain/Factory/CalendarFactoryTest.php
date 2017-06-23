@@ -1,6 +1,7 @@
 <?php
 
 namespace DWenzel\T3calendar\Tests\Unit\Domain\Factory;
+
 use DWenzel\T3calendar\Domain\Factory\CalendarDayFactory;
 use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
 use DWenzel\T3calendar\Domain\Factory\CalendarMonthFactory;
@@ -19,7 +20,6 @@ use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
-
 
 /**
  * This file is part of the TYPO3 CMS project.

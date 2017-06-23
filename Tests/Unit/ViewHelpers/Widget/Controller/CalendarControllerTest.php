@@ -281,7 +281,6 @@ class CalendarControllerTest extends UnitTestCase
             ->method('assignMultiple');
 
         $this->subject->indexAction();
-
     }
 
     /**
@@ -309,7 +308,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -363,7 +361,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -391,7 +388,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -409,7 +405,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -477,7 +472,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -495,7 +489,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -563,7 +556,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -581,7 +573,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -651,7 +642,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**
@@ -670,7 +660,6 @@ class CalendarControllerTest extends UnitTestCase
             $expectedStartDate,
             $this->configuration->getStartDate()
         );
-
     }
 
     /**

@@ -53,5 +53,4 @@ class CalendarQuarterFactory implements CalendarQuarterFactoryInterface, Singlet
 
         return $calendarQuarter;
     }
-
 }

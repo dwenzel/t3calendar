@@ -87,5 +87,4 @@ class CalendarConfigurationFactory implements CalendarConfigurationFactoryInterf
 
         return $configuration;
     }
-
 }

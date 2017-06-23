@@ -41,9 +41,9 @@ class CalendarDay
     /**
      * @param \DateTime|null $date
      */
-    public function __construct($date = NULL)
+    public function __construct($date = null)
     {
-        if ($date !== NULL) {
+        if ($date !== null) {
             $this->date = $date;
         }
         $this->initStorageObjects();
@@ -92,11 +92,11 @@ class CalendarDay
      */
     public function getDay()
     {
-        if ($this->date !== NULL) {
+        if ($this->date !== null) {
             return $this->date->format('d');
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -106,11 +106,11 @@ class CalendarDay
      */
     public function getDayOfWeek()
     {
-        if ($this->date !== NULL) {
+        if ($this->date !== null) {
             return (int)date('w', $this->date->getTimestamp());
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -181,11 +181,11 @@ class CalendarDay
      */
     public function getMonth($format = 'n')
     {
-        if ($this->date !== NULL) {
+        if ($this->date !== null) {
             return $this->date->format($format);
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -197,4 +197,3 @@ class CalendarDay
         return ($this->items->count()) ? true : false;
     }
 }
-

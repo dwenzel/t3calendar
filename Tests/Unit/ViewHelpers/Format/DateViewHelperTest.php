@@ -5,7 +5,6 @@ namespace DWenzel\T3calendar\Tests\Unit\ViewHelpers\Format;
 use DWenzel\T3calendar\ViewHelpers\Format\DateViewHelper;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-
 /**
  * This file is part of the TYPO3 CMS project.
  *
