@@ -105,7 +105,8 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
         ];
     }
 
-    public function startDateDataProvider() {
+    public function startDateDataProvider()
+    {
         $timeZone = new \DateTimeZone(date_default_timezone_get());
         $currentDate = new \DateTime('today', $timeZone);
 

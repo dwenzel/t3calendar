@@ -60,5 +60,4 @@ class CalendarYearFactoryTraitTest extends UnitTestCase
             $this->subject
         );
     }
-
 }

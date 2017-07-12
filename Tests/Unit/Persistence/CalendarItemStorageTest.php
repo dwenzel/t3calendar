@@ -103,7 +103,8 @@ class CalendarItemStorageTest extends UnitTestCase
     /**
      * @test
      */
-    public function attachAddsItemWithEndDateForEachDay(){
+    public function attachAddsItemWithEndDateForEachDay()
+    {
         $date = new \DateTime('today');
         $endDate = new \DateTime('tomorrow');
         $item = $this->getMock(
@@ -156,5 +157,4 @@ class CalendarItemStorageTest extends UnitTestCase
             $this->subject->getByDate($endDate)->contains($item)
         );
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 namespace DWenzel\T3calendar\Domain\Factory;
 
- /**
+/**
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -16,7 +16,7 @@ namespace DWenzel\T3calendar\Domain\Factory;
 
  use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 
-/**
+ /**
  * Class ObjectManagerTrait
  *
  * @package DWenzel\T3calendar\Domain\Factory

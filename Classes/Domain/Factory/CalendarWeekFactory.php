@@ -56,4 +56,3 @@ class CalendarWeekFactory implements CalendarWeekFactoryInterface, SingletonInte
         return $calendarWeek;
     }
 }
-

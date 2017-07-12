@@ -74,7 +74,6 @@ class CalendarViewHelper extends AbstractWidgetViewHelper
      */
     public function render()
     {
-
         $objects = $this->arguments['objects'];
 
         if ($this->hasArgument('configuration')) {
@@ -101,5 +100,4 @@ class CalendarViewHelper extends AbstractWidgetViewHelper
 
         return $this->initiateSubRequest();
     }
-
 }

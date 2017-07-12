@@ -17,98 +17,108 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  * Class CalendarQuarter
  * @package DWenzel\T3calendar\Domain\Model
  */
-class CalendarQuarter {
+class CalendarQuarter
+{
 
-	/**
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\DWenzel\T3calendar\Domain\Model\CalendarMonth>
-	 */
-	protected $months;
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\DWenzel\T3calendar\Domain\Model\CalendarMonth>
+     */
+    protected $months;
 
-	/**
-	 * @var \DateTime
-	 */
-	protected $startDate;
+    /**
+     * @var \DateTime
+     */
+    protected $startDate;
 
-	/**
-	 * __construct
-	 */
-	public function __construct() {
-		$this->initStorageObjects();
-	}
+    /**
+     * __construct
+     */
+    public function __construct()
+    {
+        $this->initStorageObjects();
+    }
 
-	/**
-	 * Initializes all \TYPO3\CMS\Extbase\Persistence\ObjectStorage properties.
-	 *
-	 * @return void
-	 */
-	protected function initStorageObjects() {
-		$this->months = new ObjectStorage();
-	}
+    /**
+     * Initializes all \TYPO3\CMS\Extbase\Persistence\ObjectStorage properties.
+     *
+     * @return void
+     */
+    protected function initStorageObjects()
+    {
+        $this->months = new ObjectStorage();
+    }
 
-	/**
-	 * Gets the months
-	 *
-	 * @return ObjectStorage
-	 */
-	public function getMonths() {
-		return $this->months;
-	}
+    /**
+     * Gets the months
+     *
+     * @return ObjectStorage
+     */
+    public function getMonths()
+    {
+        return $this->months;
+    }
 
-	/**
-	 * Sets the months
-	 *
-	 * @param ObjectStorage $months
-	 */
-	public function setMonths(ObjectStorage $months) {
-		$this->months = $months;
-	}
+    /**
+     * Sets the months
+     *
+     * @param ObjectStorage $months
+     */
+    public function setMonths(ObjectStorage $months)
+    {
+        $this->months = $months;
+    }
 
-	/**
-	 * Adds a month
-	 *
-	 * @param CalendarMonth $month
-	 */
-	public function addMonth(CalendarMonth $month) {
-		$this->months->attach($month);
-	}
+    /**
+     * Adds a month
+     *
+     * @param CalendarMonth $month
+     */
+    public function addMonth(CalendarMonth $month)
+    {
+        $this->months->attach($month);
+    }
 
-	/**
-	 * Removes a month
-	 *
-	 * @param CalendarMonth $month
-	 */
-	public function removeMonth(CalendarMonth $month) {
-		$this->months->detach($month);
-	}
+    /**
+     * Removes a month
+     *
+     * @param CalendarMonth $month
+     */
+    public function removeMonth(CalendarMonth $month)
+    {
+        $this->months->detach($month);
+    }
 
-	/**
-	 * Gets the start date
-	 *
-	 * @return \DateTime
-	 */
-	public function getStartDate() {
-		return $this->startDate;
-	}
+    /**
+     * Gets the start date
+     *
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
 
-	/**
-	 * Sets the start date
-	 *
-	 * @param \DateTime $startDate
-	 */
-	public function setStartDate($startDate) {
-		$this->startDate = $startDate;
-	}
+    /**
+     * Sets the start date
+     *
+     * @param \DateTime $startDate
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
 
-	/**
-	 * Gets the quarter
-	 *
-	 * @return null|int
-	 */
-	public function getQuarter() {
-		if ($this->startDate !== NULL) {
-			return ceil($this->startDate->format('n')/3);
-		}
+    /**
+     * Gets the quarter
+     *
+     * @return null|int
+     */
+    public function getQuarter()
+    {
+        if ($this->startDate !== null) {
+            return ceil($this->startDate->format('n')/3);
+        }
 
-		return NULL;
-	}
+        return null;
+    }
 }

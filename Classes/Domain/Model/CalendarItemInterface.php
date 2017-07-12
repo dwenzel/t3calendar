@@ -23,5 +23,4 @@ interface CalendarItemInterface
      * @return \DateTime
      */
     public function getDate();
-
 }

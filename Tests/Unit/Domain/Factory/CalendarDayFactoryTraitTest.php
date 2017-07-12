@@ -60,5 +60,4 @@ class CalendarDayFactoryTraitTest extends UnitTestCase
             $this->subject
         );
     }
-
 }

@@ -11,13 +11,18 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
-
-class DummyItemWithEndDate implements CalendarItemInterface{
+class DummyItemWithEndDate implements CalendarItemInterface
+{
     public function __construct($date)
-    {}
+    {
+    }
 
-    public function getDate(){}
-    public function getEndDate(){}
+    public function getDate()
+    {
+    }
+    public function getEndDate()
+    {
+    }
 }
 
 /**

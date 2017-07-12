@@ -1,3 +1,7 @@
+2017-07-12         [RELEASE] Release of t3calendar 0.4.1 (Dirk Wenzel)
+2017-07-12 62ff4f0 [BUGFIX] version number corrected. (Dirk Wenzel)
+2017-06-23 3d2a385 [TASK] coding guidelines (Dirk Wenzel)
+
 2017-05-12         [RELEASE] Release of t3calendar 0.4.1 (Dirk Wenzel)
 2017-05-12 08abc8a [BUGFIX] fixed error which caused calendar items with end date being visible before their start date. (Dirk Wenzel)
 

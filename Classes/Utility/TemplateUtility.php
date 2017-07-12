@@ -69,7 +69,8 @@ class TemplateUtility
      * @param array $configuration Widget view helper configuration from framework
      * @param string $extensionName
      */
-    public function configureTemplatePaths($view, $configuration, $extensionName = 't3calendar') {
+    public function configureTemplatePaths($view, $configuration, $extensionName = 't3calendar')
+    {
         $partialRootPaths = $this->getDefaultPartialRootPaths($extensionName);
         $templateRootPaths = [];
         if (method_exists($view, 'getTemplateRootPaths')) {
