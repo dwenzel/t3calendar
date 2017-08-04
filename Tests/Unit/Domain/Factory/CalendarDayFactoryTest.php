@@ -148,7 +148,7 @@ class CalendarDayFactoryTest extends UnitTestCase
         $timeZone = new \DateTimeZone(date_default_timezone_get());
         $date = new \DateTime('now', $timeZone);
         $mockCalendarDay = $this->getMock(
-            CalendarDay::class, ['setIsCurrent'], [$date]
+            CalendarDay::class, ['setCurrent'], [$date]
         );
 
         $this->objectManager->expects($this->once())
@@ -156,7 +156,7 @@ class CalendarDayFactoryTest extends UnitTestCase
             ->with(CalendarDay::class, $date)
             ->will($this->returnValue($mockCalendarDay));
         $mockCalendarDay->expects($this->once())
-            ->method('setIsCurrent')
+            ->method('setCurrent')
             ->with(true);
 
         $this->subject->create($date, null, true);
