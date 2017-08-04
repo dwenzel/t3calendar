@@ -28,16 +28,6 @@ trait MonthTrait
     protected $months;
 
     /**
-     * Initializes all \TYPO3\CMS\Extbase\Persistence\ObjectStorage properties.
-     *
-     * @return void
-     */
-    protected function initStorageObjects()
-    {
-        $this->months = new ObjectStorage();
-    }
-
-    /**
      * Gets the months
      *
      * @return ObjectStorage
@@ -77,4 +67,13 @@ trait MonthTrait
         $this->months->detach($month);
     }
 
+    /**
+     * Initializes all \TYPO3\CMS\Extbase\Persistence\ObjectStorage properties.
+     *
+     * @return void
+     */
+    protected function initStorageObjects()
+    {
+        $this->months = new ObjectStorage();
+    }
 }
