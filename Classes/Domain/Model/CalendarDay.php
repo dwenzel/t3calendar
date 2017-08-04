@@ -118,7 +118,7 @@ class CalendarDay
      *
      * @return bool
      */
-    public function getIsCurrent()
+    public function isCurrent()
     {
         return $this->isCurrent;
     }
