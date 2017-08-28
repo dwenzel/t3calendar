@@ -39,7 +39,7 @@ class TemplateUtility
             $values = array_reverse($values, true);
         }
 
-        // @todo remove handling of deprecated key two versions after 6.2
+        // remove handling of deprecated key two versions after 6.2
         if (
             $deprecatedKey !== null
             && isset($widgetConfiguration[$deprecatedKey])
@@ -69,7 +69,7 @@ class TemplateUtility
      * @param array $configuration Widget view helper configuration from framework
      * @param string $extensionName
      */
-    public function configureTemplatePaths($view, $configuration, $extensionName = 't3calendar')
+    public function configureTemplatePaths(ViewInterface $view, $configuration, $extensionName = 't3calendar')
     {
         $partialRootPaths = $this->getDefaultPartialRootPaths($extensionName);
         $templateRootPaths = [];

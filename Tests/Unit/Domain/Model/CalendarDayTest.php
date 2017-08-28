@@ -147,24 +147,24 @@ class CalendarDayTest extends UnitTestCase
 
     /**
      * @test
-     * @covers ::getIsCurrent
+     * @covers ::isCurrent
      */
     public function getIsCurrentForBooleanReturnsInitiallyFalse()
     {
         $this->assertFalse(
-            $this->subject->getIsCurrent()
+            $this->subject->isCurrent()
         );
     }
 
     /**
      * @test
-     * @covers ::setIsCurrent
+     * @covers ::setCurrent
      */
     public function setIsCurrentForBooleanSetsIsCurrent()
     {
-        $this->subject->setIsCurrent(true);
+        $this->subject->setCurrent(true);
         $this->assertTrue(
-            $this->subject->getIsCurrent()
+            $this->subject->isCurrent()
         );
     }
 

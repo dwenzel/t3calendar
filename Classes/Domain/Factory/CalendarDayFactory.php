@@ -53,7 +53,7 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
             }
         }
 
-        $calendarDay->setIsCurrent($current);
+        $calendarDay->setCurrent($current);
 
         return $calendarDay;
     }

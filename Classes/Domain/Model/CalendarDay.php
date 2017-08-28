@@ -118,7 +118,7 @@ class CalendarDay
      *
      * @return bool
      */
-    public function getIsCurrent()
+    public function isCurrent()
     {
         return $this->isCurrent;
     }
@@ -128,7 +128,7 @@ class CalendarDay
      *
      * @param bool $isCurrent
      */
-    public function setIsCurrent($isCurrent)
+    public function setCurrent($isCurrent)
     {
         $this->isCurrent = $isCurrent;
     }

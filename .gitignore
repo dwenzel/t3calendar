@@ -1,5 +1,3 @@
-.DS_Store
-.idea
 /backup/*
 /app/*
 /docker-compose.yml
