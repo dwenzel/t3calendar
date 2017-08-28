@@ -1,3 +1,8 @@
+2017-08-28         [RELEASE] Release of t3calendar 0.5.0 (Dirk Wenzel)
+2017-08-05 7380791 [TASK][BREAKING] CalendarDay refactored. All occurrences of `calendarDay.isCurrent` in templates and partials where changed to `calendarDay.current` too. Make sure to adapt your custom templates! (Dirk Wenzel)
+2017-08-05 4fdadff [TASK] coding guidelines (Dirk Wenzel)
+2017-08-05 80db672 [TASK] CalendarDayFactory, CalendarDay, CalendarQuarter, CalendarYear, TemplateUtility refactored. (Dirk Wenzel)
+
 2017-07-12         [RELEASE] Release of t3calendar 0.4.1 (Dirk Wenzel)
 2017-07-12 62ff4f0 [BUGFIX] version number corrected. (Dirk Wenzel)
 2017-06-23 3d2a385 [TASK] coding guidelines (Dirk Wenzel)
