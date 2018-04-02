@@ -50,17 +50,18 @@ class CalendarQuarterFactoryTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = $this->getMock(
-            CalendarQuarterFactory::class, ['dummy']
-        );
-        $this->objectManager = $this->getMock(ObjectManager::class, ['get']);
+        $this->subject = $this->getMockBuilder(CalendarQuarterFactory::class)
+            ->setMethods(['dummy'])->getMock();
+        /** @var ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject objectManager */
+        $this->objectManager = $this->getMockBuilder(ObjectManager::class)
+            ->setMethods(['get'])->getMock();
         $this->subject->injectObjectManager($this->objectManager);
-        $this->calendarMonthFactory = $this->getMock(
-            CalendarMonthFactory::class, ['create']
-        );
-        $mockCalendarMonth = $this->getMock(
-            CalendarMonth::class
-        );
+
+        /** @var CalendarMonthFactoryInterface|\PHPUnit_Framework_MockObject_MockObject calendarMonthFactory */
+        $this->calendarMonthFactory = $this->getMockBuilder(CalendarMonthFactory::class)
+            ->setMethods(['create'])->getMock();
+        /** @var CalendarMonth|\PHPUnit_Framework_MockObject_MockObject $mockCalendarMonth */
+        $mockCalendarMonth = $this->getMockBuilder(CalendarMonth::class)->getMock();
         $this->calendarMonthFactory->expects($this->any())
             ->method('create')
             ->will($this->returnValue($mockCalendarMonth));
@@ -74,9 +75,8 @@ class CalendarQuarterFactoryTest extends UnitTestCase
     {
         $startDate = new \DateTime();
         $currentDate = new \DateTime();
-        $mockCalendarQuarter = $this->getMock(
-            CalendarQuarter::class
-        );
+        /** @var CalendarQuarter|\PHPUnit_Framework_MockObject_MockObject $mockCalendarQuarter */
+        $mockCalendarQuarter = $this->getMockBuilder(CalendarQuarter::class)->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -96,9 +96,9 @@ class CalendarQuarterFactoryTest extends UnitTestCase
     {
         $startDate = new \DateTime();
         $currentDate = new \DateTime();
-        $mockCalendarQuarter = $this->getMock(
-            CalendarQuarter::class, ['setStartDate']
-        );
+        /** @var CalendarQuarter|\PHPUnit_Framework_MockObject_MockObject $mockCalendarQuarter */
+        $mockCalendarQuarter = $this->getMockBuilder(CalendarQuarter::class)
+            ->setMethods(['setStartDate'])->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -117,15 +117,16 @@ class CalendarQuarterFactoryTest extends UnitTestCase
     {
         $startDate = new \DateTime();
         $currentDate = new \DateTime();
-        $mockCalendarQuarter = $this->getMock(
-            CalendarQuarter::class, ['addMonth']
-        );
+        /** @var CalendarQuarter|\PHPUnit_Framework_MockObject_MockObject $mockCalendarQuarter */
+        $mockCalendarQuarter = $this->getMockBuilder(CalendarQuarter::class)
+            ->setMethods(['addMonth'])->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockCalendarQuarter));
 
-        $mockCalendarMonth = $this->getMock(CalendarMonth::class);
+        /** @var CalendarMonth|\PHPUnit_Framework_MockObject_MockObject $mockCalendarMonth */
+        $mockCalendarMonth = $this->getMockBuilder(CalendarMonth::class)->getMock();
         $this->calendarMonthFactory->expects($this->exactly(3))
             ->method('create')
             ->will($this->returnValue($mockCalendarMonth));

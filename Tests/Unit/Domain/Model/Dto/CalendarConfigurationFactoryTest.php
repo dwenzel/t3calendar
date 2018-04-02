@@ -4,6 +4,7 @@ namespace DWenzel\T3calendar\Tests\Unit\Domain\Model\Dto;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactory;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 
 /**
@@ -35,9 +36,8 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = $this->getMock(
-            CalendarConfigurationFactory::class, ['dummy']
-        );
+        $this->subject = $this->getMockBuilder(CalendarConfigurationFactory::class)
+            ->setMethods(['dummy'])->getMock();
         $this->objectManager = $this->getMockForAbstractClass(
             ObjectManagerInterface::class
         );
@@ -50,8 +50,9 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
      */
     protected function mockConfiguration()
     {
-        $mockConfiguration = $this->getMock(
-            CalendarConfiguration::class,
+        /** @var CalendarConfiguration|PHP $mockConfiguration */
+        $mockConfiguration = $this->getMockBuilder(CalendarConfiguration::class)
+            ->setMethods(
             [
                 'setDisplayPeriod',
                 'getDisplayPeriod',
@@ -61,7 +62,7 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
                 'setAjaxEnabled',
                 'setShowNavigation'
             ]
-        );
+        )->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockConfiguration));
@@ -74,7 +75,8 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
     public function createReturnsObjectFromObjectManager()
     {
         $settings = [];
-        $mockConfiguration = $this->getMock(CalendarConfiguration::class);
+        /** @var CalendarConfiguration|\PHPUnit_Framework_MockObject_MockObject $mockConfiguration */
+        $mockConfiguration = $this->getMockBuilder(CalendarConfiguration::class)->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->with(CalendarConfiguration::class)
@@ -249,6 +251,8 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
     /**
      * @test
      * @dataProvider ajaxEnabledDataProvider
+     * @param $valueFromSettings
+     * @param $expectedValue
      */
     public function createSetAjaxEnabled($valueFromSettings, $expectedValue)
     {
@@ -283,6 +287,8 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
     /**
      * @test
      * @dataProvider showNavigationDataProvider
+     * @param $valueFromSettings
+     * @param $expectedValue
      */
     public function createSetsShowNavigation($valueFromSettings, $expectedValue)
     {

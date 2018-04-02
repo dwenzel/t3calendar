@@ -53,7 +53,8 @@ class CalendarWeekFactoryTest extends UnitTestCase
         $this->subject = $this->getAccessibleMock(
             CalendarWeekFactory::class, ['dummy']
         );
-        $this->objectManager = $this->getMock(ObjectManager::class, ['get']);
+        /** @var ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject objectManager */
+        $this->objectManager = $this->getMockBuilder(ObjectManager::class)->setMethods(['get'])->getMock();
         $this->subject->injectObjectManager($this->objectManager);
         $this->calendarDayFactory = $this->getMockForAbstractClass(
             CalendarDayFactoryInterface::class
@@ -66,9 +67,8 @@ class CalendarWeekFactoryTest extends UnitTestCase
      */
     public function calenderDayFactoryCanBeInjected()
     {
-        $mockFactory = $this->getMockForAbstractClass(
-            CalendarDayFactoryInterface::class
-        );
+        /** @var CalendarDayFactoryInterface|\PHPUnit_Framework_MockObject_MockObject $mockFactory */
+        $mockFactory = $this->getMockForAbstractClass(CalendarDayFactoryInterface::class);
         $this->subject->injectCalendarDayFactory($mockFactory);
         $this->assertAttributeSame(
             $mockFactory,
@@ -84,14 +84,14 @@ class CalendarWeekFactoryTest extends UnitTestCase
     {
         $timeZone = new \DateTimeZone(date_default_timezone_get());
         $date = new \DateTime('now', $timeZone);
-        $mockCalendarWeek = $this->getMock(
-            CalendarWeek::class, []
-        );
+        /** @var CalendarWeek|\PHPUnit_Framework_MockObject_MockObject $mockCalendarWeek */
+        $mockCalendarWeek = $this->getMockBuilder(CalendarWeek::class)->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->with(CalendarWeek::class)
             ->will($this->returnValue($mockCalendarWeek));
-        $mockCalendarDay = $this->getMock(CalendarDay::class);
+        /** @var CalendarDay|\PHPUnit_Framework_MockObject_MockObject $mockCalendarDay */
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)->getMock();
         $this->calendarDayFactory->expects($this->any())
             ->method('create')
             ->will($this->returnValue($mockCalendarDay));
@@ -108,16 +108,18 @@ class CalendarWeekFactoryTest extends UnitTestCase
     public function createAddsDays()
     {
         $items = [];
-        $mockStartDate = $this->getMock(DateTime::class, ['add']);
-        $mockCurrentDate = $this->getMock(DateTime::class);
-        $mockCalendarWeek = $this->getMock(
-            CalendarWeek::class, ['addDay']
-        );
+        /** @var DateTime|\PHPUnit_Framework_MockObject_MockObject $mockStartDate */
+        $mockStartDate = $this->getMockBuilder(DateTime::class)->setMethods(['add'])->getMock();
+        /** @var DateTime|\PHPUnit_Framework_MockObject_MockObject $mockCurrentDate */
+        $mockCurrentDate = $this->getMockBuilder(DateTime::class)->getMock();
+        /** @var CalendarWeek|\PHPUnit_Framework_MockObject_MockObject $mockCalendarWeek */
+        $mockCalendarWeek = $this->getMockBuilder(CalendarWeek::class)->setMethods(['addDay'])->getMock();
         $expectedIntervals = [];
         for ($dayOfWeek = 1; $dayOfWeek < 7; $dayOfWeek++) {
             $expectedIntervals[] = [new \DateInterval('P' . $dayOfWeek . 'D')];
         }
-        $mockCalendarDay = $this->getMock(CalendarDay::class);
+        /** @var CalendarDay|\PHPUnit_Framework_MockObject_MockObject $mockCalendarDay */
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)->getMock();
         $mockStartDate->expects($this->exactly(6))
             ->method('add')
             ->withConsecutive(

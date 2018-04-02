@@ -35,7 +35,8 @@ class CalendarItemStorageTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = $this->getMock(CalendarItemStorage::class, ['dummy']);
+        $this->subject = $this->getMockBuilder(CalendarItemStorage::class)
+            ->setMethods(['dummy'])->getMock();
     }
 
     /**
@@ -107,9 +108,9 @@ class CalendarItemStorageTest extends UnitTestCase
     {
         $date = new \DateTime('today');
         $endDate = new \DateTime('tomorrow');
-        $item = $this->getMock(
-            CalendarItemInterface::class, ['getDate', 'getEndDate']
-        );
+        /** @var CalendarItemInterface|\PHPUnit_Framework_MockObject_MockObject $item */
+        $item = $this->getMockBuilder(CalendarItemInterface::class)
+            ->setMethods(['getDate', 'getEndDate'])->getMock();
         $item->expects($this->atLeastOnce())
             ->method('getDate')
             ->will($this->returnValue($date));
@@ -136,9 +137,9 @@ class CalendarItemStorageTest extends UnitTestCase
     {
         $date = new \DateTime('tomorrow');
         $endDate = new \DateTime('today');
-        $item = $this->getMock(
-            CalendarItemInterface::class, ['getDate', 'getEndDate']
-        );
+        /** @var CalendarItemInterface|\PHPUnit_Framework_MockObject_MockObject $item */
+        $item = $this->getMockBuilder(CalendarItemInterface::class)
+            ->setMethods(['getDate', 'getEndDate'])->getMock();
         $item->expects($this->atLeastOnce())
             ->method('getDate')
             ->will($this->returnValue($date));

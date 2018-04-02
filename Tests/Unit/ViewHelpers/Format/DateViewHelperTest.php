@@ -29,7 +29,9 @@ class DateViewHelperTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = $this->getMock(DateViewHelper::class, ['renderChildren']);
+        $this->subject = $this->getMockBuilder(DateViewHelper::class)
+            ->setMethods(['renderChildren'])
+            ->getMock();
     }
 
     /**
