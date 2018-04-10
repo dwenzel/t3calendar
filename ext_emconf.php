@@ -14,23 +14,23 @@ $EM_CONF[$_EXTKEY] = array (
   'title' => 'Calendar',
   'description' => 'Calendar',
   'category' => 'plugin',
-  'version' => '0.5.0',
+  'version' => '0.6.0',
   'state' => 'beta',
   'uploadfolder' => 0,
   'createDirs' => '',
   'clearcacheonload' => 1,
   'author' => 'Dirk Wenzel',
   'author_email' => 't3events@gmx.de',
-  'constraints' => 
+  'constraints' =>
   array (
-    'depends' => 
+    'depends' =>
     array (
       'typo3' => '8.7.0-9.1.99'
     ),
-    'conflicts' => 
+    'conflicts' =>
     array (
     ),
-    'suggests' => 
+    'suggests' =>
     array (
     ),
   ),

@@ -1,3 +1,10 @@
+2018-04-10         [RELEASE] Release of t3calendar 0.6.0 (Dirk Wenzel)
+2018-04-02 ddcd387 [TASK] CI: test matrix updated. - use typo3/minimal package for build - ext_emconf.php updated (Dirk Wenzel)
+2018-04-02 bc78462 [TASK] compatibility for TYPO3 9 (and PHP 7.2) - use TYPO3 core ArrayUtility class instead of obsolete Extbase class - prevent error caused by invalid usage of count() (Dirk Wenzel)
+2018-04-02 033ba44 [TASK] use mock builder instead of parent method 'getMock' in unit tests. (Dirk Wenzel)
+2018-04-02 5dc4ed6 [TASK] require typo3/cms-core instead of typo3/cms (Dirk Wenzel)
+2018-04-02 8f8fea9 [TASK] require typo3/cms >=8.7.0,<=9.99.99 (Dirk Wenzel)
+
 2017-08-28         [RELEASE] Release of t3calendar 0.5.0 (Dirk Wenzel)
 2017-08-05 7380791 [TASK][BREAKING] CalendarDay refactored. All occurrences of `calendarDay.isCurrent` in templates and partials where changed to `calendarDay.current` too. Make sure to adapt your custom templates! (Dirk Wenzel)
 2017-08-05 4fdadff [TASK] coding guidelines (Dirk Wenzel)
