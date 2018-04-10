@@ -48,7 +48,9 @@ class CalendarViewHelperTest extends UnitTestCase
      */
     public function initializeSetsAjaxEnabled()
     {
-        $mockConfiguration = $this->getMock(CalendarConfiguration::class, ['getAjaxEnabled']);
+        $mockConfiguration = $this->getMockBuilder(CalendarConfiguration::class)
+            ->setMethods(['getAjaxEnabled'])
+            ->getMock();
         $arguments = [
             'configuration' => $mockConfiguration
         ];

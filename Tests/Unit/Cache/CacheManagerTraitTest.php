@@ -50,9 +50,8 @@ class CacheManagerTraitTest extends UnitTestCase
      */
     public function calenderFactoryCanBeInjected()
     {
-        $mockFactory = $this->getMock(
-            CacheManager::class
-        );
+        $mockFactory = $this->getMockBuilder(CacheManager::class)
+        ->getMock();
         $this->subject->injectCacheManager($mockFactory);
         $this->assertAttributeSame(
             $mockFactory,
