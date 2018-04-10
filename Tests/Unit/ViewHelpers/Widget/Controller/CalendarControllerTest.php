@@ -16,6 +16,7 @@ namespace DWenzel\T3calendar\Tests\ViewHelpers\Widget\Controller;
  */
 
 use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
+use DWenzel\T3calendar\Domain\Factory\CalendarFactoryInterface;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactory;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfigurationFactoryInterface;
@@ -65,7 +66,7 @@ class CalendarControllerTest extends UnitTestCase
     protected $templateUtility;
 
     /**
-     * @var CalendarConfigurationFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var CalendarFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $calendarFactory;
 
@@ -112,18 +113,22 @@ class CalendarControllerTest extends UnitTestCase
         $this->subject = $this->getAccessibleMock(
             CalendarController::class, ['dummy']
         );
-        $this->view = $this->getMock(ViewInterface::class);
+        $this->view = $this->getMockBuilder(ViewInterface::class)->getMock();
         $this->subject->_set('view', $this->view);
         $this->mockConfiguration();
-        $this->objectManager = $this->getMock(ObjectManagerInterface::class);
+        /** @var ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject objectManager */
+        $this->objectManager = $this->getMockBuilder(ObjectManagerInterface::class)->getMock();
         $this->subject->injectObjectManager($this->objectManager);
-        $this->calendarFactory = $this->getMock(
-            CalendarFactory::class, ['create']
-        );
+        /** @var CalendarFactoryInterface|\PHPUnit_Framework_MockObject_MockObject calendarFactory */
+        $this->calendarFactory = $this->getMockBuilder(CalendarFactory::class)
+            ->setMethods(['create'])->getMock();
         $this->calendarFactory->method('create')->will($this->returnValue($this->configuration));
         $this->subject->injectCalendarFactory($this->calendarFactory);
         $this->subject->_set('objects', $this->objects);
-        $this->contentCache = $this->getMock(VariableFrontend::class, ['get', 'set'], [], '', false);
+        /** @var VariableFrontend|\PHPUnit_Framework_MockObject_MockObject contentCache */
+        $this->contentCache = $this->getMockBuilder(VariableFrontend::class)
+            ->setMethods(['get', 'set'])
+            ->disableOriginalConstructor()->getMock();
         $this->contentCache->expects($this->any())
             ->method('get')
             ->will($this->returnValue(false));
@@ -132,7 +137,9 @@ class CalendarControllerTest extends UnitTestCase
             'contentCache',
             $this->contentCache
         );
-        $this->cacheManager = $this->getMock(CacheManager::class, ['getCache']);
+        /** @var CacheManager|\PHPUnit_Framework_MockObject_MockObject cacheManager */
+        $this->cacheManager = $this->getMockBuilder(CacheManager::class)
+            ->setMethods(['getCache'])->getMock();
         $this->cacheManager->expects($this->any())
             ->method('getCache')
             ->will($this->returnValue($this->contentCache));
@@ -152,10 +159,9 @@ class CalendarControllerTest extends UnitTestCase
         $this->configurationManager = $this->getMockBuilder(ConfigurationManagerInterface::class)
             ->setMethods(['getConfiguration'])->getMockForAbstractClass();
         $this->inject($this->subject, 'configurationManager', $this->configurationManager);
-        $this->calendarConfigurationFactory = $this->getMock(
-            CalendarConfigurationFactory::class,
-            ['create']
-        );
+        /** @var CalendarConfigurationFactoryInterface|\PHPUnit_Framework_MockObject_MockObject calendarConfigurationFactory */
+        $this->calendarConfigurationFactory = $this->getMockBuilder(CalendarConfigurationFactory::class)
+            ->setMethods(['create'])->getMock();
         $this->subject->injectCalendarConfigurationFactory($this->calendarConfigurationFactory);
     }
 
@@ -164,10 +170,9 @@ class CalendarControllerTest extends UnitTestCase
      */
     protected function mockConfiguration()
     {
-        $this->configuration = $this->getMock(
-            CalendarConfiguration::class,
-            ['getDisplayPeriod', 'setDisplayPeriod']
-        );
+        /** @var CalendarConfiguration|\PHPUnit_Framework_MockObject_MockObject configuration */
+        $this->configuration = $this->getMockBuilder(CalendarConfiguration::class)
+            ->setMethods(['getDisplayPeriod', 'setDisplayPeriod'])->getMock();
         $startDate = new \DateTime();
         $this->configuration->setStartDate($startDate);
 
@@ -179,6 +184,7 @@ class CalendarControllerTest extends UnitTestCase
      */
     public function templateUtilityCanBeInjected()
     {
+        /** @var TemplateUtility|\PHPUnit_Framework_MockObject_MockObject $templateUtility */
         $templateUtility = $this->getMockBuilder(TemplateUtility::class)
             ->getMock();
         $this->subject->injectTemplateUtility($templateUtility);
@@ -194,7 +200,8 @@ class CalendarControllerTest extends UnitTestCase
      */
     public function initializeActionSetsObjectsFromWidgetConfiguration()
     {
-        $objects = $this->getMock(QueryResultInterface::class);
+        /** @var QueryResultInterface|\PHPUnit_Framework_MockObject_MockObject $objects */
+        $objects = $this->getMockBuilder(QueryResultInterface::class)->getMock();
         $widgetConfiguration = [
             'objects' => $objects
         ];
@@ -212,7 +219,8 @@ class CalendarControllerTest extends UnitTestCase
      */
     public function initializeActionSetsConfigurationFromWidgetConfiguration()
     {
-        $configuration = $this->getMock(CalendarConfiguration::class);
+        /** @var CalendarConfiguration|\PHPUnit_Framework_MockObject_MockObject $configuration */
+        $configuration = $this->getMockBuilder(CalendarConfiguration::class)->getMock();
         $widgetConfiguration = [
             'configuration' => $configuration
         ];
@@ -741,7 +749,6 @@ class CalendarControllerTest extends UnitTestCase
             ->method('configureTemplatePaths')
             ->willReturn($view, $widgetViewHelperConfig);
 
-        $params = [$view];
         $this->subject->_callRef(
             'initializeView', $view);
     }
@@ -755,7 +762,8 @@ class CalendarControllerTest extends UnitTestCase
         $widgetConfiguration = [
             'configuration' => $configuration
         ];
-        $mockConfiguration = $this->getMock(CalendarConfiguration::class);
+        /** @var CalendarConfiguration|\PHPUnit_Framework_MockObject_MockObject $mockConfiguration */
+        $mockConfiguration = $this->getMockBuilder(CalendarConfiguration::class)->getMock();
         $this->subject->_set('widgetConfiguration', $widgetConfiguration);
         $this->calendarConfigurationFactory->expects($this->once())
             ->method('create')
