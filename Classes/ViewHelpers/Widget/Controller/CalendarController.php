@@ -212,7 +212,7 @@ class CalendarController extends AbstractWidgetController
      */
     protected function getInterval($shift)
     {
-        if (!($shift === 'next' or $shift === 'previous')) {
+        if (!($shift === 'next' || $shift === 'previous')) {
             return false;
         }
         switch ($this->configuration->getDisplayPeriod()) {

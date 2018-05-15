@@ -4,19 +4,22 @@ namespace DWenzel\T3calendar\Tests\Unit\Domain\Factory;
 
 use DWenzel\T3calendar\Domain\Factory\CalendarDayFactory;
 use DWenzel\T3calendar\Domain\Factory\CalendarFactory;
+use DWenzel\T3calendar\Domain\Factory\CalendarFactoryInterface;
 use DWenzel\T3calendar\Domain\Factory\CalendarMonthFactory;
-use DWenzel\T3calendar\Domain\Factory\CalendarWeekFactory;
-use DWenzel\T3calendar\Domain\Factory\CalendarYearFactory;
+use DWenzel\T3calendar\Domain\Factory\CalendarMonthFactoryInterface;
 use DWenzel\T3calendar\Domain\Factory\CalendarQuarterFactory;
+use DWenzel\T3calendar\Domain\Factory\CalendarQuarterFactoryInterface;
+use DWenzel\T3calendar\Domain\Factory\CalendarWeekFactory;
+use DWenzel\T3calendar\Domain\Factory\CalendarWeekFactoryInterface;
+use DWenzel\T3calendar\Domain\Factory\CalendarYearFactory;
+use DWenzel\T3calendar\Domain\Factory\CalendarYearFactoryInterface;
 use DWenzel\T3calendar\Domain\Model\Calendar;
 use DWenzel\T3calendar\Domain\Model\CalendarDay;
 use DWenzel\T3calendar\Domain\Model\CalendarMonth;
+use DWenzel\T3calendar\Domain\Model\CalendarQuarter;
 use DWenzel\T3calendar\Domain\Model\CalendarWeek;
 use DWenzel\T3calendar\Domain\Model\CalendarYear;
-use DWenzel\T3calendar\Domain\Model\CalendarQuarter;
 use DWenzel\T3calendar\Domain\Model\Dto\CalendarConfiguration;
-use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
@@ -33,7 +36,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 class CalendarFactoryTest extends UnitTestCase
 {
     /**
@@ -73,50 +75,50 @@ class CalendarFactoryTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->subject = $this->getMock(
-            CalendarFactory::class, ['dummy']
-        );
-        $this->objectManager = $this->getMock(ObjectManager::class, ['get']);
+        $this->subject = $this->getMockBuilder(CalendarFactory::class)
+            ->setMethods(['dummy'])
+            ->getMock();
+        /** @var ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject objectManager */
+        $this->objectManager = $this->getMockBuilder(ObjectManager::class)
+            ->setMethods(['get'])
+            ->getMock();
         $this->subject->injectObjectManager($this->objectManager);
 
-        $this->calendarDayFactory = $this->getMock(CalendarDayFactory::class, ['create']);
+        /** @var CalendarFactoryInterface|\PHPUnit_Framework_MockObject_MockObject calendarDayFactory */
+        $this->calendarDayFactory = $this->getMockBuilder(CalendarDayFactory::class)
+            ->setMethods(['create'])
+            ->getMock();
         $this->subject->injectCalendarDayFactory($this->calendarDayFactory);
 
-        $this->calendarWeekFactory = $this->getMock(CalendarWeekFactory::class, ['create']);
+        /** @var CalendarWeekFactoryInterface|\PHPUnit_Framework_MockObject_MockObject calendarWeekFactory */
+        $this->calendarWeekFactory = $this->getMockBuilder(CalendarWeekFactory::class)
+            ->setMethods(['create'])
+            ->getMock();
         $this->subject->injectCalendarWeekFactory($this->calendarWeekFactory);
 
-        $this->calendarMonthFactory = $this->getMock(CalendarMonthFactory::class, ['create']);
+        /** @var CalendarMonthFactoryInterface|\PHPUnit_Framework_MockObject_MockObject calendarMonthFactory */
+        $this->calendarMonthFactory = $this->getMockBuilder(CalendarMonthFactory::class)
+            ->setMethods(['create'])
+            ->getMock();
         $this->subject->injectCalendarMonthFactory($this->calendarMonthFactory);
-        $mockCalendarMonth = $this->getMock(CalendarMonth::class);
+
+        /** @var CalendarMonth|\PHPUnit_Framework_MockObject_MockObject $mockCalendarMonth */
+        $mockCalendarMonth = $this->getMockBuilder(CalendarMonth::class)->getMock();
         $this->calendarMonthFactory->expects($this->any())
             ->method('create')
             ->will($this->returnValue($mockCalendarMonth));
-        $this->calendarQuarterFactory = $this->getMock(CalendarQuarterFactory::class, ['create']);
+
+        /** @var CalendarQuarterFactoryInterface|\PHPUnit_Framework_MockObject_MockObject calendarQuarterFactory */
+        $this->calendarQuarterFactory = $this->getMockBuilder(CalendarQuarterFactory::class)
+            ->setMethods(['create'])
+            ->getMock();
         $this->subject->injectCalendarQuarterFactory($this->calendarQuarterFactory);
 
-        $this->calendarYearFactory = $this->getMock(CalendarYearFactory::class, ['create']);
+        /** @var CalendarYearFactoryInterface calendarYearFactory */
+        $this->calendarYearFactory = $this->getMockBuilder(CalendarYearFactory::class)
+            ->setMethods(['create'])
+            ->getMock();
         $this->subject->injectCalendarYearFactory($this->calendarYearFactory);
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function mockConfiguration()
-    {
-        $startDate = new \DateTime();
-        $currentDate = new \DateTime();
-
-        $mockConfiguration = $this->getMock(
-            CalendarConfiguration::class,
-            ['getStartDate', 'getCurrentDate', 'getViewMode', 'getDisplayPeriod']
-        );
-        $mockConfiguration->expects($this->any())
-            ->method('getStartDate')
-            ->will($this->returnValue($startDate));
-        $mockConfiguration->expects($this->any())
-            ->method('getCurrentDate')
-            ->will($this->returnValue($currentDate));
-        return $mockConfiguration;
     }
 
     /**
@@ -128,9 +130,8 @@ class CalendarFactoryTest extends UnitTestCase
 
         $items = [];
 
-        $mockCalendar = $this->getMock(
-            Calendar::class
-        );
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -144,6 +145,27 @@ class CalendarFactoryTest extends UnitTestCase
     }
 
     /**
+     * @return CalendarConfiguration|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockConfiguration()
+    {
+        $startDate = new \DateTime();
+        $currentDate = new \DateTime();
+
+        /** @var CalendarConfiguration|\PHPUnit_Framework_MockObject_MockObject $mockConfiguration */
+        $mockConfiguration = $this->getMockBuilder(CalendarConfiguration::class)
+            ->setMethods(['getStartDate', 'getCurrentDate', 'getViewMode', 'getDisplayPeriod'])
+            ->getMock();
+        $mockConfiguration->expects($this->any())
+            ->method('getStartDate')
+            ->will($this->returnValue($startDate));
+        $mockConfiguration->expects($this->any())
+            ->method('getCurrentDate')
+            ->will($this->returnValue($currentDate));
+        return $mockConfiguration;
+    }
+
+    /**
      * @test
      */
     public function createSetsViewMode()
@@ -152,9 +174,8 @@ class CalendarFactoryTest extends UnitTestCase
         $mockConfiguration = $this->mockConfiguration();
         $items = [];
 
-        $mockCalendar = $this->getMock(
-            Calendar::class
-        );
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -180,7 +201,8 @@ class CalendarFactoryTest extends UnitTestCase
         $mockConfiguration = $this->mockConfiguration();
         $items = [];
 
-        $mockCalendar = $this->getMock(Calendar::class);
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -203,14 +225,16 @@ class CalendarFactoryTest extends UnitTestCase
         $currentDate = new \DateTime();
         $viewMode = CalendarConfiguration::VIEW_MODE_MINI_MONTH;
 
-        $mockConfiguration = $this->getMock(
-            CalendarConfiguration::class,
-            ['getStartDate', 'getCurrentDate', 'getViewMode']
-        );
+        /** @var CalendarConfiguration|\PHPUnit_Framework_MockObject_MockObject $mockConfiguration */
+        $mockConfiguration = $this->getMockBuilder(CalendarConfiguration::class)
+            ->setMethods(['getStartDate', 'getCurrentDate', 'getViewMode'])
+            ->getMock();
         $items = [];
 
-        $mockCalendar = $this->getMock(Calendar::class);
-        $mockCalendarMonth = $this->getMock(CalendarMonth::class);
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
+        /** @var CalendarMonth|\PHPUnit_Framework_MockObject_MockObject $mockCalendarMonth */
+        $mockCalendarMonth = $this->getMockBuilder(CalendarMonth::class)->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockCalendar));
@@ -244,13 +268,14 @@ class CalendarFactoryTest extends UnitTestCase
         $viewMode = CalendarConfiguration::VIEW_MODE_COMBO_PANE;
         $displayPeriod = CalendarConfiguration::PERIOD_DAY;
 
-        $currentDate = new \DateTime();
 
         $mockConfiguration = $this->mockConfiguration();
         $items = [];
 
-        $mockCalendar = $this->getMock(Calendar::class);
-        $mockCalendarDay = $this->getMock(CalendarDay::class);
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
+        /** @var CalendarDay|\PHPUnit_Framework_MockObject_MockObject $mockCalendarDay */
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockCalendar));
@@ -261,14 +286,14 @@ class CalendarFactoryTest extends UnitTestCase
             ->method('getDisplayPeriod')
             ->will($this->returnValue($displayPeriod));
 
-        $this->calendarDayFactory->expects($this->once())
-            ->method('create')
-            ->with($currentDate, $items, true)
-            ->will($this->returnValue($mockCalendarDay));
-
         $mockCalendar->expects($this->once())
             ->method('setCurrentDay')
             ->with($mockCalendarDay);
+
+        $this->calendarDayFactory->expects($this->once())
+            ->method('create')
+            ->will($this->returnValue($mockCalendarDay));
+
 
         $this->subject->create($mockConfiguration, $items);
     }
@@ -281,14 +306,14 @@ class CalendarFactoryTest extends UnitTestCase
         $viewMode = CalendarConfiguration::VIEW_MODE_COMBO_PANE;
         $displayPeriod = CalendarConfiguration::PERIOD_WEEK;
 
-        $startDate = new \DateTime();
-        $currentDate = new \DateTime();
-
         $mockConfiguration = $this->mockConfiguration();
         $items = [];
 
-        $mockCalendar = $this->getMock(Calendar::class);
-        $mockCalendarWeek = $this->getMock(CalendarWeek::class);
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
+
+        /** @var CalendarWeek|\PHPUnit_Framework_MockObject_MockObject $mockCalendarWeek */
+        $mockCalendarWeek = $this->getMockBuilder(CalendarWeek::class)->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockCalendar));
@@ -301,7 +326,6 @@ class CalendarFactoryTest extends UnitTestCase
 
         $this->calendarWeekFactory->expects($this->once())
             ->method('create')
-            ->with($startDate, $currentDate, $items)
             ->will($this->returnValue($mockCalendarWeek));
 
         $mockCalendar->expects($this->once())
@@ -319,14 +343,14 @@ class CalendarFactoryTest extends UnitTestCase
         $viewMode = CalendarConfiguration::VIEW_MODE_COMBO_PANE;
         $displayPeriod = CalendarConfiguration::PERIOD_YEAR;
 
-        $startDate = new \DateTime();
-        $currentDate = new \DateTime();
-
         $mockConfiguration = $this->mockConfiguration();
         $items = [];
 
-        $mockCalendar = $this->getMock(Calendar::class);
-        $mockCalendarYear = $this->getMock(CalendarYear::class);
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
+
+        /** @var CalendarYear|\PHPUnit_Framework_MockObject_MockObject $mockCalendarYear */
+        $mockCalendarYear = $this->getMockBuilder(CalendarYear::class)->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockCalendar));
@@ -339,7 +363,6 @@ class CalendarFactoryTest extends UnitTestCase
 
         $this->calendarYearFactory->expects($this->once())
             ->method('create')
-            ->with($startDate, $currentDate, $items)
             ->will($this->returnValue($mockCalendarYear));
 
         $mockCalendar->expects($this->once())
@@ -357,14 +380,14 @@ class CalendarFactoryTest extends UnitTestCase
         $viewMode = CalendarConfiguration::VIEW_MODE_COMBO_PANE;
         $displayPeriod = CalendarConfiguration::PERIOD_QUARTER;
 
-        $startDate = new \DateTime();
-        $currentDate = new \DateTime();
-
         $mockConfiguration = $this->mockConfiguration();
         $items = [];
 
-        $mockCalendar = $this->getMock(Calendar::class);
-        $mockCalendarQuarter = $this->getMock(CalendarQuarter::class);
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
+
+        /** @var CalendarQuarter|\PHPUnit_Framework_MockObject_MockObject $mockCalendarQuarter */
+        $mockCalendarQuarter = $this->getMockBuilder(CalendarQuarter::class)->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockCalendar));
@@ -377,7 +400,6 @@ class CalendarFactoryTest extends UnitTestCase
 
         $this->calendarQuarterFactory->expects($this->once())
             ->method('create')
-            ->with($startDate, $currentDate, $items)
             ->will($this->returnValue($mockCalendarQuarter));
 
         $mockCalendar->expects($this->once())
@@ -395,14 +417,13 @@ class CalendarFactoryTest extends UnitTestCase
         $viewMode = CalendarConfiguration::VIEW_MODE_COMBO_PANE;
         $displayPeriod = CalendarConfiguration::PERIOD_MONTH;
 
-        $startDate = new \DateTime();
-        $currentDate = new \DateTime();
-
         $mockConfiguration = $this->mockConfiguration();
         $items = [];
 
-        $mockCalendar = $this->getMock(Calendar::class);
-        $mockCalendarMonth = $this->getMock(CalendarMonth::class);
+        /** @var Calendar|\PHPUnit_Framework_MockObject_MockObject $mockCalendar */
+        $mockCalendar = $this->getMockBuilder(Calendar::class)->getMock();
+        /** @var CalendarMonth|\PHPUnit_Framework_MockObject_MockObject $mockCalendarMonth */
+        $mockCalendarMonth = $this->getMockBuilder(CalendarMonth::class)->getMock();
         $this->objectManager->expects($this->once())
             ->method('get')
             ->will($this->returnValue($mockCalendar));
@@ -415,7 +436,6 @@ class CalendarFactoryTest extends UnitTestCase
 
         $this->calendarMonthFactory->expects($this->once())
             ->method('create')
-            ->with($startDate, $currentDate, $items)
             ->will($this->returnValue($mockCalendarMonth));
 
         $mockCalendar->expects($this->once())

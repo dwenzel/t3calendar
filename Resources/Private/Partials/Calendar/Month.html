@@ -66,7 +66,7 @@
             <f:for each="{calendarWeek.days}" as="calendarDay">
                 <td class="day
 					{f:if(condition: '{calendarDay.month} != {month.month}', then: 'outOfMonth')}
-					{f:if(condition: '{calendarDay.isCurrent}', then: 'current')}
+					{f:if(condition: '{calendarDay.current}', then: 'current')}
 					{f:if(condition: '{calendarDay.hasItems}', then: 'hasEvent')}">
                     <div class="labelDay">{calendarDay.day}</div>
                     <f:if condition="{calendarDay.hasItems}">

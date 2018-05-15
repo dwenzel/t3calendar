@@ -1,5 +1,6 @@
 [![code coverage](https://codecov.io/gh/dwenzel/t3calendar/branch/master/graph/badge.svg)](https://codecov.io/gh/dwenzel/t3calendar)
-[![Build Status](https://travis-ci.org/dwenzel/t3calendar.svg?branch=master)](https://travis-ci.org/dwenzel/t3calendar)
+[![Build Status](https://travis-ci.org/dwenzel/t3calendar.svg?branch=master)](https://travis-ci.org/dwenzel/t3calendar)  
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/6a0eb348-f78f-4cc5-86f6-8a997cc9773b/small.png)](https://insight.sensiolabs.com/projects/6a0eb348-f78f-4cc5-86f6-8a997cc9773b)
 
 Calendar
 ========

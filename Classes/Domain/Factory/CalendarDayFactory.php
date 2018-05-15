@@ -45,7 +45,10 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
 
         if ($items instanceof CalendarItemStorage) {
             $calendarDay->setItems($items->getByDate($date));
-        } elseif (count($items)) {
+        } elseif (
+            $items instanceof \Iterator ||
+            is_array($items)
+        ) {
             foreach ($items as $item) {
                 if ($this->shouldAddItem($item, $calendarDay)) {
                     $calendarDay->addItem($item);
@@ -53,7 +56,7 @@ class CalendarDayFactory implements CalendarDayFactoryInterface, SingletonInterf
             }
         }
 
-        $calendarDay->setIsCurrent($current);
+        $calendarDay->setCurrent($current);
 
         return $calendarDay;
     }

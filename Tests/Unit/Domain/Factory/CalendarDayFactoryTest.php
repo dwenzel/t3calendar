@@ -20,6 +20,7 @@ class DummyItemWithEndDate implements CalendarItemInterface
     public function getDate()
     {
     }
+
     public function getEndDate()
     {
     }
@@ -58,7 +59,8 @@ class CalendarDayFactoryTest extends UnitTestCase
         $this->subject = $this->getAccessibleMock(
             CalendarDayFactory::class, ['dummy']
         );
-        $this->objectManager = $this->getMock(ObjectManager::class, ['get']);
+        $this->objectManager = $this->getMockBuilder(ObjectManager::class)
+            ->setMethods(['get'])->getMock();
         $this->subject->injectObjectManager($this->objectManager);
     }
 
@@ -71,7 +73,8 @@ class CalendarDayFactoryTest extends UnitTestCase
             CalendarDayFactory::class, ['dummy']
         );
 
-        $mockObjectManager = $this->getMock(ObjectManager::class);
+        /** @var ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject $mockObjectManager */
+        $mockObjectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
         $this->subject->injectObjectManager($mockObjectManager);
         $this->assertAttributeSame(
             $mockObjectManager,
@@ -87,9 +90,10 @@ class CalendarDayFactoryTest extends UnitTestCase
     {
         $timeZone = new \DateTimeZone(date_default_timezone_get());
         $date = new \DateTime('now', $timeZone);
-        $mockCalendarDay = $this->getMock(
-            CalendarDay::class, ['addItem'], [$date]
-        );
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)
+            ->setConstructorArgs([$date])
+            ->setMethods()
+            ->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -113,12 +117,17 @@ class CalendarDayFactoryTest extends UnitTestCase
         $timeZone = new \DateTimeZone(date_default_timezone_get());
         $date = new \DateTime('now', $timeZone);
         /** @var CalendarDay|\PHPUnit_Framework_MockObject_MockObject $mockCalendarDay */
-        $mockCalendarDay = $this->getMock(
-            CalendarDay::class, ['addItem'], [$date]
-        );
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)
+            ->setConstructorArgs([$date])
+            ->setMethods(['addItem'])
+            ->getMock();
 
-        $mockCalendarItemStorage = $this->getMock(CalendarItemStorage::class, ['getByDate']);
-        $mockObjectStorage = $this->getMock(ObjectStorage::class);
+        $mockCalendarItemStorage = $this->getMockBuilder(CalendarItemStorage::class)
+            ->setMethods(['getByDate'])
+            ->getMock();
+
+        $mockObjectStorage = $this->getMockBuilder(ObjectStorage::class)
+            ->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -147,16 +156,17 @@ class CalendarDayFactoryTest extends UnitTestCase
     {
         $timeZone = new \DateTimeZone(date_default_timezone_get());
         $date = new \DateTime('now', $timeZone);
-        $mockCalendarDay = $this->getMock(
-            CalendarDay::class, ['setIsCurrent'], [$date]
-        );
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)
+            ->setMethods(['setCurrent'])
+            ->setConstructorArgs([$date])
+            ->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
             ->with(CalendarDay::class, $date)
             ->will($this->returnValue($mockCalendarDay));
         $mockCalendarDay->expects($this->once())
-            ->method('setIsCurrent')
+            ->method('setCurrent')
             ->with(true);
 
         $this->subject->create($date, null, true);
@@ -169,9 +179,9 @@ class CalendarDayFactoryTest extends UnitTestCase
     {
         $timeZone = new \DateTimeZone(date_default_timezone_get());
         $date = new \DateTime('now', $timeZone);
-        $mockCalendarDay = $this->getMock(
-            CalendarDay::class, [], [$date]
-        );
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)
+            ->setConstructorArgs([$date])
+            ->getMock();
 
         $this->objectManager->expects($this->once())
             ->method('get')
@@ -193,9 +203,11 @@ class CalendarDayFactoryTest extends UnitTestCase
         $calendarDayDate = new \DateTime('today', $timeZone);
         $date = new \DateTime('yesterday', $timeZone);
         $endDate = new \DateTime('tomorrow', $timeZone);
-        $mockCalendarDay = $this->getMock(
-            CalendarDay::class, ['addItem', 'getDate'], [$date]
-        );
+        /** @var CalendarDay|\PHPUnit_Framework_MockObject_MockObject $mockCalendarDay */
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)
+            ->setMethods(['addItem', 'getDate'])
+            ->setConstructorArgs([$date])
+            ->getMock();
         $mockCalendarDay->expects($this->atLeastOnce())
             ->method('getDate')->willReturn($calendarDayDate);
 
@@ -203,9 +215,12 @@ class CalendarDayFactoryTest extends UnitTestCase
             ->method('get')
             ->with(CalendarDay::class, $calendarDayDate)
             ->will($this->returnValue($mockCalendarDay));
-        $mockItemWithMatchingDate = $this->getMock(
-            DummyItemWithEndDate::class, ['getDate', 'getEndDate'], [], '', false
-        );
+        /** @var DummyItemWithEndDate|\PHPUnit_Framework_MockObject_MockObject $mockItemWithMatchingDate */
+        $mockItemWithMatchingDate = $this->getMockBuilder(DummyItemWithEndDate::class)
+            ->setMethods(['getDate', 'getEndDate'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $mockItemWithMatchingDate->expects($this->atLeastOnce())
             ->method('getDate')
             ->willReturn($date);
@@ -228,18 +243,24 @@ class CalendarDayFactoryTest extends UnitTestCase
         $calendarDayDate = new \DateTime('today', $timeZone);
         $date = new \DateTime('yesterday', $timeZone);
         $endDate = new \DateTime('yesterday', $timeZone);
-        $mockCalendarDay = $this->getMock(
-            CalendarDay::class, ['addItem', 'getDate'], [$date]
-        );
+        /** @var CalendarDay|\PHPUnit_Framework_MockObject_MockObject $mockCalendarDay */
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)
+            ->setMethods(['addItem', 'getDate'])
+            ->setConstructorArgs([$date])
+            ->getMock();
+
         $mockCalendarDay->expects($this->atLeastOnce())
             ->method('getDate')->willReturn($calendarDayDate);
 
         $this->objectManager->expects($this->once())
             ->method('get')->with(CalendarDay::class, $calendarDayDate)
             ->will($this->returnValue($mockCalendarDay));
-        $mockItemWithMatchingDate = $this->getMock(
-            DummyItemWithEndDate::class, ['getDate', 'getEndDate'], [], '', false
-        );
+        /** @var DummyItemWithEndDate|\PHPUnit_Framework_MockObject_MockObject $mockItemWithMatchingDate */
+        $mockItemWithMatchingDate = $this->getMockBuilder(DummyItemWithEndDate::class)
+            ->setMethods(['getDate', 'getEndDate'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $mockItemWithMatchingDate->expects($this->atLeastOnce())
             ->method('getDate')->willReturn($date);
         $mockItemWithMatchingDate->expects($this->atLeastOnce())
@@ -259,18 +280,24 @@ class CalendarDayFactoryTest extends UnitTestCase
         $calendarDayDate = new \DateTime('yesterday', $timeZone);
         $date = new \DateTime('today', $timeZone);
         $endDate = new \DateTime('today', $timeZone);
-        $mockCalendarDay = $this->getMock(
-            CalendarDay::class, ['addItem', 'getDate'], [$date]
-        );
+        /** @var CalendarDay|\PHPUnit_Framework_MockObject_MockObject $mockCalendarDay */
+        $mockCalendarDay = $this->getMockBuilder(CalendarDay::class)
+            ->setMethods(['addItem', 'getDate'])
+            ->setConstructorArgs([$date])
+            ->getMock();
+
         $mockCalendarDay->expects($this->atLeastOnce())
             ->method('getDate')->willReturn($calendarDayDate);
 
         $this->objectManager->expects($this->once())
             ->method('get')->with(CalendarDay::class, $calendarDayDate)
             ->will($this->returnValue($mockCalendarDay));
-        $mockItemWithMatchingDate = $this->getMock(
-            DummyItemWithEndDate::class, ['getDate', 'getEndDate'], [], '', false
-        );
+        /** @var DummyItemWithEndDate|\PHPUnit_Framework_MockObject_MockObject $mockItemWithMatchingDate */
+        $mockItemWithMatchingDate = $this->getMockBuilder(DummyItemWithEndDate::class)
+            ->setMethods(['getDate', 'getEndDate'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $mockItemWithMatchingDate->expects($this->atLeastOnce())
             ->method('getDate')->willReturn($date);
         $mockItemWithMatchingDate->expects($this->any())
