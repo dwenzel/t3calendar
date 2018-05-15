@@ -22,12 +22,14 @@
 				action="day"
 				section="{calendarId}"
 				additionalAttributes="{data-calendarId: calendarId}"
+				rel="nofollow"
 				ajax="{configuration.ajaxEnabled}"
 				class="button {f:if(condition: '{calendar.displayPeriod} == 0', then: 'active')}"
 		><f:translate key="displayPeriod.day" default="Day" /></f:widget.link>
 		<f:widget.link
 				action="week"
 				section="{calendarId}"
+				rel="nofollow"
 				additionalAttributes="{data-calendarId: calendarId}"
 				ajax="{configuration.ajaxEnabled}"
 				class="button {f:if(condition: '{calendar.displayPeriod} == 1', then: 'active')}"
@@ -36,6 +38,7 @@
 				action="month"
 				section="{calendarId}"
 				additionalAttributes="{data-calendarId: calendarId}"
+				rel="nofollow"
 				ajax="{configuration.ajaxEnabled}"
 				class="button {f:if(condition: '{calendar.displayPeriod} == 2', then: 'active')}"
 		><f:translate key="displayPeriod.month" default="Month"/></f:widget.link>
@@ -43,6 +46,7 @@
 				action="quarter"
 				section="{calendarId}"
 				additionalAttributes="{data-calendarId: calendarId}"
+				rel="nofollow"
 				ajax="{configuration.ajaxEnabled}"
 				class="button {f:if(condition: '{calendar.displayPeriod} == 3', then: 'active')}"
 		><f:translate key="displayPeriod.quarter" default="Quarter"/></f:widget.link>
@@ -50,6 +54,7 @@
 				action="year"
 				section="{calendarId}"
 				additionalAttributes="{data-calendarId: calendarId}"
+				rel="nofollow"
 				ajax="{configuration.ajaxEnabled}"
 				class="button {f:if(condition: '{calendar.displayPeriod} == 6', then: 'active')}"
 		><f:translate key="displayPeriod.year" default="Year"/></f:widget.link>
@@ -79,6 +84,7 @@
 			action="{action}"
 			section="{calendarId}"
 			additionalAttributes="{data-calendarId: calendarId}"
+			rel="nofollow"
 			ajax="{configuration.ajaxEnabled}"
 			arguments="{shift: shift, origin: '{f:format.date(format:\'U\', date: \'{configuration.startDate}\')}'}">
 		<f:if condition="{0: shift} == {0: 'previous'}">
