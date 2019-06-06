@@ -1,0 +1,5 @@
+
+# include jQuery library
+page.includeJSFooterlibs {
+    jQuery = EXT:t3calendar/Resources/Public/JavaScript/jquery-2.1.4.js
+}
