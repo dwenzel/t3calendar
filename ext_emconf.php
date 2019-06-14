@@ -21,16 +21,16 @@ $EM_CONF[$_EXTKEY] = array (
   'clearcacheonload' => 1,
   'author' => 'Dirk Wenzel',
   'author_email' => 't3events@gmx.de',
-  'constraints' => 
+  'constraints' =>
   array (
-    'depends' => 
+    'depends' =>
     array (
-      'typo3' => '8.7.0-9.1.99'
+      'typo3' => '8.7.0-9.5.99'
     ),
-    'conflicts' => 
+    'conflicts' =>
     array (
     ),
-    'suggests' => 
+    'suggests' =>
     array (
     ),
   ),
