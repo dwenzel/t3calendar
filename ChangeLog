@@ -1,3 +1,6 @@
+2019-07-08         [RELEASE] Release of t3calendar 0.7.1 (Dirk Wenzel)
+2019-07-08 111437b [BUGFIX] fixed error in unit test caused by invalid method (Dirk Wenzel)
+
 2019-07-08         [RELEASE] Release of t3calendar 0.7.0 (Dirk Wenzel)
 2019-06-14 8b6368a [BUGFIX] dependencies in ext_emconf.php corrected (Dirk Wenzel)
 2019-06-06 8f892de [TASK] include JavaScript (Dirk Wenzel)
