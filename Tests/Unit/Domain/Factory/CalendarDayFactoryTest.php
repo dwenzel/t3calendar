@@ -99,9 +99,9 @@ class CalendarDayFactoryTest extends UnitTestCase
             ->method('get')
             ->with(CalendarDay::class, $date)
             ->will($this->returnValue($mockCalendarDay));
-        $mockItemWithMatchingDate = $this->getMockForAbstractClass(
-            CalendarItemInterface::class, ['getDate']
-        );
+        $mockItemWithMatchingDate = $this->getMockBuilder(CalendarItemInterface::class)
+            ->setMethods(['getDate'])
+            ->getMockForAbstractClass();
         $mockItemWithMatchingDate->expects($this->atLeastOnce())
             ->method('getDate')
             ->will($this->returnValue($date));
