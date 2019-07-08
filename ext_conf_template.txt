@@ -1,2 +1,8 @@
 # cat=basic/enable; type=boolean; label=Cache: enable caching of widget content
 enableWidgetCache = false
+
+# cat=basic/enable/101; type=boolean; label=Include jQuery:If set jQuery is automatically included.
+includeJQuery = 1
+
+# cat=basic/enable/101; type=boolean; label=Include extension JavaScript:If set extension javascript is automatically included.
+includeJavaScript = 1

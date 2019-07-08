@@ -14,7 +14,7 @@ $EM_CONF[$_EXTKEY] = array (
   'title' => 'Calendar',
   'description' => 'Calendar',
   'category' => 'plugin',
-  'version' => '0.6.0',
+  'version' => '0.7.0',
   'state' => 'beta',
   'uploadfolder' => 0,
   'createDirs' => '',
@@ -25,7 +25,7 @@ $EM_CONF[$_EXTKEY] = array (
   array (
     'depends' =>
     array (
-      'typo3' => '8.7.0-9.1.99'
+      'typo3' => '8.7.0-9.5.99'
     ),
     'conflicts' =>
     array (

@@ -1,3 +1,9 @@
+2019-07-08         [RELEASE] Release of t3calendar 0.7.0 (Dirk Wenzel)
+2019-06-14 8b6368a [BUGFIX] dependencies in ext_emconf.php corrected (Dirk Wenzel)
+2019-06-06 8f892de [TASK] include JavaScript (Dirk Wenzel)
+2018-10-05 65d5803 [TASK] require typo3/cms-core:^8.7 || ^9.5 (Dirk Wenzel)
+2018-05-15 d2f3b4f [TASK] add attribute rel=nofollow to all widget navigation links (Dirk Wenzel)
+
 2018-04-10         [RELEASE] Release of t3calendar 0.6.0 (Dirk Wenzel)
 2018-04-02 ddcd387 [TASK] CI: test matrix updated. - use typo3/minimal package for build - ext_emconf.php updated (Dirk Wenzel)
 2018-04-02 bc78462 [TASK] compatibility for TYPO3 9 (and PHP 7.2) - use TYPO3 core ArrayUtility class instead of obsolete Extbase class - prevent error caused by invalid usage of count() (Dirk Wenzel)
