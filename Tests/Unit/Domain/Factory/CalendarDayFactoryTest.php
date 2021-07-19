@@ -60,6 +60,7 @@ class CalendarDayFactoryTest extends UnitTestCase
             CalendarDayFactory::class, ['dummy']
         );
         $this->objectManager = $this->getMockBuilder(ObjectManager::class)
+            ->disableOriginalConstructor()
             ->setMethods(['get'])->getMock();
         $this->subject->injectObjectManager($this->objectManager);
     }
@@ -74,7 +75,7 @@ class CalendarDayFactoryTest extends UnitTestCase
         );
 
         /** @var ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject $mockObjectManager */
-        $mockObjectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
+        $mockObjectManager = $this->getMockBuilder(ObjectManager::class)->disableOriginalConstructor()->getMock();
         $this->subject->injectObjectManager($mockObjectManager);
         $this->assertAttributeSame(
             $mockObjectManager,
