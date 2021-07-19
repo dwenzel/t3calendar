@@ -29,7 +29,7 @@ class CalendarDay
 
     /**
      * @var ObjectStorage
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $items;
 
