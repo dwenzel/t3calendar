@@ -5,18 +5,9 @@ if (!defined('TYPO3_MODE')) {
 
 $boot = function () {
 
-    $emSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['t3calendar']);
-
-    // assets
-    if (!empty($settings['includeJQuery'])) {
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
-            '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:t3calendar/Resources/Private/TypoScript/jQuery.typoScript">');
-    }
-    if (!empty($settings['includeJavaScript'])) {
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
-            '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:t3calendar/Resources/Private/TypoScript/javaScript.typoScript">');
-    }
-
+    $emSettings = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
+    )->get('t3calendar');
 
     // caching
     $identifier = 't3calendar_content';
