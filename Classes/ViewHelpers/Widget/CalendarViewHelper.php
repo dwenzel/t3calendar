@@ -32,7 +32,6 @@ class CalendarViewHelper extends AbstractWidgetViewHelper
 
     /**
      * @var \DWenzel\T3calendar\ViewHelpers\Widget\Controller\CalendarController
-     * @inject
      */
     protected $controller;
 
@@ -40,6 +39,14 @@ class CalendarViewHelper extends AbstractWidgetViewHelper
      * @var bool
      */
     protected $ajaxWidget = false;
+
+    /**
+     * @param Controller\CalendarController $controller
+     */
+    public function injectController(\DWenzel\T3calendar\ViewHelpers\Widget\Controller\CalendarController $controller)
+    {
+        $this->controller = $controller;
+    }
 
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
