@@ -1,6 +1,0 @@
-
-# include t3calendar JavaScript
-page.includeJSFooter {
-	t3calendar = EXT:t3calendar/Resources/Public/JavaScript/calendar.js
-	t3calendar.excludeFromConcatenation = 1
-}
