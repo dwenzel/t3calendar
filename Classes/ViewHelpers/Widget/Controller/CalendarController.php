@@ -116,23 +116,24 @@ class CalendarController extends AbstractWidgetController
     protected function getContent()
     {
         $identifier = sha1(serialize($this->configuration));
-        $content = $this->contentCache->get($identifier);
-        if ($content === false) {
+        $calendarDataString = $this->contentCache->get($identifier);
+        if ($calendarDataString !== false) {
+            $calendar = unserialize($calendarDataString);
+        } else {
             $calendar = $this->calendarFactory->create($this->configuration, $this->objects);
-            $this->view->assignMultiple(
-                [
-                    'configuration' => $this->configuration,
-                    'calendar' => $calendar,
-                    'calendarId' => $this->id,
-                    'parameters' => $this->parameters
-                ]
-            );
-
-            $content = $this->view->render();
-            $this->contentCache->set($identifier, $content);
+            $this->contentCache->set($identifier, serialize($calendar));
         }
 
-        return $content;
+        $this->view->assignMultiple(
+            [
+                'configuration' => $this->configuration,
+                'calendar' => $calendar,
+                'calendarId' => $this->id,
+                'parameters' => $this->parameters
+            ]
+        );
+
+        return $this->view->render();
     }
 
     /**
