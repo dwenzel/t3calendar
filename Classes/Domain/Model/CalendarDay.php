@@ -77,8 +77,6 @@ class CalendarDay
 
     /**
      * Sets the date
-     *
-     * @param \DateTime $dateTime
      */
     public function setDate(\DateTime $dateTime)
     {
@@ -101,10 +99,8 @@ class CalendarDay
 
     /**
      * Gets the day of week
-     *
-     * @return int|null
      */
-    public function getDayOfWeek()
+    public function getDayOfWeek(): ?int
     {
         if ($this->date !== null) {
             return (int)date('w', $this->date->getTimestamp());
@@ -155,8 +151,6 @@ class CalendarDay
 
     /**
      * Adds an item
-     *
-     * @param CalendarItemInterface $item
      */
     public function addItem(CalendarItemInterface $item)
     {
@@ -165,8 +159,6 @@ class CalendarDay
 
     /**
      * Removes an item
-     *
-     * @param CalendarItemInterface $item
      */
     public function removeItem(CalendarItemInterface $item)
     {
@@ -177,9 +169,8 @@ class CalendarDay
      * Gets the month
      *
      * @param string $format A format as understood by date() Default. 'n'
-     * @return null|string
      */
-    public function getMonth($format = 'n')
+    public function getMonth($format = 'n'): ?string
     {
         if ($this->date !== null) {
             return $this->date->format($format);

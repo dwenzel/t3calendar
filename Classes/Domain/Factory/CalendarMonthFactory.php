@@ -27,8 +27,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     /**
      * creates a CalendarMonth object
      *
-     * @param \DateTime $startDate
-     * @param \DateTime $currentDate
      * @param array|\Iterator|null $items
      * @return CalendarMonth
      */
@@ -46,9 +44,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     /**
      * Appends the calendar days of the previous month
      * to the daysOfMonth array
-     *
-     * @param \DateTime $startDate
-     * @param array $daysOfMonth
      */
     public function addDaysOfPreviousMonth(\DateTime $startDate, array &$daysOfMonth)
     {
@@ -68,8 +63,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      * CalendarItemInterface objects will be added to the matching
      * CalendarDay
      *
-     * @param \DateTime $startDate
-     * @param \DateTime $currentDate
      * @param array $daysOfMonth An array holding the days of month.
      * @param array $items An array of CalendarItemInterface objects
      */
@@ -93,9 +86,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      * Appends the first calendar days of next month to the
      * daysOfMonth array. Current month and number of
      * days in month are determined by startDate.
-     *
-     * @param \DateTime $startDate
-     * @param array $daysOfMonth
      */
     public function addDaysOfNextMonth(\DateTime $startDate, array &$daysOfMonth)
     {
@@ -117,8 +107,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
      * the first few days of next month in order to
      * get a total number of days divisible by seven.
      *
-     * @param \DateTime $startDate
-     * @param \DateTime $currentDate
      * @param $items
      * @return array An array of CalendarDays
      */
@@ -135,10 +123,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     /**
      * Spreads the CalendarDay objects hold by
      * $daysOfMonth evenly over a number of weeks
-     *
-     * @param \DateTime $startDate
-     * @param CalendarMonth $calendarMonth
-     * @param array $daysOfMonth
      */
     protected function addWeeks(\DateTime $startDate, CalendarMonth $calendarMonth, array $daysOfMonth)
     {
@@ -155,7 +139,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     }
 
     /**
-     * @param \DateTime $startDate
      * @return int
      */
     protected function getNumberOfDaysInMonth(\DateTime $startDate)
@@ -166,7 +149,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     }
 
     /**
-     * @param \DateTime $startDate
      * @return int
      */
     protected function getNumberOfDaysToAppend(\DateTime $startDate)
@@ -180,7 +162,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     }
 
     /**
-     * @param \DateTime $startDate
      * @return int
      */
     protected function getNumberOfDaysToPrepend(\DateTime $startDate)
@@ -191,7 +172,6 @@ class CalendarMonthFactory implements CalendarMonthFactoryInterface, SingletonIn
     }
 
     /**
-     * @param \DateTime $startDate
      * @return int
      */
     protected function getNumberOfWeeks(\DateTime $startDate)

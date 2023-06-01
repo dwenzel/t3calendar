@@ -70,8 +70,6 @@ class CalendarWeek
 
     /**
      * Adds a day
-     *
-     * @param CalendarDay $day
      */
     public function addDay(CalendarDay $day)
     {
@@ -80,8 +78,6 @@ class CalendarWeek
 
     /**
      * Removes a day
-     *
-     * @param CalendarDay $day
      */
     public function removeDay(CalendarDay $day)
     {

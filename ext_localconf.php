@@ -5,6 +5,7 @@ if (!defined('TYPO3_MODE')) {
 
 $boot = function () {
 
+    $TYPO3_CONF_VARS = [];
     $emSettings = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
         \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
     )->get('t3calendar');
@@ -25,7 +26,7 @@ $boot = function () {
         !(bool)$emSettings['enableWidgetCache']
         && !isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations'][$identifier]['backend'])
     ) {
-        $TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations'][$identifier]['backend'] = 'TYPO3\\CMS\\Core\\Cache\\Backend\\NullBackend';
+        $TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations'][$identifier]['backend'] = \TYPO3\CMS\Core\Cache\Backend\NullBackend::class;
     }
 
     unset($identifier, $emSettings);

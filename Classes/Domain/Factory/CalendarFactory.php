@@ -31,7 +31,6 @@ class CalendarFactory implements SingletonInterface, CalendarFactoryInterface
      * Creates a Calendar from configuration.
      * Items will be added to matching CalendarDays
      *
-     * @param CalendarConfiguration $configuration
      * @param QueryResultInterface|array|\Iterator $items Array holding CalendarItemInterface objects
      * @return Calendar
      */

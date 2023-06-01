@@ -29,7 +29,6 @@ trait CalendarYearFactoryTrait
 
     /**
      * injects a calendar year factory
-     * @param CalendarYearFactoryInterface $calendarYearFactory
      */
     public function injectCalendarYearFactory(CalendarYearFactoryInterface $calendarYearFactory)
     {

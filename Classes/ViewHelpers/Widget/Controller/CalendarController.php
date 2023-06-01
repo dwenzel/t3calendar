@@ -67,8 +67,6 @@ class CalendarController extends AbstractWidgetController
 
     /**
      * Injects the template utility
-     *
-     * @param TemplateUtility $templateUtility
      */
     public function injectTemplateUtility(TemplateUtility $templateUtility)
     {
@@ -160,6 +158,8 @@ class CalendarController extends AbstractWidgetController
      */
     protected function adjustStartDate($period, $shift = null, $origin = null)
     {
+        $interval = null;
+        $startDate = null;
         /** @var \DateTimeZone $timeZone */
         $timeZone = new \DateTimeZone(date_default_timezone_get());
 
@@ -178,22 +178,13 @@ class CalendarController extends AbstractWidgetController
         }
 
         if ($interval === false || empty($shift)) {
-            switch ($period) {
-                case CalendarConfiguration::PERIOD_WEEK:
-                    $dateString = 'monday this week';
-                    break;
-                case CalendarConfiguration::PERIOD_MONTH:
-                    $dateString = 'first day of this month 00:00:00';
-                    break;
-                case CalendarConfiguration::PERIOD_QUARTER:
-                    $dateString = date(sprintf('Y-%s-01', floor((date('n') - 1) / 3) * 3 + 1));
-                    break;
-                case CalendarConfiguration::PERIOD_YEAR:
-                    $dateString = date('Y') . '-01-01';
-                    break;
-                default:
-                    $dateString = 'today';
-            }
+            $dateString = match ($period) {
+                CalendarConfiguration::PERIOD_WEEK => 'monday this week',
+                CalendarConfiguration::PERIOD_MONTH => 'first day of this month 00:00:00',
+                CalendarConfiguration::PERIOD_QUARTER => date(sprintf('Y-%s-01', floor((date('n') - 1) / 3) * 3 + 1)),
+                CalendarConfiguration::PERIOD_YEAR => date('Y') . '-01-01',
+                default => 'today',
+            };
 
             $startDate = new \DateTime($dateString, $timeZone);
         }
@@ -209,32 +200,20 @@ class CalendarController extends AbstractWidgetController
 
     /**
      * @param $shift
-     * @return bool|\DateInterval
      */
-    protected function getInterval($shift)
+    protected function getInterval($shift): bool|\DateInterval
     {
         if (!($shift === 'next' || $shift === 'previous')) {
             return false;
         }
-        switch ($this->configuration->getDisplayPeriod()) {
-            case CalendarConfiguration::PERIOD_DAY:
-                $intervalString = 'P1D';
-                break;
-            case CalendarConfiguration::PERIOD_WEEK:
-                $intervalString = 'P1W';
-                break;
-            case CalendarConfiguration::PERIOD_MONTH:
-                $intervalString = 'P1M';
-                break;
-            case CalendarConfiguration::PERIOD_QUARTER:
-                $intervalString = 'P3M';
-                break;
-            case CalendarConfiguration::PERIOD_YEAR:
-                $intervalString = 'P1Y';
-                break;
-            default:
-                $intervalString = '';
-        }
+        $intervalString = match ($this->configuration->getDisplayPeriod()) {
+            CalendarConfiguration::PERIOD_DAY => 'P1D',
+            CalendarConfiguration::PERIOD_WEEK => 'P1W',
+            CalendarConfiguration::PERIOD_MONTH => 'P1M',
+            CalendarConfiguration::PERIOD_QUARTER => 'P3M',
+            CalendarConfiguration::PERIOD_YEAR => 'P1Y',
+            default => '',
+        };
         if ($intervalString === '') {
             return false;
         }
@@ -311,7 +290,6 @@ class CalendarController extends AbstractWidgetController
      * Prevent from overriding template path in parent method
      * @see initializeView
      *
-     * @param ViewInterface $view
      * @return void
      */
     protected function setViewConfiguration(ViewInterface $view)
@@ -323,7 +301,6 @@ class CalendarController extends AbstractWidgetController
      * e.g. plugin.tx_extension.view.widget.<WidgetViewHelperClassName>.templateRootPaths
      * Note: we use the new syntax (plural: *Paths) here and allow the old (*Path) too
      *
-     * @param ViewInterface $view
      * @return void
      */
     protected function initializeView(ViewInterface $view)

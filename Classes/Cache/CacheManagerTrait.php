@@ -30,8 +30,6 @@ trait CacheManagerTrait
 
     /**
      * Injects the cache manager
-     *
-     * @param CacheManager $cacheManager
      */
     public function injectCacheManager(CacheManager $cacheManager)
     {

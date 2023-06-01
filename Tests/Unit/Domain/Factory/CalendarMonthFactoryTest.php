@@ -115,7 +115,7 @@ class CalendarMonthFactoryTest extends UnitTestCase
         $this->subject->addDaysOfPreviousMonth($startDate, $daysOfMonth);
         $this->assertSame(
             $expectedNumberOfDays,
-            count($daysOfMonth)
+            is_countable($daysOfMonth) ? count($daysOfMonth) : 0
         );
     }
 
@@ -137,7 +137,7 @@ class CalendarMonthFactoryTest extends UnitTestCase
         $this->subject->addDaysOfCurrentMonth($startDate, $currentDate, $daysOfMonth);
         $this->assertSame(
             $expectedNumberOfDays,
-            count($daysOfMonth)
+            is_countable($daysOfMonth) ? count($daysOfMonth) : 0
         );
     }
 
@@ -156,7 +156,7 @@ class CalendarMonthFactoryTest extends UnitTestCase
         $this->subject->addDaysOfNextMonth($startDate, $daysOfMonth);
         $this->assertSame(
             $expectedNumberOfDays,
-            count($daysOfMonth)
+            is_countable($daysOfMonth) ? count($daysOfMonth) : 0
         );
     }
 

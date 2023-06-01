@@ -18,14 +18,14 @@ namespace DWenzel\T3calendar\Domain\Model\Dto;
  */
 class CalendarConfiguration
 {
-    const PERIOD_DAY = 0;
-    const PERIOD_WEEK = 1;
-    const PERIOD_MONTH = 2;
-    const PERIOD_QUARTER = 3;
-    const PERIOD_SEMESTER = 5;
-    const PERIOD_YEAR = 6;
-    const VIEW_MODE_COMBO_PANE = 1;
-    const VIEW_MODE_MINI_MONTH = 2;
+    final public const PERIOD_DAY = 0;
+    final public const PERIOD_WEEK = 1;
+    final public const PERIOD_MONTH = 2;
+    final public const PERIOD_QUARTER = 3;
+    final public const PERIOD_SEMESTER = 5;
+    final public const PERIOD_YEAR = 6;
+    final public const VIEW_MODE_COMBO_PANE = 1;
+    final public const VIEW_MODE_MINI_MONTH = 2;
 
     /**
      * Start date

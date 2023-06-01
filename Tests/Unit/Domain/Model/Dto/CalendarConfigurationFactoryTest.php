@@ -122,10 +122,9 @@ class CalendarConfigurationFactoryTest extends UnitTestCase
     /**
      * @test
      * @dataProvider displayPeriodDataProvider
-     * @param int|string|null $value
      * @param int $expectedPeriod
      */
-    public function createSetsDisplayPeriod($value, $expectedPeriod)
+    public function createSetsDisplayPeriod(int|string|null $value, $expectedPeriod)
     {
         $settings = [
             'displayPeriod' => $value

@@ -28,8 +28,6 @@ class CalendarQuarterFactory implements CalendarQuarterFactoryInterface, Singlet
     /**
      * creates a CalendarQuarter object
      *
-     * @param \DateTime $startDate
-     * @param \DateTime $currentDate
      * @param array|\Iterator|null $items
      * @return CalendarQuarter
      */

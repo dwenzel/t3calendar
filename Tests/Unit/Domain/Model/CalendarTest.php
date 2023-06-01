@@ -37,7 +37,7 @@ class CalendarTest extends UnitTestCase
     public function setUp()
     {
         $this->subject = $this->getAccessibleMock(
-            'DWenzel\\T3calendar\\Domain\\Model\\Calendar',
+            \DWenzel\T3calendar\Domain\Model\Calendar::class,
             ['dummy'], [], '', true
         );
     }

@@ -114,7 +114,7 @@ class CalendarQuarterTest extends UnitTestCase
      */
     public function getQuarterForStringReturnsQuarter()
     {
-        $timeStamp = 1441065600;
+        $timeStamp = 1_441_065_600;
         $dateTime = new \DateTime('@' . $timeStamp);
         $expectedQuarter = ceil(date('n', $timeStamp)/3);
         $this->subject->setStartDate($dateTime);

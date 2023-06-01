@@ -30,10 +30,8 @@ class CalendarQuarter
 
     /**
      * Gets the quarter
-     *
-     * @return null|int
      */
-    public function getQuarter()
+    public function getQuarter(): ?int
     {
         if ($this->startDate !== null) {
             return ceil($this->startDate->format('n')/3);

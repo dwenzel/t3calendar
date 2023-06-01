@@ -40,9 +40,6 @@ class CalendarViewHelper extends AbstractWidgetViewHelper
      */
     protected $ajaxWidget = false;
 
-    /**
-     * @param Controller\CalendarController $controller
-     */
     public function injectController(\DWenzel\T3calendar\ViewHelpers\Widget\Controller\CalendarController $controller)
     {
         $this->controller = $controller;
@@ -90,19 +87,19 @@ class CalendarViewHelper extends AbstractWidgetViewHelper
         if (!($objects instanceof QueryResultInterface || $objects instanceof CalendarItemStorage || is_array($objects))) {
             $objectType = '';
             if (is_object($objects)) {
-                $objectType = get_class($objects) . ' ';
+                $objectType = $objects::class . ' ';
             }
 
-            throw new \UnexpectedValueException('Supplied object type ' . $objectType . 'must be QueryResultInterface or CalendarItemStorage or be an array.', 1493322353);
+            throw new \UnexpectedValueException('Supplied object type ' . $objectType . 'must be QueryResultInterface or CalendarItemStorage or be an array.', 1_493_322_353);
         }
 
         if (!empty($configuration) && !($configuration instanceof CalendarConfiguration || is_array($configuration))) {
             $configurationType = '';
             if (is_object($configuration)) {
-                $configurationType = get_class($configuration) . ' ';
+                $configurationType = $configuration::class . ' ';
             }
 
-            throw new \UnexpectedValueException('Supplied configuration type ' . $configurationType . 'must be CalendarConfiguration or be an array.', 1493322353);
+            throw new \UnexpectedValueException('Supplied configuration type ' . $configurationType . 'must be CalendarConfiguration or be an array.', 1_493_322_353);
         }
 
         return $this->initiateSubRequest();

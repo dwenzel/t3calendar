@@ -29,7 +29,6 @@ trait CalendarWeekFactoryTrait
 
     /**
      * injects a calendar week factory
-     * @param CalendarWeekFactoryInterface $calendarWeekFactory
      */
     public function injectCalendarWeekFactory(CalendarWeekFactoryInterface $calendarWeekFactory)
     {

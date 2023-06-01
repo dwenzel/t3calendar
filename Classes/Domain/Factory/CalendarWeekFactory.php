@@ -27,8 +27,6 @@ class CalendarWeekFactory implements CalendarWeekFactoryInterface, SingletonInte
     /**
      * creates a CalendarWeek object
      *
-     * @param \DateTime $startDate
-     * @param \DateTime $currentDate
      * @param array|\Iterator|null $items
      * @return CalendarWeek
      */

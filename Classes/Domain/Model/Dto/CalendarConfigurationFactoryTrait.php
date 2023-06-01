@@ -30,7 +30,6 @@ trait CalendarConfigurationFactoryTrait
 
     /**
      * injects a calendar  factory
-     * @param CalendarConfigurationFactoryInterface $calendarConfigurationFactory
      */
     public function injectCalendarConfigurationFactory(CalendarConfigurationFactoryInterface $calendarConfigurationFactory)
     {

@@ -29,7 +29,6 @@ trait CalendarDayFactoryTrait
 
     /**
      * injects a calendar day factory
-     * @param CalendarDayFactoryInterface $calendarDayFactory
      */
     public function injectCalendarDayFactory(CalendarDayFactoryInterface $calendarDayFactory)
     {

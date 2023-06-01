@@ -29,7 +29,6 @@ trait CalendarQuarterFactoryTrait
 
     /**
      * injects a calendar quarter factory
-     * @param CalendarQuarterFactoryInterface $calendarQuarterFactory
      */
     public function injectCalendarQuarterFactory(CalendarQuarterFactoryInterface $calendarQuarterFactory)
     {

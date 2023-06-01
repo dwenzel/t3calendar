@@ -325,8 +325,8 @@ class CalendarControllerTest extends UnitTestCase
     public function dayActionShiftOriginDataProvider()
     {
         return [
-            [1234567, 'next', 'P1D', false],
-            [1234567, 'previous', 'P1D', true]
+            [1_234_567, 'next', 'P1D', false],
+            [1_234_567, 'previous', 'P1D', true]
         ];
     }
 
@@ -422,8 +422,8 @@ class CalendarControllerTest extends UnitTestCase
     public function weekActionShiftOriginDataProvider()
     {
         return [
-            [1482706800, 'next', 'P1W', false],
-            [1482706800, 'previous', 'P1W', true],
+            [1_482_706_800, 'next', 'P1W', false],
+            [1_482_706_800, 'previous', 'P1W', true],
         ];
     }
 
@@ -506,8 +506,8 @@ class CalendarControllerTest extends UnitTestCase
     public function monthActionShiftOriginDataProvider()
     {
         return [
-            [1482706800, 'next', 'P1M', false],
-            [1482706800, 'previous', 'P1M', true],
+            [1_482_706_800, 'next', 'P1M', false],
+            [1_482_706_800, 'previous', 'P1M', true],
         ];
     }
 
@@ -590,8 +590,8 @@ class CalendarControllerTest extends UnitTestCase
     public function yearActionShiftOriginDataProvider()
     {
         return [
-            [1482706800, 'next', 'P1Y', false],
-            [1482706800, 'previous', 'P1Y', true],
+            [1_482_706_800, 'next', 'P1Y', false],
+            [1_482_706_800, 'previous', 'P1Y', true],
         ];
     }
 
@@ -677,8 +677,8 @@ class CalendarControllerTest extends UnitTestCase
     public function quarterActionShiftOriginDataProvider()
     {
         return [
-            [1482706800, 'next', 'P3M', false],
-            [1482706800, 'previous', 'P3M', true],
+            [1_482_706_800, 'next', 'P3M', false],
+            [1_482_706_800, 'previous', 'P3M', true],
         ];
     }
 

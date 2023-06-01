@@ -39,8 +39,6 @@ trait MonthTrait
 
     /**
      * Sets the months
-     *
-     * @param ObjectStorage $months
      */
     public function setMonths(ObjectStorage $months)
     {
@@ -49,8 +47,6 @@ trait MonthTrait
 
     /**
      * Adds a month
-     *
-     * @param CalendarMonth $month
      */
     public function addMonth(CalendarMonth $month)
     {
@@ -59,8 +55,6 @@ trait MonthTrait
 
     /**
      * Removes a month
-     *
-     * @param CalendarMonth $month
      */
     public function removeMonth(CalendarMonth $month)
     {

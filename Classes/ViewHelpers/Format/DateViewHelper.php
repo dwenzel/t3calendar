@@ -65,7 +65,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  */
 class DateViewHelper extends AbstractViewHelper
 {
-    const DEFAULT_DATE_FORMAT = 'Y-m-d';
+    final public const DEFAULT_DATE_FORMAT = 'Y-m-d';
 
     /**
      * @var boolean
@@ -83,7 +83,7 @@ class DateViewHelper extends AbstractViewHelper
      * @return string Formatted date
      * @throws Exception
      */
-    public function render($date = null, $format = '', $time = null, $base = null)
+    public function render(mixed $date = null, $format = '', $time = null, mixed $base = null)
     {
         if ($format === '') {
             $format = $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] ?: static::DEFAULT_DATE_FORMAT;
@@ -110,8 +110,8 @@ class DateViewHelper extends AbstractViewHelper
                 $dateTimestamp = strtotime((MathUtility::canBeInterpretedAsInteger($date) ? '@' : '') . $date, $base);
                 $modifiedDate = new \DateTime('@' . $dateTimestamp);
                 $modifiedDate->setTimezone(new \DateTimeZone(date_default_timezone_get()));
-            } catch (\Exception $exception) {
-                throw new Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579);
+            } catch (\Exception) {
+                throw new Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1_241_722_579);
             }
         } else {
             $modifiedDate = clone($date);
@@ -121,7 +121,7 @@ class DateViewHelper extends AbstractViewHelper
             $modifiedDate->setTimestamp($modifiedDate->getTimestamp() + $time);
         }
 
-        if (strpos($format, '%') !== false) {
+        if (str_contains((string) $format, '%')) {
             return strftime($format, $modifiedDate->format('U'));
         } else {
             return $modifiedDate->format($format);

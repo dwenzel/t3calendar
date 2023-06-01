@@ -96,7 +96,6 @@ class CalendarItemStorage extends ObjectStorage
     /**
      * Tells if any calendar item for a given date exist in storage
      *
-     * @param \DateTime $dateTime
      * @return bool
      */
     public function hasItemsForDate(\DateTime $dateTime)
@@ -109,7 +108,6 @@ class CalendarItemStorage extends ObjectStorage
      * If any exist an ObjectStorage containing the items
      * is returned otherwise an empty ObjectStorage
      *
-     * @param \DateTime $dateTime
      * @return ObjectStorage
      */
     public function getByDate(\DateTime $dateTime)

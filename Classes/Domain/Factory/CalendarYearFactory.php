@@ -26,8 +26,6 @@ class CalendarYearFactory implements CalendarYearFactoryInterface, SingletonInte
     /**
      * creates a CalendarYear object
      *
-     * @param \DateTime $startDate
-     * @param \DateTime $currentDate
      * @param array|\Iterator|null $items
      * @return CalendarYear
      */

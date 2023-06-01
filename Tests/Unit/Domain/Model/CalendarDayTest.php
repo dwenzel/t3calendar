@@ -81,7 +81,7 @@ class CalendarDayTest extends UnitTestCase
      */
     public function getDayForStringReturnsDayOfMonth()
     {
-        $timeStamp = 1441065600;
+        $timeStamp = 1_441_065_600;
         $dateTime = new \DateTime('@' . $timeStamp);
         $expectedDay = date('d', $timeStamp);
         $this->subject->setDate($dateTime);
@@ -108,7 +108,7 @@ class CalendarDayTest extends UnitTestCase
      */
     public function getMonthForStringReturnsMonth()
     {
-        $timeStamp = 1441065600;
+        $timeStamp = 1_441_065_600;
         $dateTime = new \DateTime('@' . $timeStamp);
         $expectedMonth = date('n', $timeStamp);
         $this->subject->setDate($dateTime);
@@ -135,7 +135,7 @@ class CalendarDayTest extends UnitTestCase
      */
     public function getDayOfWeekForIntegerReturnsDayOfWeek()
     {
-        $timeStamp = 1441065600;
+        $timeStamp = 1_441_065_600;
         $dateTime = new \DateTime('@' . $timeStamp);
         $dayOfWeek = (int)date('w', $timeStamp);
         $this->subject->setDate($dateTime);

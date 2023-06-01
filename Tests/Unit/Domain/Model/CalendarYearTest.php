@@ -114,7 +114,7 @@ class CalendarYearTest extends UnitTestCase
      */
     public function getYearForStringReturnsYear()
     {
-        $timeStamp = 1441065600;
+        $timeStamp = 1_441_065_600;
         $dateTime = new \DateTime('@' . $timeStamp);
         $expectedYear = date('Y', $timeStamp);
         $this->subject->setStartDate($dateTime);

@@ -65,8 +65,6 @@ class CalendarMonth
 
     /**
      * Sets the weeks
-     *
-     * @param ObjectStorage $weeks
      */
     public function setWeeks(ObjectStorage $weeks)
     {
@@ -75,8 +73,6 @@ class CalendarMonth
 
     /**
      * Adds a week
-     *
-     * @param CalendarWeek $week
      */
     public function addWeek(CalendarWeek $week)
     {
@@ -85,8 +81,6 @@ class CalendarMonth
 
     /**
      * Removes a week
-     *
-     * @param CalendarWeek $week
      */
     public function removeWeek(CalendarWeek $week)
     {
@@ -117,9 +111,8 @@ class CalendarMonth
      * Gets the month
      *
      * @param string $format A format as understood by date(). Default 'n'
-     * @return null|string
      */
-    public function getMonth($format = 'n')
+    public function getMonth($format = 'n'): ?string
     {
         if ($this->startDate !== null) {
             return $this->startDate->format($format);

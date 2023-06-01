@@ -31,9 +31,8 @@ class CalendarYear
      * Gets the year
      *
      * @param string $format A format as understood by date(). Default 'y'
-     * @return null|string
      */
-    public function getYear($format = 'Y')
+    public function getYear($format = 'Y'): ?string
     {
         if ($this->startDate !== null) {
             return $this->startDate->format($format);

@@ -28,7 +28,6 @@ class CalendarConfigurationFactory implements CalendarConfigurationFactoryInterf
 
     /**
      * Creates a CalendarConfiguration object
-     * @param array $settings
      * @return CalendarConfiguration
      */
     public function create(array $settings)
@@ -52,16 +51,11 @@ class CalendarConfigurationFactory implements CalendarConfigurationFactoryInterf
         $currentDate = new \DateTime($dateString, $timeZone);
         $configuration->setCurrentDate($currentDate);
 
-        switch ($configuration->getDisplayPeriod()) {
-            case CalendarConfiguration::PERIOD_WEEK:
-                $dateString = 'monday this week';
-                break;
-            case CalendarConfiguration::PERIOD_YEAR:
-                $dateString = 'first day of january ' . $currentDate->format('Y');
-                break;
-            default:
-                $dateString = 'first day of this month';
-        }
+        $dateString = match ($configuration->getDisplayPeriod()) {
+            CalendarConfiguration::PERIOD_WEEK => 'monday this week',
+            CalendarConfiguration::PERIOD_YEAR => 'first day of january ' . $currentDate->format('Y'),
+            default => 'first day of this month',
+        };
 
         if (!empty($settings['startDate'])) {
             $dateString = $settings['startDate'];

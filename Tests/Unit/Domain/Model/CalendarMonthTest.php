@@ -34,7 +34,7 @@ class CalendarMonthTest extends UnitTestCase
     public function setUp()
     {
         $this->fixture = $this->getAccessibleMock(
-            'DWenzel\\T3calendar\\Domain\\Model\\CalendarMonth',
+            \DWenzel\T3calendar\Domain\Model\CalendarMonth::class,
             ['dummy'], [], '', true
         );
     }
@@ -115,7 +115,7 @@ class CalendarMonthTest extends UnitTestCase
      */
     public function getMonthForStringReturnsMonth()
     {
-        $timeStamp = 1441065600;
+        $timeStamp = 1_441_065_600;
         $dateTime = new \DateTime('@' . $timeStamp);
         $expectedMonth = date('n', $timeStamp);
         $this->fixture->setStartDate($dateTime);

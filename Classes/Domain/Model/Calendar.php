@@ -71,8 +71,6 @@ class Calendar
 
     /**
      * Sets the current month
-     *
-     * @param CalendarMonth $calendarMonth
      */
     public function setCurrentMonth(CalendarMonth $calendarMonth)
     {
@@ -91,8 +89,6 @@ class Calendar
 
     /**
      * Sets the current week
-     *
-     * @param CalendarWeek $calendarWeek
      */
     public function setCurrentWeek(CalendarWeek $calendarWeek)
     {
@@ -111,8 +107,6 @@ class Calendar
 
     /**
      * Sets the current quarter
-     *
-     * @param CalendarQuarter $currentQuarter
      */
     public function setCurrentQuarter(CalendarQuarter $currentQuarter)
     {
@@ -131,8 +125,6 @@ class Calendar
 
     /**
      * Sets the current day
-     *
-     * @param CalendarDay $calendarDay
      */
     public function setCurrentDay(CalendarDay $calendarDay)
     {
@@ -151,8 +143,6 @@ class Calendar
 
     /**
      * Sets the current year
-     *
-     * @param CalendarYear $calendarYear
      */
     public function setCurrentYear(CalendarYear $calendarYear)
     {
@@ -207,13 +197,10 @@ class Calendar
     public function getWeekDayLabels()
     {
         $weekDays = [];
-        switch ($this->getViewMode()) {
-            case CalendarConfiguration::VIEW_MODE_MINI_MONTH:
-                $monthFormat = '%a';
-                break;
-            default:
-                $monthFormat = '%A';
-        }
+        $monthFormat = match ($this->getViewMode()) {
+            CalendarConfiguration::VIEW_MODE_MINI_MONTH => '%a',
+            default => '%A',
+        };
 
         for ($dayOfWeek = 0; $dayOfWeek < 7; $dayOfWeek++) {
             $weekDays[] = strftime($monthFormat, strtotime('next Monday +' . $dayOfWeek . ' days'));

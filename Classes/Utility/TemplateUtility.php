@@ -11,8 +11,8 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
  */
 class TemplateUtility
 {
-    const RESOURCES_PATH = 'Resources/';
-    const PARTIAL_PATH_SEGMENT = 'Private/Partials';
+    final public const RESOURCES_PATH = 'Resources/';
+    final public const PARTIAL_PATH_SEGMENT = 'Private/Partials';
 
     /**
      * Handles the path resolving for *rootPath(s)
@@ -65,7 +65,6 @@ class TemplateUtility
      * Configures the template paths of a given view
      * by interpreting a given configuration
      *
-     * @param ViewInterface $view
      * @param array $configuration Widget view helper configuration from framework
      * @param string $extensionName
      */
