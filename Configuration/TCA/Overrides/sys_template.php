@@ -15,3 +15,5 @@ if (!empty($settings['includeJavaScript'])) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
         '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:t3calendar/Resources/Private/TypoScript/javaScript.typoScript">');
 }
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile('t3calendar', 'Configuration/TypoScript', 'Calendar');

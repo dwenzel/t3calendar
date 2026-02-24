@@ -1,11 +1,10 @@
 <?php
-if (!defined('TYPO3_MODE')) {
+if (!defined('TYPO3')) {
     die('Access denied.');
 }
 
 $boot = function () {
 
-    $TYPO3_CONF_VARS = [];
     $emSettings = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
         \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
     )->get('t3calendar');
@@ -17,16 +16,16 @@ $boot = function () {
     }
 
     // register t3calendar content cache with pages group
-    if (!isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations'][$identifier]['groups'])) {
-        $TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations'][$identifier]['groups'] = ['pages', 'all'];
+    if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$identifier]['groups'])) {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$identifier]['groups'] = ['pages', 'all'];
     }
 
     // disable cache
     if (
         !(bool)$emSettings['enableWidgetCache']
-        && !isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations'][$identifier]['backend'])
+        && !isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$identifier]['backend'])
     ) {
-        $TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations'][$identifier]['backend'] = \TYPO3\CMS\Core\Cache\Backend\NullBackend::class;
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$identifier]['backend'] = \TYPO3\CMS\Core\Cache\Backend\NullBackend::class;
     }
 
     unset($identifier, $emSettings);
